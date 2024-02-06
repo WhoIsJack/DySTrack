@@ -25,7 +25,7 @@ from warnings import simplefilter
 simplefilter('always',UserWarning)
 
 # Specific imports
-import _winreg as winr
+import winreg as winr
 
      
 #------------------------------------------------------------------------------

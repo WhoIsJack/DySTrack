@@ -37,8 +37,8 @@ from msvcrt import kbhit,getch
 from time import sleep
 
 # Internal imports
-from pt880_analyze import analyze_image
-from pt880_scope import send_xyz_to_scope
+from masking import analyze_image
+from feedback import send_xyz_to_scope
 
 
 #------------------------------------------------------------------------------
