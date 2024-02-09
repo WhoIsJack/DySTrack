@@ -22,7 +22,41 @@ sys.path.append(scriptfolder)
 
 Zen.Application.Documents.RemoveAll()
 
-### Start external script?
+### Start experiment
+
+ZenService.Actions.StartExperiment()
+
+counter = 0
+
+if #if what?    
+    counter = counter+1
+
+# Load image
+#image1 = Zen.Application.Documents.GetByName("test_stack_2.czi") ##Add stack
+#if image2 is None:
+image1 = Zen.Application.LoadImage(r"S:\DBIO_WongGroup_1\Zimeng\980_vis\20240131_cldnb_stacks\516x180_LSM_50um_xyz.czi", False) #add stack
+Zen.Application.Documents.Add(image1)
+
+# Reuse settings
+ZenService.HardwareActions.ExecuteHardwareSettingFromFile(image1)
+
+
+# Save image
+if image2 is None:
+    saved = Zen.Application.Save(image1, r"D:\Zimeng\test_{counter}.czi", False)
+    print("Saved:", saved)
+    image2 = image1
+
+
+### Append things to a file
+
+#output to the same as image folder (timepoint and date time?)
+ZenService.Xtra.System.AppendLogLine(str(ZenService.Experiment.CurrentTimePointIndex), ":", "1. " + str(ZenService.Environment.CurrentTimeHour).zfill(2) + ":" + str(ZenService.Environment.CurrentTimeMinute).zfill(2) + ":" + str(ZenService.Environment.CurrentTimeSecond).zfill(2) + " on " + str(ZenService.Environment.CurrentDateYear).zfill(4) + "-" + str(ZenService.Environment.CurrentDateMonth).zfill(2) + "-" + str(ZenService.Environment.CurrentDateDay).zfill(2), "LogFile")
+
+#ZenService.Xtra.System.AppendLogLine(str(ZenService.Experiment.CurrentTimePointIndex), "LogFile")
+
+
+### Start external script? Don't need maybe...
 
 if (start_Simple_Plot == True):
     
@@ -39,8 +73,6 @@ if image2 is None:
     image1 = Zen.Application.LoadImage(r"D:\Jonas\_automation\test_stack.czi", False)
     Zen.Application.Documents.Add(image1)
 
-# Reuse settings
-hardwaresetting1 = ZenHardwareSetting()
 
 
 # Save image
