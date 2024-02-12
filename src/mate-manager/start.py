@@ -38,7 +38,7 @@ from time import sleep
 
 # Internal imports
 from masking import analyze_image
-from feedback import send_xyz_to_scope
+from feedback_txt import send_xyz_to_scope
 
 
 #------------------------------------------------------------------------------
@@ -81,7 +81,7 @@ def main():
         sys.exit()
     
     # Get positional arguments
-    TARGET_DIR = sys.argv[1]
+    TARGET_DIR = r'S:\DBIO_WongGroup_1\Zimeng\980_vis\_MATE\TEST_FOLDER' #sys.argv[1]
     if not os.path.isdir(TARGET_DIR):
         raise IOError(TARGET_DIR+" is not a valid dir. See pt880_start -h for help.")
     
@@ -102,6 +102,8 @@ def main():
         VERBOSE = True
     else:
         VERBOSE = False
+
+    #fpath = r'S:\DBIO_WongGroup_1\Zimeng\980_vis\_MATE\TEST_FOLDER'
     
     # Start the scheduler
     stats = main_scheduler(TARGET_DIR,img_params=CHANNEL,
@@ -300,7 +302,7 @@ def main_scheduler(target_dir,interval=1,fileStart='',fileEnd='',
             # Start looking again
             continue
         
-        # If nothing is found, wait for the intervall to pass
+        # If nothing is found, wait for the interval to pass
         check_counter += 1
         sleep(interval)
 
