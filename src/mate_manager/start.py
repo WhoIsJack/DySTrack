@@ -37,8 +37,8 @@ from msvcrt import kbhit,getch
 from time import sleep
 
 # Internal imports
-from masking import analyze_image
-from feedback_txt import send_xyz_to_scope
+from mate_manager.masking import analyze_image
+from mate_manager.feedback_txt import send_xyz_to_scope
 
 
 #------------------------------------------------------------------------------

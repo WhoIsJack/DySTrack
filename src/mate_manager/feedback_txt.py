@@ -66,7 +66,7 @@ def write_reg(key,name,value):
 
 # FUNCTION FOR SCOPE COMMUNICATION
 
-def send_xyz_to_scope(z_pos=None,y_pos=None,x_pos=None,codeM='focus',errMsg=None):
+def send_xyz_to_scope(fpath, z_pos=None,y_pos=None,x_pos=None,codeM='focus',errMsg=None):
     """
         Communicate new position for imaging to the microscope through the
         Windows registry, then prime it for imaging (the actual acquisition
@@ -115,7 +115,6 @@ def send_xyz_to_scope(z_pos=None,y_pos=None,x_pos=None,codeM='focus',errMsg=None
     
     # Message to microscope what to do.
     #write_reg(reg_key,name_codemic,codeM)
-    fpath = r"S:\DBIO_WongGroup_1\Zimeng\980_vis\_MATE\TEST_LOG_FOLDER\coords.txt"
     f = open(fpath, "a")
     f.write(f"{name_xpos}:{x_pos}, {name_ypos}:{y_pos}, {name_zpos}:{z_pos}\n")
     f.close()
