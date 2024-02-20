@@ -7,9 +7,9 @@ Created on Sun Jan 15 00:34:07 2017
 
 @descript:  Functions for sending coordinates and commands to microscopes (or 
             rather to the macros they are running).
-            For more information see `start.py`.
+            For more information see `run_mate.py`.
             
-@usage:     Called by `start.py`.
+@usage:     Called by `run_mate.py`.
 """
 
 
@@ -88,7 +88,7 @@ def send_coords_txt(
 
     # Handle failure cases
     # FIXME: This is too unspecific and should be revisited in the context of
-    #        the fallback measures implemented in `start.py`!
+    #        the fallback measures implemented in `run_mate.py`!
     except Exception: 
         no_error = False
     
@@ -158,7 +158,7 @@ def send_coords_winreg(
 ### handle direct calls
 
 if __name__ == '__main__':
-    raise Exception("Can't run this module directly. See 'python start.py -h' for help.")
+    raise Exception("Can't run this module directly. See 'python run_mate.py -h' for help.")
 
 
 
