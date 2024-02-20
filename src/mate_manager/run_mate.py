@@ -2,43 +2,31 @@
 """
 Created on Sun Jan 15 00:34:07 2017
 
-@author:    Jonas Hartmann @ Gilmour group @ EMBL Heidelberg
+@authors:   Jonas Hartmann @ Gilmour group (EMBL) & Mayor lab (UCL)
+            Zimeng Wu @ Wong group (UCL)
 
-@descript:  Tool to be used in conjunction with LSM880 (ZEN BLACK) and the 
-            pipeline constructor macro to automatically track moving zebrafish 
-            posterior lateral line primordia across several embryos (positions) 
-            during a timecourse.
-        
-            Monitors a directory and its sudirectories for low-res stacks or 
-            slices produced by the scope and determines the positional shift 
-            needed for the subsequent hi-res stack to be positioned correctly 
-            with regard to the prim.
+@descript:  Main script to run the MATE manager. This script monitors a target
+            directory (and its subdirectories) for images produced by the scope
+            that fit certain criteria, then triggers an image analysis pipeline
+            that determines the new coordinates to be sent to the microscope,
+            or rather to the relevant macro running in the scope's software.
             
-@usage:     Call from Windows command line. See "pt880_start --help" for more
-            information.
+@usage:     Run from Windows command line. 
+            See 'python run_mate.py -h' for help.
 """
 
 
-#------------------------------------------------------------------------------
+### Imports
 
-# PREPARATION
+import sys, os
+from warnings import simplefilter, warn
+simplefilter('always', UserWarning)
 
-# General imports
-from __future__ import division
-import sys,os
-#import numpy as np
-#import scipy.ndimage as ndi
-#import matplotlib.pyplot as plt
-from warnings import simplefilter,warn
-simplefilter('always',UserWarning)
-
-# Specific imports
-from msvcrt import kbhit,getch
+from msvcrt import kbhit, getch
 from time import sleep
 
-# Internal imports
-from masking import analyze_image
-from feedback_txt import send_xyz_to_scope
+from mate_manager.masking.lateral_line import analyze_image
+from mate_manager.feedback import send_coords_winreg, send_coords_txt
 
 
 #------------------------------------------------------------------------------
@@ -232,8 +220,9 @@ def main_scheduler(target_dir,interval=1,fileStart='',fileEnd='',
                         img_path = os.path.join(target_dir,f)
                         
                         # RUN IT!
-                        z_pos,y_pos,x_pos = analyze_image(img_path,channel=img_params,
-                                                          show=False,verbose=verbose)
+                        z_pos,y_pos,x_pos = analyze_image(
+                            img_path, channel=img_params,
+                            show=False, verbose=verbose)
                         
                         # Report
                         errMsg = None
@@ -262,7 +251,10 @@ def main_scheduler(target_dir,interval=1,fileStart='',fileEnd='',
                         attempts += 1                        
                         
                         # SUBMIT THE COORDS!
-                        no_error = send_xyz_to_scope(z_pos,y_pos,x_pos,codeM=codeM,errMsg=errMsg)
+                        #no_error = send_coords_winreg(
+                        #    z_pos, y_pos, x_pos, codeM=codeM, errMsg=errMsg)
+                        no_error = send_coords_txt(
+                            coords_path, z_pos, y_pos, x_pos, codeM=codeM)
                         
                         # Check if it worked
                         if no_error:
@@ -278,8 +270,10 @@ def main_scheduler(target_dir,interval=1,fileStart='',fileEnd='',
                     else:      
                         
                         # Try just running it with the last position
-                        no_error = send_xyz_to_scope(codeM="nothing",
-                                                     errMsg="Coordinate communication failed!")
+                        #no_error = send_coords_winreg(
+                        #    codeM="nothing",
+                        #    errMsg="Coordinate communication failed!")
+                        raise NotImplementedError("Retrying with the previous position is not yet implemented for send_coords_txt!")
                                                      
                         # Report if this final solution worked or not
                         if no_error:

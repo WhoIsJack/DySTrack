@@ -2,71 +2,63 @@
 """
 Created on Sun Jan 15 00:34:07 2017
 
-@author:    Jonas Hartmann @ Gilmour group @ EMBL Heidelberg
+@authors:   Jonas Hartmann @ Gilmour group (EMBL) & Mayor lab (UCL)
+            Zimeng Wu @ Wong group (UCL)
 
-@descript:  Image analysis pipeline for prim tracking on the 880.
-            For more information see pt880_start.
+@descript:  Image analysis pipeline for live tracking of the posterior lateral
+            line primordium using MATE.
+            See `run_mate.py` for more info.
 
-@usage:     Called by pt880_start.
+@usage:     Called by `run_mate.py`.
 """
 
 
-#------------------------------------------------------------------------------
+### Imports
 
-# PREPARATION
-
-# General imports
-from __future__ import division
 import os
+from time import sleep
+from warnings import simplefilter, warn
+simplefilter('always', UserWarning)
+
 import numpy as np
 import scipy.ndimage as ndi
 import matplotlib.pyplot as plt
-from warnings import simplefilter,warn
-simplefilter('always',UserWarning)
 
-# Specific imports
-from time import sleep
 from tifffile import imread as tifread
 from czifile import imread as cziread
 
 
-#------------------------------------------------------------------------------
+### Complete pipeline function for lateral line masking
 
-# FUNCTION FOR IMAGE ANALYSIS STEPS
+def analyze_image(target_file, channel=None, show=False, verbose=False):
+    """Compute new positions for the microscope to track the zebrafish lateral 
+    line primordium's movement based on a 2D or 3D image. The new y (and z, if
+    3D) positions are computed as the respective centers of mass of the image.
+    The new x position is computed relative to the leading edge position, as 
+    determined by object-count threshold masking of the image (for 2D) or of 
+    its center-of-mass slice (for 3D).
 
-def analyze_image(target_file,channel=None,show=False,verbose=False):
-    """
-        Compute appropriate new positions for the microscope to track prim
-        movement based on a 2D or 3D image. New y (and z, if 3D) positions are
-        computed as respective centers of mass of the image. The new x position
-        is computed relative to the leading edge position as determined by
-        object-count threshold masking of the image (for 2D) or of its center-
-        of-mass slice (for 3D).
+    Parameters
+    ----------
+    target_file : path-like
+        Path to the image file that is to be analyzed.
+    channel : int, optional
+        Channel to use for masking in case of multi-channel images.
+        If channel is not specified, a single-channel image is assumed.
+    show :  bool, optional
+        Whether to show the threshold plot and the mask. Default is False.
+    verbose: bool, optional
+        If True, more information is printed.
 
-        Parameters
-        ----------
-        target_file : path-like
-            Path to the file that is to be analyzed.
-        channel : int, optional
-            Channel to use for masking in case of multi-channel images.
-            If channel is not specified, a single-channel image is assumed.
-        show:  bool, optional
-            Whether to show the threshold plot and the mask.
-            Default is False.
-        verbose: bool, optional
-            If true, more information is printed.
-
-        Returns
-        -------
-        z_pos,y_pos,x_pos : ints
-            New coordinates for the next acquisition. For 2D inputs, z_pos is
-            always 0.
+    Returns
+    -------
+    z_pos, y_pos, x_pos : ints
+        New coordinates for the next acquisition.
+        For 2D inputs, z_pos is always 0.
     """
 
 
-    #..........................................................................
-
-    # DATA LOADING
+    ### Load data
 
     # Make sure the file has finished writing
     # NOTE: This works in general but still seems to randomly fail sometimes.
@@ -124,9 +116,7 @@ def analyze_image(target_file,channel=None,show=False,verbose=False):
         plt.show()
 
 
-    #..........................................................................
-
-    # MASKING BY OBJECT-COUNT THRESHOLDING
+    ### Mask by object-count thresholding
     # Note: Masking 3D images in full 3D is feasible because we really use a
     #       low-res image with very few pixels. If we were to change this, it
     #       may make sense to use the older alternative approach (see build 1)
@@ -213,9 +203,7 @@ def analyze_image(target_file,channel=None,show=False,verbose=False):
         #imsave(os.path.join(os.path.split(target_file)[0],"DEV_TEMP.tif"),mask.astype(np.uint8),bigtiff=True)
 
 
-    #..........................................................................
-
-    # FIND NEW Z AND Y POSITIONS
+    ### Find new z and y positions
 
     # Get centroid
     cen = ndi.measurements.center_of_mass(mask)
@@ -248,9 +236,7 @@ def analyze_image(target_file,channel=None,show=False,verbose=False):
         y_pos = cen[0]
 
 
-    #..........................................................................
-
-    # FIND LEADING EDGE X-POSITION
+    ### Find leading edge position
 
     # Collapse to x axis
     if raw.ndim == 3:
@@ -262,9 +248,7 @@ def analyze_image(target_file,channel=None,show=False,verbose=False):
     front_pos = np.max(np.nonzero(collapsed)[0])
 
 
-    #..........................................................................
-
-    # CHECK IF LEADING EDGE POSITION IS SENSIBLE
+    ### Check if leading edge position is sensible
 
     # NOTE: This check is rather simple at the moment; it just asks if the new
     #       position is in the leading half of the img but not at the very end.
@@ -297,9 +281,7 @@ def analyze_image(target_file,channel=None,show=False,verbose=False):
         return z_pos,y_pos,x_pos
 
 
-    #..........................................................................
-
-    # COMPUTE NEW X-POSITION FOR SCOPE
+    ### Compute new x-position for scope
 
     # NOTE: This is currently based on putting 1/5th of the image size between
     #       the current leading edge and the end of the image. This is an
@@ -315,23 +297,16 @@ def analyze_image(target_file,channel=None,show=False,verbose=False):
     x_pos = front_pos + blank_fract * collapsed.shape[0] - 1.0/2.0 * collapsed.shape[0]
 
 
-    #..........................................................................
-
-    # RETURN RESULTS
+    ### Return results
 
     if verbose: print("~~RESULT:", z_pos,y_pos,x_pos)
     return z_pos,y_pos,x_pos
 
 
-#------------------------------------------------------------------------------
-
-# HANDLE DIRECT CALLS
+### Handle direct calls
 
 if __name__ == '__main__':
-    raise Exception("This module is not designed to be called directly. See 'pt880_start -h' for help.")
-
-
-#------------------------------------------------------------------------------
+    raise Exception("Can't run this module directly. See 'python run_mate.py -h' for help.")
 
 
 
