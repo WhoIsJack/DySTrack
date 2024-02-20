@@ -2,52 +2,40 @@
 """
 Created on Sun Jan 15 00:34:07 2017
 
-@author:    Jonas Hartmann @ Gilmour group @ EMBL Heidelberg
+@authors:   Jonas Hartmann @ Gilmour group (EMBL) & Mayor lab (UCL)
+            Zimeng Wu @ Wong group (UCL)
 
-@descript:  Functions for interacting with the LSM880 through the registry.
-            For more information see pt880_start.
+@descript:  Functions for sending coordinates and commands to microscopes (or 
+            rather to the macros they are running).
+            For more information see `start.py`.
             
-@usage:     Called by pt880_start.
+@usage:     Called by `start.py`.
 """
 
 
-#------------------------------------------------------------------------------
+### Imports
 
-# PREPARATION
-
-# General imports
-from __future__ import division
-#import sys,os
-#import numpy as np
-#import scipy.ndimage as ndi
-#import matplotlib.pyplot as plt
-from warnings import simplefilter
-simplefilter('always',UserWarning)
-
-# Specific imports
+import os
 import winreg as winr
 
      
-#------------------------------------------------------------------------------
+### Helper function to write to Windows registry
 
-# FUNCTION FOR WRITING TO WINDOWS REGISTRY
-
-def write_reg(key,name,value):
-    """
-        Write value to key[name] in the Windows registry. 
-        Assumes HKEY_CURRENT_USER as base key.
-        Returns True if successful, False otherwise.
+def _write_reg(key, name, value):
+    """Write value to key[name] in the Windows registry.
+    Assumes HKEY_CURRENT_USER as base key.
+    Returns True if successful, False otherwise.
     """
     
     try:
-        
+
         # Create or open the key
-        registry_key = winr.CreateKeyEx(winr.HKEY_CURRENT_USER,key,
-                                        0,winr.KEY_WRITE)
+        registry_key = winr.CreateKeyEx(
+            winr.HKEY_CURRENT_USER, key, 0, winr.KEY_WRITE)
         
         # Set the key value
         #print "~~", registry_key,name,value
-        winr.SetValueEx(registry_key,name,0,winr.REG_SZ,str(value))
+        winr.SetValueEx(registry_key, name, 0, winr.REG_SZ, str(value))
         
         # Close the key
         winr.CloseKey(registry_key)
@@ -57,39 +45,83 @@ def write_reg(key,name,value):
     
     # If things went wrong
     except WindowsError:
-        global no_error
-        no_error = False
         return False
 
 
-#------------------------------------------------------------------------------
+### Function to send coordinates to scope via a txt file
 
-# FUNCTION FOR SCOPE COMMUNICATION
+def send_coords_txt(
+    fpath, z_pos=None, y_pos=None, x_pos=None, codeM='focus'):
+    """Communicate new position for stage movement to the microscope through a
+    text file, which should be monitored by the microscope software's macro.
 
-def send_xyz_to_scope(z_pos=None,y_pos=None,x_pos=None,codeM='focus',errMsg=None):
-    """
-        Communicate new position for imaging to the microscope through the
-        Windows registry, then prime it for imaging (the actual acquisition
-        will be triggered when the scope is idle).
+    Parameters
+    ----------
+    fpath : str
+        Path to the coordinate text file.
+    z_pos, y_pos, x_pos : integers, optional
+        Cooordinates of the new imaging position. Will be None if not given; in 
+        this case, nothing new will be written to the coordinate file.
+    codeM : string, optional
+        Action for the microscope to take.
+        Default is 'focus'.
         
-        Parameters
-        ----------
-        z_pos,y_pos,x_pos : integers, optional
-            Cooordinates of the new imaging position.
-            Will be None if not given; in this case, nothing new will be
-            written to the respective keys.
-        codeM : string, optional
-            Action for the microscope to take.
-            Default is 'focus'.
-        errMsg: string, optional
-            An error message for the pipeline constructor to log.
-            Default is None.
-            
-        Returns
-        -------
-        no_error : bool
-            True if all registry operations were completed without an error.
-            False otherwise.
+    Returns
+    -------
+    no_error : bool
+        True if file writing operation completed without an error.
+        False otherwise.
+    """
+
+    # Create the file if it doesn't exist yet
+    if not os.path.isfile(fpath):
+        with open(fpath, 'w') as coordsfile:
+            coordsfile.write('Z\tY\tX\tcodeM\n')  # Write header
+       
+    # Track if all goes well
+    no_error = True
+
+    # Write new coordinates
+    try:
+        with open(fpath, "a") as coordsfile:
+            coordsfile.write(f"{z_pos}\t{y_pos}\t{x_pos}\t{codeM}\n")
+
+    # Handle failure cases
+    # FIXME: This is too unspecific and should be revisited in the context of
+    #        the fallback measures implemented in `start.py`!
+    except Exception: 
+        no_error = False
+    
+    # Return
+    return no_error
+
+
+### Function to send coordinates to scope via windows registry
+
+def send_coords_winreg(
+    z_pos=None, y_pos=None, x_pos=None, codeM='focus', errMsg=None):
+    """Communicate new position for stage movement to the microscope through 
+    the Windows registry, then prime it for imaging in the way expected by the
+    MyPiC Pipeline Constructor macro. The actual acquisition will be triggered
+    once the scope is idle.
+        
+    Parameters
+    ----------
+    z_pos, y_pos, x_pos : integers, optional
+        Cooordinates of the new imaging position. Will be None if not given; in 
+        this case, nothing new will be written to the respective keys.
+    codeM : string, optional
+        Action for the microscope to take.
+        Default is 'focus'.
+    errMsg: string, optional
+        An error message for the pipeline constructor to log.
+        Default is None.
+        
+    Returns
+    -------
+    no_error : bool
+        True if all registry operations were completed without an error.
+        False otherwise.
     """
 
     # Set registry addresses
@@ -101,34 +133,32 @@ def send_xyz_to_scope(z_pos=None,y_pos=None,x_pos=None,codeM='focus',errMsg=None
     name_errormsg = 'errorMsg'
     
     # Track if all goes well
-    global no_error
-    no_error = True    
+    no_error = True
     
     # Submit the new positions
-    if z_pos is not None: write_reg(reg_key,name_zpos,z_pos)
-    if y_pos is not None: write_reg(reg_key,name_ypos,y_pos)
-    if x_pos is not None: write_reg(reg_key,name_xpos,x_pos)
+    if z_pos is not None: 
+        no_error &= _write_reg(reg_key, name_zpos, z_pos)
+    if y_pos is not None: 
+        no_error &= _write_reg(reg_key, name_ypos, y_pos)
+    if x_pos is not None: 
+        no_error &= _write_reg(reg_key, name_xpos, x_pos)
         
     # Error message if something goes wrong;
-    # pipeline constructor copies this message to its log file
-    if errMsg: write_reg(reg_key,name_errormsg,errMsg)
+    # Note: The MyPiC pipeline constructor copies this message to its log file.
+    if errMsg: 
+        no_error &= _write_reg(reg_key, name_errormsg, errMsg)
     
-    # Message to microscope what to do.
-    write_reg(reg_key,name_codemic,codeM)
+    # Message to microscope what to do
+    no_error &= _write_reg(reg_key, name_codemic, codeM)
     
     # Return
     return no_error
 
 
-#------------------------------------------------------------------------------
-
-# HANDLE DIRECT CALLS
+### handle direct calls
 
 if __name__ == '__main__':
-    raise Exception("This module is not designed to be called directly. See 'pt880_start -h' for help.")
-
-
-#------------------------------------------------------------------------------
+    raise Exception("Can't run this module directly. See 'python start.py -h' for help.")
 
 
 
