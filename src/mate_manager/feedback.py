@@ -5,9 +5,9 @@ Created on Sun Jan 15 00:34:07 2017
 @authors:   Jonas Hartmann @ Gilmour group (EMBL) & Mayor lab (UCL)
             Zimeng Wu @ Wong group (UCL)
 
-@descript:  Functions for sending coordinates and commands to microscopes (or 
-            rather to the macros they are running).
-            For more information see `run_mate.py`.
+@descript:  Functions for sending coordinates and commands to microscopes, or 
+            rather to the macros that are running in their software.
+            See `run_mate.py` for more info.
             
 @usage:     Called by `run_mate.py`.
 """
@@ -57,12 +57,12 @@ def send_coords_txt(
 
     Parameters
     ----------
-    fpath : str
+    fpath : path-like
         Path to the coordinate text file.
     z_pos, y_pos, x_pos : integers, optional
         Cooordinates of the new imaging position. Will be None if not given; in 
         this case, nothing new will be written to the coordinate file.
-    codeM : string, optional
+    codeM : str, optional
         Action for the microscope to take.
         Default is 'focus'.
         
@@ -110,10 +110,10 @@ def send_coords_winreg(
     z_pos, y_pos, x_pos : integers, optional
         Cooordinates of the new imaging position. Will be None if not given; in 
         this case, nothing new will be written to the respective keys.
-    codeM : string, optional
+    codeM : str, optional
         Action for the microscope to take.
         Default is 'focus'.
-    errMsg: string, optional
+    errMsg: str, optional
         An error message for the pipeline constructor to log.
         Default is None.
         
@@ -155,7 +155,7 @@ def send_coords_winreg(
     return no_error
 
 
-### handle direct calls
+### Handle direct calls
 
 if __name__ == '__main__':
     raise Exception("Can't run this module directly. See 'python run_mate.py -h' for help.")
