@@ -25,8 +25,8 @@ simplefilter('always', UserWarning)
 from msvcrt import kbhit, getch
 from time import sleep
 
-from mate_manager.masking.lateral_line import analyze_image
-from mate_manager.feedback import send_coords_winreg, send_coords_txt
+from masking.lateral_line import analyze_image
+from feedback import send_coords_winreg, send_coords_txt
 
 
 #------------------------------------------------------------------------------
@@ -39,7 +39,7 @@ def main():
     # Help
     if '-h' in sys.argv or '--help' in sys.argv:
         print("""
-        pt880_start TARGET_DIR [-s START] [-e END] [-c CHANNEL] [-v]
+        run_mate TARGET_DIR [-s START] [-e END] [-c CHANNEL] [-w] [-v]
         
         Tool to be used in conjunction with LSM880 (ZEN BLACK) and the pipeline
         constructor macro to automatically track moving zebrafish posterior
@@ -63,13 +63,17 @@ def main():
             Target files must contain this string at the start of their name.
         END : string, optional
             Target files must contain this string at the end of their name.
+        -w : flag, optional
+            If given, the calculated coordinates are written to the Windows
+            registry instead of a txt file. This is required when using the
+            MyPiC pipeline constructor macro on ZEN Black.
         -v : flag, optional
             If given, the program runs in verbose mode, printing more info.
         """)
         sys.exit()
     
     # Get positional arguments
-    TARGET_DIR = r'S:\DBIO_WongGroup_1\Zimeng\980_vis\_MATE\TEST_FOLDER' #sys.argv[1]
+    TARGET_DIR = sys.argv[1]
     if not os.path.isdir(TARGET_DIR):
         raise IOError(TARGET_DIR+" is not a valid dir. See pt880_start -h for help.")
     
@@ -86,17 +90,19 @@ def main():
         FILEEND = sys.argv[sys.argv.index("-e")+1]
     else:
         FILEEND = ''
+    if "-w" in sys.argv:
+        WINREG = True
+    else:
+        WINREG = False
     if "-v" in sys.argv:
         VERBOSE = True
     else:
         VERBOSE = False
-
-    #fpath = r'S:\DBIO_WongGroup_1\Zimeng\980_vis\_MATE\TEST_FOLDER'
     
     # Start the scheduler
-    stats = main_scheduler(TARGET_DIR,img_params=CHANNEL,
-                           fileStart=FILESTART,fileEnd=FILEEND,
-                           verbose=VERBOSE)
+    stats = main_scheduler(TARGET_DIR, img_params=CHANNEL,
+                           fileStart=FILESTART, fileEnd=FILEEND,
+                           write_winreg=WINREG, verbose=VERBOSE)
     
     # Done
     return stats
@@ -106,8 +112,9 @@ def main():
 
 # FUNCTION FOR MONITORING AND SCHEDULING
 
-def main_scheduler(target_dir,interval=1,fileStart='',fileEnd='',
-                   img_params=None,scope_params=None,verbose=False):
+def main_scheduler(target_dir, interval=1, fileStart='', fileEnd='',
+                   img_params=None, scope_params=None,
+                   write_winreg=False, verbose=False):
     """
         Checks a target directory and its subdirectores for new files using 
         os.walk. For each file found that matches a particular starting and/or 
@@ -135,6 +142,10 @@ def main_scheduler(target_dir,interval=1,fileStart='',fileEnd='',
         scope_params : object or iterable, optional
             Additional parameter or parameters to be passed to the microscope
             communication function when it is called. Default is None.
+        write_winreg : bool, optional
+            If True, calculated coordinates are written to the Windows registry
+            instead of a txt file. This is required when using the MyPiC
+            pipeline constructor macro on ZEN Black.
             
         Returns
         -------
@@ -251,10 +262,14 @@ def main_scheduler(target_dir,interval=1,fileStart='',fileEnd='',
                         attempts += 1                        
                         
                         # SUBMIT THE COORDS!
-                        #no_error = send_coords_winreg(
-                        #    z_pos, y_pos, x_pos, codeM=codeM, errMsg=errMsg)
-                        no_error = send_coords_txt(
-                            coords_path, z_pos, y_pos, x_pos, codeM=codeM)
+                        if write_winreg:
+                            no_error = send_coords_winreg(
+                                z_pos, y_pos, x_pos, 
+                                codeM=codeM, errMsg=errMsg)
+                        else:
+                            no_error = send_coords_txt(
+                                coords_path, z_pos, y_pos, x_pos, 
+                                codeM=codeM)
                         
                         # Check if it worked
                         if no_error:
@@ -270,10 +285,12 @@ def main_scheduler(target_dir,interval=1,fileStart='',fileEnd='',
                     else:      
                         
                         # Try just running it with the last position
-                        #no_error = send_coords_winreg(
-                        #    codeM="nothing",
-                        #    errMsg="Coordinate communication failed!")
-                        raise NotImplementedError("Retrying with the previous position is not yet implemented for send_coords_txt!")
+                        if write_winreg:
+                            no_error = send_coords_winreg(
+                                codeM="nothing",
+                                errMsg="Coordinate communication failed!")
+                        else:
+                            raise NotImplementedError("Retrying with the previous position is not yet implemented for send_coords_txt!")
                                                      
                         # Report if this final solution worked or not
                         if no_error:
