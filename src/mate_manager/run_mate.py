@@ -210,7 +210,9 @@ def main_scheduler(target_dir, interval=1, fileStart='', fileEnd='',
             for f in new_files:
                 
                 # If the file matches the conditions...
-                if os.path.split(f)[1].startswith(fileStart) and f.endswith(fileEnd):
+                if (os.path.split(f)[1].startswith(fileStart) 
+                    and f.endswith(fileEnd)
+                    and os.path.split(f)[1] != 'mate_coords.txt'):
                     
                     # Stats
                     target_counter += 1  
@@ -228,7 +230,7 @@ def main_scheduler(target_dir, interval=1, fileStart='', fileEnd='',
                     try:
                         
                         # Prep
-                        img_path = os.path.join(target_dir,f)
+                        img_path = os.path.join(target_dir, f)  # FIXME: `f` is actually already/still the full path,  which is confusing!
                         
                         # RUN IT!
                         z_pos,y_pos,x_pos = analyze_image(
@@ -267,6 +269,8 @@ def main_scheduler(target_dir, interval=1, fileStart='', fileEnd='',
                                 z_pos, y_pos, x_pos, 
                                 codeM=codeM, errMsg=errMsg)
                         else:
+                            coords_path = os.path.join(
+                                target_dir, 'mate_coords.txt')
                             no_error = send_coords_txt(
                                 coords_path, z_pos, y_pos, x_pos, 
                                 codeM=codeM)
