@@ -26,6 +26,7 @@ import matplotlib.pyplot as plt
 
 from tifffile import imread as tifread
 from czifile import imread as cziread
+from nd2 import imread as nd2read
 
 
 ### Complete pipeline function for lateral line masking
@@ -87,6 +88,11 @@ def analyze_image(target_file, channel=None, show=False, verbose=False):
         raw = np.squeeze(raw)           # Remove excess dimensions
         if verbose: print("~~LOADED IMG SHAPE:", raw.shape)
 
+    if target_file.endswith('.nd2'):
+        raw = nd2read(target_file)
+        raw = np.squeeze(raw)
+        if verbose: print("~~LOADED IMG SHAPE:", raw.shape)
+
     # Check dimensionality
     if raw.ndim > 4:
         raise IOError("Image dimensionality exceeds 4; this cannot be right!")
@@ -128,6 +134,9 @@ def analyze_image(target_file, channel=None, show=False, verbose=False):
     #       improperly, masking can fail. However, it seems to work fairly
     #       robustly if it's simply at `3` and it seems to be relatively
     #       insensitve to pixel size / resolution!
+    # Note2: sigma = 3 good for cldnb with skin bg
+    #        sigma = 1 good for KTR green with little bg
+        
     raw = ndi.gaussian_filter(raw,3)       # Param!
 
     # Preparations
