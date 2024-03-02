@@ -123,7 +123,7 @@ def analyze_image(target_file, channel=None, show=False, verbose=False):
         plt.imshow(np.max(raw, axis=0),interpolation="none",cmap="gray")
         plt.show()
 
-        ## DEV-TEMP: Plot without blocking (untested; work in progress)
+        ## DEV-TEMP: Plot without blocking (untested; work in progress)  # TODO!
         #plt.ion()
         #plt.show(block=False)
         #plt.imshow(np.max(raw, axis=0),interpolation="none",cmap="gray")
@@ -221,7 +221,7 @@ def analyze_image(target_file, channel=None, show=False, verbose=False):
         # Plot of counts over threshold series
         plt.plot(counts_smooth)
         plt.plot(counts)
-        plt.vlines(threshold, 0, counts_smooth[threshold])
+        plt.vlines(threshold, 0, counts.max(), color='g')
         plt.show()
 
         # Plots of final masks
@@ -296,7 +296,7 @@ def analyze_image(target_file, channel=None, show=False, verbose=False):
         # Handle it...
         default_step_fract = 1.0 / 8.0  # Param!
         x_pos = 0.5 * collapsed.shape[0] + default_step_fract * collapsed.shape[0]
-        if verbose: print("      Resulting coords:", z_pos, y_pos, x_pos)
+        if verbose: print(f"      Resulting coords (zyx): {z_pos:.4f}, {y_pos:.4f}, {x_pos:.4f}")
         return z_pos, y_pos, x_pos
 
     # If the tip of the mask touches the front end of the image
@@ -308,7 +308,7 @@ def analyze_image(target_file, channel=None, show=False, verbose=False):
         # Handle it...
         default_catchup_fract = 1.0 / 5.0  # Param!
         x_pos = 0.5 * collapsed.shape[0] + default_catchup_fract * collapsed.shape[0]
-        if verbose: print("      Resulting coords:", z_pos, y_pos, x_pos)
+        if verbose: print(f"      Resulting coords (zyx): {z_pos:.4f}, {y_pos:.4f}, {x_pos:.4f}")
         return z_pos, y_pos, x_pos
 
 
@@ -330,7 +330,7 @@ def analyze_image(target_file, channel=None, show=False, verbose=False):
 
     ### Return results
 
-    if verbose: print("      Resulting coords:", z_pos, y_pos, x_pos)
+    if verbose: print(f"      Resulting coords (zyx): {z_pos:.4f}, {y_pos:.4f}, {x_pos:.4f}")
     return z_pos, y_pos, x_pos
 
 
