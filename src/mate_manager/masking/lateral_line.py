@@ -33,11 +33,10 @@ from nd2 import imread as nd2read
 
 def analyze_image(target_file, channel=None, show=False, verbose=False):
     """Compute new positions for the microscope to track the zebrafish lateral 
-    line primordium's movement based on a 2D or 3D image. The new y (and z, if
-    3D) positions are computed as the respective centers of mass of the image.
-    The new x position is computed relative to the leading edge position, as 
-    determined by object-count threshold masking of the image (for 2D) or of 
-    its center-of-mass slice (for 3D).
+    line primordium's movement based on a 2D or 3D image. The primordium is
+    masked using object-count thresolding. The new y (and z, if 3D) positions 
+    are computed as the respective centers of mass of the image. The new x 
+    position is computed relative to the leading edge position of the mask.
 
     Parameters
     ----------
@@ -48,6 +47,7 @@ def analyze_image(target_file, channel=None, show=False, verbose=False):
         If channel is not specified, a single-channel image is assumed.
     show :  bool, optional
         Whether to show the threshold plot and the mask. Default is False.
+        WARNING: Showing figures halts execution until they are closed.  # FIXME!
     verbose: bool, optional
         If True, more information is printed.
 
@@ -58,11 +58,16 @@ def analyze_image(target_file, channel=None, show=False, verbose=False):
         For 2D inputs, z_pos is always 0.
     """
 
+    # TODO: Think about how best to expose the various image analysis params
+    #       of this pipeline to the user. Adding them as kwargs seems of little
+    #       use without cmdline forwarding in run_mate.py, so either a config
+    #       file or just a parameter section here at the top might be best?
+
 
     ### Load data
 
     # Make sure the file has finished writing
-    # NOTE: This works in general but still seems to randomly fail sometimes.
+    # NOTE: This works in general but still seems to randomly fail sometimes.  # FIXME!
     sleep(2)  # Initial delay; helps with stability
     file_size = -1
     while True:
@@ -73,10 +78,9 @@ def analyze_image(target_file, channel=None, show=False, verbose=False):
         else:
             break
 
-    # Loading the image if it is a tif
+    # Load the image if it is a tif
     if target_file.endswith('.tif'):
         raw = tifread(target_file)
-        if verbose: print("~~LOADED IMG SHAPE:", raw.shape)
 
     # Loading the image if it is a czi
     # NOTE: This uses Christoph Gohlke's czifile, which does not seem to be as
@@ -85,27 +89,28 @@ def analyze_image(target_file, channel=None, show=False, verbose=False):
     #       is that it is pure (c)python (no javabridge required).
     if target_file.endswith('.czi'):
         raw = cziread(target_file)
-        raw = np.squeeze(raw)           # Remove excess dimensions
-        if verbose: print("~~LOADED IMG SHAPE:", raw.shape)
+        raw = np.squeeze(raw)  # Remove excess dimensions
 
     if target_file.endswith('.nd2'):
         raw = nd2read(target_file)
         raw = np.squeeze(raw)
-        if verbose: print("~~LOADED IMG SHAPE:", raw.shape)
+
+    # Report
+    if verbose: print("      Loaded image of shape:", raw.shape)
 
     # Check dimensionality
     if raw.ndim > 4:
-        raise IOError("Image dimensionality exceeds 4; this cannot be right!")
+        raise IOError("Image dimensionality >4; this cannot be right!")
     elif raw.ndim < 2:
-        raise IOError("Image dimensionality lower than 2; this cannot be right!")
+        raise IOError("Image dimensionality <2; this cannot be right!")
     elif raw.ndim < 3 and channel is not None:
-        raise IOError("CHANNEL given but image dimensionality cannot contain multiple channels!")
+        raise IOError("CHANNEL given but image dimensionality is only 2!")
     elif raw.shape[0] > 5 and channel is not None:
-        raise IOError("CHANNEL given but image size suggests it does not contain multiple chanels!")
+        warn(f"CHANNEL given but image dim 0 is of size {raw.shape[0]}!")
 
     # If there are multiple channels, select the one to use
     if channel is not None:
-        raw = raw[channel,...]
+        raw = raw[channel, ...]
 
     # If the image is not 8bit, convert it
     # NOTE: This conversion scales min to 0 and max to 255!
@@ -115,33 +120,44 @@ def analyze_image(target_file, channel=None, show=False, verbose=False):
 
     # Show loaded image
     if show and raw.ndim == 3:
-        plt.imshow(np.max(raw,axis=0),interpolation="none",cmap="gray")
+        plt.imshow(np.max(raw, axis=0),interpolation="none",cmap="gray")
         plt.show()
+
+        ## DEV-TEMP: Plot without blocking (untested; work in progress)
+        #plt.ion()
+        #plt.show(block=False)
+        #plt.imshow(np.max(raw, axis=0),interpolation="none",cmap="gray")
+        #plt.draw()
+        #plt.pause(0.001)  # To give mpl time to draw
+        #plt.pause(2.0)    # To give user time to view (optional)
+
     elif show and raw.ndim == 2:
         plt.imshow(raw,interpolation="none",cmap="gray")
         plt.show()
 
 
     ### Mask by object-count thresholding
+
     # Note: Masking 3D images in full 3D is feasible because we really use a
     #       low-res image with very few pixels. If we were to change this, it
     #       may make sense to use the older alternative approach (see build 1)
     #       because this is much slower, plus it would definitely need some
-    #       erosion to prevent skin-cell artefacts...
+    #       erosion to prevent skin-cell artifacts...
+    # TODO: The above is an old note; look into this!
 
-    # Preprocessing: gaussian smoothing
-    # Note: The sigma param here seems to be very important. If it is set
-    #       improperly, masking can fail. However, it seems to work fairly
-    #       robustly if it's simply at `3` and it seems to be relatively
-    #       insensitve to pixel size / resolution!
-    # Note2: sigma = 3 good for cldnb with skin bg
-    #        sigma = 1 good for KTR green with little bg
-        
-    raw = ndi.gaussian_filter(raw,3)       # Param!
+    # Preprocessing: Gaussian smoothing
+    # Note 1: The sigma param here seems to be very important. If it is set
+    #         improperly, masking can fail. However, it seems to work fairly
+    #         robustly if it's simply at `3` and it seems to be relatively
+    #         insensitve to pixel size / resolution!
+    # Note 2: sigma = 3 good for cldnb with skin bg
+    #         sigma = 1 good for KTR green with little bg
+    # TODO: Think of a more robust/generalized approach!
+    raw = ndi.gaussian_filter(raw, 3)  # Param!
 
     # Preparations
-    thresh_div = 2.0    # XXX: Robustness?  # Param!
-    thresholds = np.arange(0,256,1)
+    thresh_div = 2.0  # Param!
+    thresholds = np.arange(0, 256, 1)
     counts = np.zeros_like(thresholds)
 
     # Run threshold series
@@ -150,8 +166,8 @@ def analyze_image(target_file, channel=None, show=False, verbose=False):
         # Apply current threshold and count objects
         counts[index] = ndi.label(raw>=threshold)[1]
 
-    # Smooth the thresholds a bit
-    counts_smooth = ndi.gaussian_filter1d(counts,3)
+    # Smoothen the thresholds a bit
+    counts_smooth = ndi.gaussian_filter1d(counts, 3)
 
     # Get the target threshold
     for threshold in thresholds[1:255]:
@@ -160,13 +176,14 @@ def analyze_image(target_file, channel=None, show=False, verbose=False):
         if np.max(counts_smooth[:threshold]) > counts_smooth[threshold]:
 
             # Criterion 2a: Is the current value below the maximum value divided by thresh_div?
+            # FIXME: This criterion doesn't seem particularly robust!
             if counts_smooth[threshold] <= (np.max(counts_smooth[:threshold]) / thresh_div):
                 break
 
             # Criterion 2b: Alternatively, if the threshold is followed by an
-            #               increase in counts again (i.e. it is a local min.)
-            # XXX: If there ever is an "early dip" despite smoothing, this will
-            #      lead to a low threshold being accepted!
+            #               increase in counts again (i.e. it is a local min)
+            # FIXME: If there ever is an "early dip" despite smoothing, this 
+            #        will lead to a low threshold being accepted!
             elif counts_smooth[threshold+1] > counts_smooth[threshold]:
                 break
 
@@ -174,42 +191,48 @@ def analyze_image(target_file, channel=None, show=False, verbose=False):
     #           before that had some objects. Note that this is important since
     #           the smoothing will often stretch the curve out too far, leading
     #           to thresholds that yield no objects when applied to the image!
+    # FIXME: Robustness...
     if counts[threshold] == 0:
-        for backstep in range(1,threshold):
-            if counts[threshold-backstep] > 0:
-                threshold = threshold-backstep
+        for backstep in range(1, threshold):
+            if counts[threshold - backstep] > 0:
+                threshold = threshold - backstep
                 break
 
     # Terminal fallback: If the final result is still nonesense, give up
-    if threshold >= 250 or threshold == 0 or counts[threshold] == 0:
+    if threshold>=250 or threshold==0 or counts[threshold]==0:
         raise Exception("THRESHOLD DETECTION FAILED! Image analysis run aborted...")
 
     # Binarize with the target threshold
-    if verbose: print("~~THRESHOLD:", threshold)
+    if verbose: print("      Detected treshold:", threshold)
     mask = raw >= threshold
+
+    # TODO: Add plotting before largest-object retention step?
 
     # Retain only largest object
     img_bin_labeled = ndi.label(mask)[0]
-    obj_nums,obj_sizes = np.unique(img_bin_labeled,return_counts=True)
-    largest_obj = np.argmax(obj_sizes[1:])+1
-    mask[img_bin_labeled!=largest_obj] = 0
+    obj_nums, obj_sizes = np.unique(img_bin_labeled, return_counts=True)
+    largest_obj = np.argmax(obj_sizes[1:]) + 1
+    mask[img_bin_labeled != largest_obj] = 0
 
-    # Show stuff (DEV)
+    # Show threshold series and resulting mask
+    # TODO: Clean this up and make it non-blocking!
     if show:
+
+        # Plot of counts over threshold series
         plt.plot(counts_smooth)
         plt.plot(counts)
-        plt.vlines(threshold,0,counts_smooth[threshold])
+        plt.vlines(threshold, 0, counts_smooth[threshold])
         plt.show()
+
+        # Plots of final masks
         if mask.ndim == 3:
-            plt.imshow(np.max(mask,axis=0),interpolation="none",cmap="gray")
+            plt.imshow(np.max(mask,axis=0), interpolation="none", cmap="gray")
             plt.show()
-            plt.imshow(np.max(mask,axis=1),interpolation="none",cmap="gray")
+            plt.imshow(np.max(mask,axis=1), interpolation="none", cmap="gray")
             plt.show()
         else:
-            plt.imshow(mask,interpolation="none",cmap="gray")
+            plt.imshow(mask,interpolation="none", cmap="gray")
             plt.show()
-        #from tifffile import imsave # DEV!
-        #imsave(os.path.join(os.path.split(target_file)[0],"DEV_TEMP.tif"),mask.astype(np.uint8),bigtiff=True)
 
 
     ### Find new z and y positions
@@ -225,7 +248,7 @@ def analyze_image(target_file, channel=None, show=False, verbose=False):
         y_pos = cen[1]
 
         # z limit: An absolute limitation on how much it can move!
-        z_limit = 1.0 / 10.0     # Fraction of image size
+        z_limit = 0.1  # Fraction of image size
         z_limit_top = (raw.shape[0]-1)/2.0 + z_limit * (raw.shape[0]-1)
         z_limit_bot = (raw.shape[0]-1)/2.0 - z_limit * (raw.shape[0]-1)
         if z_pos > z_limit_top:
@@ -236,9 +259,8 @@ def analyze_image(target_file, channel=None, show=False, verbose=False):
             z_pos = z_limit_bot
 
         # Invert resulting z_position for scope frame of reference
-        z_pos = (raw.shape[0]-1) - z_pos  # Inversion for scope frame of ref
-
-
+        z_pos = (raw.shape[0]-1) - z_pos
+    
     # Get positions for 2D
     else:
         z_pos = None
@@ -249,9 +271,9 @@ def analyze_image(target_file, channel=None, show=False, verbose=False):
 
     # Collapse to x axis
     if raw.ndim == 3:
-        collapsed = np.max(np.max(mask,axis=0),axis=0)
+        collapsed = np.max(np.max(mask, axis=0), axis=0)
     else:
-        collapsed = np.max(mask,axis=0)
+        collapsed = np.max(mask, axis=0)
 
     # Find frontal-most non-zero pixel
     front_pos = np.max(np.nonzero(collapsed)[0])
@@ -272,10 +294,10 @@ def analyze_image(target_file, channel=None, show=False, verbose=False):
         warn("The detected front_pos is too far back, likely due to a masking error. Moving default distance.")
 
         # Handle it...
-        default_step_fract = 1.0/8.0
-        x_pos = 1.0/2.0 * collapsed.shape[0] + default_step_fract * collapsed.shape[0]
-        if verbose: print("~~RESULT:", z_pos,y_pos,x_pos)
-        return z_pos,y_pos,x_pos
+        default_step_fract = 1.0 / 8.0  # Param!
+        x_pos = 0.5 * collapsed.shape[0] + default_step_fract * collapsed.shape[0]
+        if verbose: print("      Resulting coords:", z_pos, y_pos, x_pos)
+        return z_pos, y_pos, x_pos
 
     # If the tip of the mask touches the front end of the image
     elif front_pos == collapsed.shape[0] - 1:
@@ -284,10 +306,10 @@ def analyze_image(target_file, channel=None, show=False, verbose=False):
         warn("The prim has probably moved out of the frame. Moving default catch-up distance.")
 
         # Handle it...
-        default_catchup_fract = 1.0/5.0
-        x_pos = 1.0/2.0 * collapsed.shape[0] + default_catchup_fract * collapsed.shape[0]
-        if verbose: print("~~RESULT:", z_pos,y_pos,x_pos)
-        return z_pos,y_pos,x_pos
+        default_catchup_fract = 1.0 / 5.0  # Param!
+        x_pos = 0.5 * collapsed.shape[0] + default_catchup_fract * collapsed.shape[0]
+        if verbose: print("      Resulting coords:", z_pos, y_pos, x_pos)
+        return z_pos, y_pos, x_pos
 
 
     ### Compute new x-position for scope
@@ -301,15 +323,15 @@ def analyze_image(target_file, channel=None, show=False, verbose=False):
     #       - Use speed to calculate next position; initially based on prior
     #         data, then based on previous timepoints.
     #       - Use some controller function (PID?) to buffer speed variability
-    #         and masking errors.
-    blank_fract = 1.0/5.0
-    x_pos = front_pos + blank_fract * collapsed.shape[0] - 1.0/2.0 * collapsed.shape[0]
+    #         and masking errors?
+    blank_fract = 1.0 / 5.0
+    x_pos = front_pos + blank_fract * collapsed.shape[0] - 0.5 * collapsed.shape[0]
 
 
     ### Return results
 
-    if verbose: print("~~RESULT:", z_pos,y_pos,x_pos)
-    return z_pos,y_pos,x_pos
+    if verbose: print("      Resulting coords:", z_pos, y_pos, x_pos)
+    return z_pos, y_pos, x_pos
 
 
 ### Handle direct calls
