@@ -24,15 +24,15 @@ sys.path.append(scriptfolder)
 componentIds = hardwareSetting.GetAllComponentIds()
 
 for componentId in componentIds:
-    print componentId
+    print(componentId)
     
     parameterNames = hardwareSetting.GetAllParameterNames(componentId)
     
     for parameterName in parameterNames:
-        print parameterName
+        print(parameterName)
         
         parameterValue = hardwareSetting.GetParameter(componentId, parameterName)
-        print parameterValue
+        print(parameterValue)
 
 ### Remove all open images
 
@@ -40,10 +40,9 @@ Zen.Application.Documents.RemoveAll()
 
 ### Start experiment
 
-ZenService.Actions.StartExperiment()
-
 counter = 0
 max_iterations = 10 #How many time it loops?
+interval = 600 #in seconds
 
 while counter < max_iterations:
 
@@ -51,19 +50,21 @@ while counter < max_iterations:
         counter = counter+1
 
     # Load image
-    #image1 = Zen.Application.Documents.GetByName("test_stack_2.czi") ##Add stack
-    #if image2 is None:
-    image1 = Zen.Application.LoadImage(r"S:\DBIO_WongGroup_1\Zimeng\980_vis\20240131_cldnb_stacks\516x180_LSM_50um_xyz.czi", False) #add stack
+    image1 = Zen.Application.LoadImage(r"prescan.czi", False) #add stack
     Zen.Application.Documents.Add(image1)
 
     # Reuse settings
     hardwareSetting = ZenHardwareSetting()
     hardwareSetting.Load(image1)
-    #ZenService.HardwareActions.ExecuteHardwareSettingFromFile(image1)
 
+    #acquire
     outputexperiment1 = Zen.Acquisition.Execute(experiment1) 
+    
+    # save prescan
+    saved = Zen.Application.Save(outputexperiment1, 'prescan%d'%counter.czi, False) #save with different name
+    print("Saved:", saved)
 
-### Append things to a file
+### Append current coordinates to a file
 
     #output to the same as image folder (timepoint and date time?)
     imgX = ZenService.Analysis.AllParticles.ImageStageXPosition
@@ -73,6 +74,8 @@ while counter < max_iterations:
 
     #ZenService.Xtra.System.AppendLogLine(str(ZenService.Experiment.CurrentTimePointIndex), "LogFile")
 
+    sleep(10) #10 second timer to wait for image analysis
+
 ##Read external coords
     with open(r'coords.txt','r') as infile: #put where the python script spits out coordinates
         newest_line = infile.readlines()[-1]
@@ -81,38 +84,32 @@ while counter < max_iterations:
     y_pos = int(newest_line.split('Y:')[1].split(', ')[0])
     z_pos = int(newest_line.split('Z:')[1])
 
-###move to position
-    ZenService.HardwareActions.SetStagePosition(x_pos, y_pos)
-    ZenService.HardwareActions.SetFocusPosition(z_pos)
+###Calculate new position in microns
+    relative_x = x_pos - img.Bounds.X/2
+    relative_y = y_pos - img.Bounds.Y/2
 
+    scaled_x = relative_x * image1.Scaling.X
+    scaled_y = relative_y * image1.Scaling.Y
+    scaled_z = z_pos * image1.Scaling.Z
 
-###Start acquisition
-    outputexperiment1 = Zen.Acquisition.Execute(experiment1)
-    saved = Zen.Application.Save(outputexperiment1, f"timepoint_{counter}", False)
-
-
-
-### Start external script? Don't need maybe...
-
-if (start_Simple_Plot == True):
-    
-    # this is easy version, where one has define the columns manually inside the data display script
-    script2 = r'MyFolder\\simple_plot.py'
-    # this one for the easy version --> only the filename is passed as an argument
-    params2 = ' -f ' + csvfile
-    # start the data display script as an external application using a tool script
-    stext.StartApp(script2, params2)
+###move to new position
+    Zen.Devices.Stage.MoveTo(Zen.Devices.Stage.ActualPositionX + scaled_x)
+    Zen.Devices.Stage.MoveTo(Zen.Devices.Stage.ActualPositionY + scaled_y)
+    Zen.Devices.Stage.MoveTo(Zen.Devices.Stage.ActualPositionZ + scaled_z)
 
 # Load image
-image1 = Zen.Application.Documents.GetByName("test_stack_2.czi")
-if image2 is None:
-    image1 = Zen.Application.LoadImage(r"D:\Jonas\_automation\test_stack.czi", False)
-    Zen.Application.Documents.Add(image1)
+    image2 = Zen.Application.LoadImage(r"stack.czi", False)
+    Zen.Application.Documents.Add(image2)
 
+# Reuse settings
+    hardwareSetting = ZenHardwareSetting()
+    hardwareSetting.Load(image2)
 
+#acquire
+    outputexperiment2 = Zen.Acquisition.Execute(experiment2)
 
 # Save image
-if image2 is None:
-    saved = Zen.Application.Save(image1, r"D:\Jonas\_automation\test_stack_2.czi", False)
+    saved2 = Zen.Application.Save(outputexperiment2, 'image%d'%counter.czi, False) #save with different name
     print("Saved:", saved)
-    image2 = image1
+
+sleep(interval)
