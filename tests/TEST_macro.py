@@ -91,9 +91,9 @@ while counter < max_iterations:
     y_pos = int(newest_line.split('Y:')[1].split(', ')[0])
     z_pos = int(newest_line.split('Z:')[1])
 
-###Calculate new position in microns
-    relative_x = x_pos - img.Bounds.X/2
-    relative_y = y_pos - img.Bounds.Y/2
+###Calculate new position in microns from center of image
+    relative_x = x_pos - (img.Bounds.X/2)
+    relative_y = y_pos - (img.Bounds.Y/2)
 
     scaled_x = relative_x * image1.Scaling.X
     scaled_y = relative_y * image1.Scaling.Y
