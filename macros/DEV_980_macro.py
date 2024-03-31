@@ -1,58 +1,93 @@
-### Prep
+# -*- coding: utf-8 -*-
+"""
+Created on Tue Feb 6 17:59:38 2024
 
-# Imports
+@authors:   Zimeng Wu @ Wong group (UCL)
+            Jonas Hartmann @ Gilmour group (EMBL) & Mayor lab (UCL)
+
+@descript:  TODO!
+            
+@usage:     TODO!
+"""
+
+### Imports
+
 from __future__ import division, print_function
 import sys, os
-import clr
-from System.Diagnostics import Process
-from System.IO import Directory, Path, File
+import clr                                           # JH: Imported but unused?
+from System.Diagnostics import Process               # JH: Imported but unused
+from System.IO import Directory, Path, File          # JH: `Directory` and `File` imported but unused, `Path` used for `Path.Combine`; if possible use `sys.path.join` instead!
 from System import DateTime
-from time import sleep, time
+from time import sleep, time                         # JH: `time` function imported but unused
 
-### Add script folder - maybe not needed
 
-prescan_fpath = r'D:\Zimeng\_settings\MATE_prescan.czexp' #.czexp file
+### User input
+
+# Prescan paths
+prescan_fpath = r'D:\Zimeng\_settings\MATE_prescan.czexp'  #.czexp file
 prescan_czi =   r'D:\Zimeng\_settings\MATE_prescan.czi'
 
-job_fpath = r'D:\Zimeng\_settings\MATE_job_488.czexp' #.czexp file
+# Job path
+job_fpath = r'D:\Zimeng\_settings\MATE_job_488.czexp'  #.czexp file
+
+# Output path
 output_folder = r'D:\Zimeng\20240328_MATE_test_2'
 
-### Remove all open images
+# Loop settings
+max_iterations = 20  # Number of loops
+interval_min   =  5  # Interval in minutes   # JH: Changed this to minutes; conversion to milliseconds happens in `# Prep` below
 
-Zen.Application.Documents.RemoveAll()
 
 ### Start experiment
 
-max_iterations = 20 #number of loops
-interval = 300000 # interval in milliseconds
+# Clear open images
+Zen.Application.Documents.RemoveAll()
 
+# Prep
+interval = interval_min * 60000
 lines_read = 0
 
+# Start the loop
 for i in range(max_iterations):
-    #timing
+
+
+    ### Prep
+
+    # Timing
     time_before = DateTime.Now
     time_after = time_before.AddMilliseconds(interval)
 
+    # Clear open images
     Zen.Application.Documents.RemoveAll()
 
-    # Reuse settings
+    
+    ### Prescan
+
+    # Reuse prescan settings
     experiment1 = Zen.Acquisition.Experiments.GetByFileName(prescan_fpath)
 
-    #acquire
-    outputexperiment1 = Zen.Acquisition.Execute(experiment1) 
+    # Acquire prescan
+    output_experiment1 = Zen.Acquisition.Execute(experiment1) 
     
-    #save prescan image
-    outputexperiment1.Name = 'prescan_%d.czi'%i 
-    outputexperiment1 = Zen.Application.Save(outputexperiment1, Path.Combine(output_folder, outputexperiment1.Name), False) 
+    # Save prescan image
+    output_experiment1.Name = 'prescan_%d.czi'%i 
+    output_experiment1 = Zen.Application.Save(
+        outpute_experiment1, 
+        Path.Combine(output_folder, output_experiment1.Name),  # JH: Use os.path.join instead, if possible
+        False) 
 
-##Read external coords
+
+    ### Read coords from mate_manager
     
-    coords_fpath = Path.Combine(output_folder, 'mate_coords.txt')
+    coords_fpath = Path.Combine(output_folder, 'mate_coords.txt')  # JH: Use os.path.join instead, if possible; also, ideally do this outside the loop since it doesn't change; e.g. put it under `# Prep` under `### Start experiment`
     
+    # During first loop, wait for mate_coords.txt to be generated
+    if i==0:   # JH: Added this so the check is only done during the first loop
     while not os.path.isfile(coords_fpath):
         print("Waiting for mate_coords.txt to be generated...")
         sleep(1)
     
+    # Wait for mate_coords.txt to be updated with a new line
     while True:
         with open(coords_fpath, 'r') as infile:
             lines = infile.readlines()
@@ -70,35 +105,46 @@ for i in range(max_iterations):
         sleep(0.1)
         
 
-###Calculate new position in microns from center of image
+    ### Convert new coordinates into the stage's Frame Of Reference (FOR)
+
     image1 = Zen.Application.LoadImage(prescan_czi, False)
 
+    # Convert from corner-of-image FOR to center-of-image FOR
     relative_x = x_pos - (image1.Bounds.SizeX/2)
     relative_y = y_pos - (image1.Bounds.SizeY/2)
     relative_z = z_pos - image1.Bounds.SizeZ
 
+    # Scale from pixels to microns
     scaled_x = relative_x * image1.Scaling.X
     scaled_y = relative_y * image1.Scaling.Y
     scaled_z = relative_z * image1.Scaling.Z
     
+    # Convert from center-of-image FOR to the stage's FOR
     new_pos_x = Zen.Devices.Stage.ActualPositionX + scaled_x
     new_pos_y = Zen.Devices.Stage.ActualPositionY + scaled_y
-    new_pos_z = Zen.Devices.Focus.ActualPosition - scaled_z
+    new_pos_z = Zen.Devices.Focus.ActualPosition  - scaled_z
     
 
-# Reuse settings and move to new position
+    ### Update position and run main scan
+
+    # Reuse settings and move stage
     experiment2 = Zen.Acquisition.Experiments.GetByFileName(job_fpath)
-    experiment2.ModifyTileRegionsWithXYZOffset(0, new_pos_x, new_pos_y,new_pos_z)
+    experiment2.ModifyTileRegionsWithXYZOffset(0, new_pos_x, new_pos_y, new_pos_z)
     Zen.Acquisition.Experiments.ActiveExperiment.Save()
 
-#acquire
-    outputexperiment2 = Zen.Acquisition.Execute(experiment2) 
+    # Acquire
+    output_experiment2 = Zen.Acquisition.Execute(experiment2) 
 
-# Save job image
-    outputexperiment2.Name = 'job_%d.czi'%i #save with different name
-    saved2 = Zen.Application.Save(outputexperiment2, Path.Combine(output_folder, outputexperiment2.Name), False) 
-    print("Saved:")
+    # Save image
+    output_experiment2.Name = 'job_%d.czi' % i  # Output file name
+    saved2 = Zen.Application.Save(
+        output_experiment2, 
+        Path.Combine(output_folder, output_experiment2.Name),  # JH: Use os.path.join instead, if possible
+        False)
+    print("Saved:")           # JH: Why the colons? Meant to add the file name?
 
-#timing
+
+    ### Interval timing
+
     while (time_after > DateTime.Now):
         sleep(0.1)
