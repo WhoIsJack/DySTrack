@@ -78,11 +78,11 @@ def analyze_image(target_file, channel=None, show=False, verbose=False):
         else:
             break
 
-    # Load the image if it is a tif
+    # Load the image if it is a tif file
     if target_file.endswith('.tif'):
         raw = tifread(target_file)
 
-    # Loading the image if it is a czi
+    # Load the image if it is a czi file
     # NOTE: This uses Christoph Gohlke's czifile, which does not seem to be as
     #       stable and well-maintained as his tifffile. It may be better to go
     #       with bio-formats (loci) instead. However, the advantage of czifile
@@ -91,9 +91,10 @@ def analyze_image(target_file, channel=None, show=False, verbose=False):
         raw = cziread(target_file)
         raw = np.squeeze(raw)  # Remove excess dimensions
 
+    # Load the image if it is an nd2 file
     if target_file.endswith('.nd2'):
         raw = nd2read(target_file)
-        raw = np.squeeze(raw)
+        raw = np.squeeze(raw)  # TODO: Check if this is actually needed!
 
     # Report
     if verbose: print("      Loaded image of shape:", raw.shape)
