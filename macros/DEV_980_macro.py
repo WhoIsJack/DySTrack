@@ -83,9 +83,9 @@ for i in range(max_iterations):
     
     # During first loop, wait for mate_coords.txt to be generated
     if i==0:   # JH: Added this so the check is only done during the first loop
-    while not os.path.isfile(coords_fpath):
-        print("Waiting for mate_coords.txt to be generated...")
-        sleep(1)
+        while not os.path.isfile(coords_fpath):
+            print("Waiting for mate_coords.txt to be generated...")
+            sleep(1)
     
     # Wait for mate_coords.txt to be updated with a new line
     while True:
