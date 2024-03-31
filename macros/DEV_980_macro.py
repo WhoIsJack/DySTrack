@@ -6,33 +6,16 @@ import sys, os
 import clr
 from System.Diagnostics import Process
 from System.IO import Directory, Path, File
-import StartExternal as stext
-from time import sleep
-
-# Check version and working dir
-print(sys.version)
-print(os.getcwd())
-
+from System import DateTime
+from time import sleep, time
 
 ### Add script folder - maybe not needed
 
-scriptfolder = r'Folder\With\MATE' #input folder
-sys.path.append(scriptfolder)
+prescan_fpath = r'D:\Zimeng\_settings\MATE_prescan.czexp' #.czexp file
+prescan_czi =   r'D:\Zimeng\_settings\MATE_prescan.czi'
 
-
-### print known hardware changes 
-componentIds = hardwareSetting.GetAllComponentIds()
-
-for componentId in componentIds:
-    print componentId
-    
-    parameterNames = hardwareSetting.GetAllParameterNames(componentId)
-    
-    for parameterName in parameterNames:
-        print parameterName
-        
-        parameterValue = hardwareSetting.GetParameter(componentId, parameterName)
-        print parameterValue
+job_fpath = r'D:\Zimeng\_settings\MATE_job_488.czexp' #.czexp file
+output_folder = r'D:\Zimeng\20240328_MATE_test_2'
 
 ### Remove all open images
 
@@ -40,79 +23,82 @@ Zen.Application.Documents.RemoveAll()
 
 ### Start experiment
 
-ZenService.Actions.StartExperiment()
+max_iterations = 20 #number of loops
+interval = 300000 # interval in milliseconds
 
-counter = 0
-max_iterations = 10 #How many time it loops?
+lines_read = 0
 
-while counter < max_iterations:
+for i in range(max_iterations):
+    #timing
+    time_before = DateTime.Now
+    time_after = time_before.AddMilliseconds(interval)
 
-    if Zen.Application.LoadImage():   
-        counter = counter+1
-
-    # Load image
-    #image1 = Zen.Application.Documents.GetByName("test_stack_2.czi") ##Add stack
-    #if image2 is None:
-    image1 = Zen.Application.LoadImage(r"S:\DBIO_WongGroup_1\Zimeng\980_vis\20240131_cldnb_stacks\516x180_LSM_50um_xyz.czi", False) #add stack
-    Zen.Application.Documents.Add(image1)
+    Zen.Application.Documents.RemoveAll()
 
     # Reuse settings
-    hardwareSetting = ZenHardwareSetting()
-    hardwareSetting.Load(image1)
-    #ZenService.HardwareActions.ExecuteHardwareSettingFromFile(image1)
+    experiment1 = Zen.Acquisition.Experiments.GetByFileName(prescan_fpath)
 
+    #acquire
     outputexperiment1 = Zen.Acquisition.Execute(experiment1) 
-
-### Append things to a file
-
-    #output to the same as image folder (timepoint and date time?)
-    imgX = ZenService.Analysis.AllParticles.ImageStageXPosition
-    imgY = ZenService.Analysis.AllParticles.ImageStageYPosition
-    imgZ = ZenService.HardwareActions.ReadFocusPosition()
-    ZenService.Xtra.System.AppendLogLine(imgX, imgY, imgZ, str(ZenService.Experiment.CurrentTimePointIndex), ":", "1. " + str(ZenService.Environment.CurrentTimeHour).zfill(2) + ":" + str(ZenService.Environment.CurrentTimeMinute).zfill(2) + ":" + str(ZenService.Environment.CurrentTimeSecond).zfill(2) + " on " + str(ZenService.Environment.CurrentDateYear).zfill(4) + "-" + str(ZenService.Environment.CurrentDateMonth).zfill(2) + "-" + str(ZenService.Environment.CurrentDateDay).zfill(2), "LogFile")
-
-    #ZenService.Xtra.System.AppendLogLine(str(ZenService.Experiment.CurrentTimePointIndex), "LogFile")
+    
+    #save prescan image
+    outputexperiment1.Name = 'prescan_%d.czi'%i 
+    outputexperiment1 = Zen.Application.Save(outputexperiment1, Path.Combine(output_folder, outputexperiment1.Name), False) 
 
 ##Read external coords
-    with open(r'coords.txt','r') as infile: #put where the python script spits out coordinates
-        newest_line = infile.readlines()[-1]
-
-    x_pos = int(newest_line.split('X:')[1].split(', ')[0])
-    y_pos = int(newest_line.split('Y:')[1].split(', ')[0])
-    z_pos = int(newest_line.split('Z:')[1])
-
-###move to position
-    ZenService.HardwareActions.SetStagePosition(x_pos, y_pos)
-    ZenService.HardwareActions.SetFocusPosition(z_pos)
-
-
-###Start acquisition
-    outputexperiment1 = Zen.Acquisition.Execute(experiment1)
-    saved = Zen.Application.Save(outputexperiment1, f"timepoint_{counter}", False)
-
-
-
-### Start external script? Don't need maybe...
-
-if (start_Simple_Plot == True):
     
-    # this is easy version, where one has define the columns manually inside the data display script
-    script2 = r'MyFolder\\simple_plot.py'
-    # this one for the easy version --> only the filename is passed as an argument
-    params2 = ' -f ' + csvfile
-    # start the data display script as an external application using a tool script
-    stext.StartApp(script2, params2)
+    coords_fpath = Path.Combine(output_folder, 'mate_coords.txt')
+    
+    while not os.path.isfile(coords_fpath):
+        print("Waiting for mate_coords.txt to be generated...")
+        sleep(1)
+    
+    while True:
+        with open(coords_fpath, 'r') as infile:
+            lines = infile.readlines()
 
-# Load image
-image1 = Zen.Application.Documents.GetByName("test_stack_2.czi")
-if image2 is None:
-    image1 = Zen.Application.LoadImage(r"D:\Jonas\_automation\test_stack.czi", False)
-    Zen.Application.Documents.Add(image1)
+            if len(lines) > lines_read:
+                newest_line = lines[-1]
+                values = newest_line.split()
 
+                x_pos = float(values[2])
+                y_pos = float(values[1])
+                z_pos = float(values[0])
 
+                lines_read = len(lines)
+                break 
+        sleep(0.1)
+        
 
-# Save image
-if image2 is None:
-    saved = Zen.Application.Save(image1, r"D:\Jonas\_automation\test_stack_2.czi", False)
-    print("Saved:", saved)
-    image2 = image1
+###Calculate new position in microns from center of image
+    image1 = Zen.Application.LoadImage(prescan_czi, False)
+
+    relative_x = x_pos - (image1.Bounds.SizeX/2)
+    relative_y = y_pos - (image1.Bounds.SizeY/2)
+    relative_z = z_pos - image1.Bounds.SizeZ
+
+    scaled_x = relative_x * image1.Scaling.X
+    scaled_y = relative_y * image1.Scaling.Y
+    scaled_z = relative_z * image1.Scaling.Z
+    
+    new_pos_x = Zen.Devices.Stage.ActualPositionX + scaled_x
+    new_pos_y = Zen.Devices.Stage.ActualPositionY + scaled_y
+    new_pos_z = Zen.Devices.Focus.ActualPosition - scaled_z
+    
+
+# Reuse settings and move to new position
+    experiment2 = Zen.Acquisition.Experiments.GetByFileName(job_fpath)
+    experiment2.ModifyTileRegionsWithXYZOffset(0, new_pos_x, new_pos_y,new_pos_z)
+    Zen.Acquisition.Experiments.ActiveExperiment.Save()
+
+#acquire
+    outputexperiment2 = Zen.Acquisition.Execute(experiment2) 
+
+# Save job image
+    outputexperiment2.Name = 'job_%d.czi'%i #save with different name
+    saved2 = Zen.Application.Save(outputexperiment2, Path.Combine(output_folder, outputexperiment2.Name), False) 
+    print("Saved:")
+
+#timing
+    while (time_after > DateTime.Now):
+        sleep(0.1)
