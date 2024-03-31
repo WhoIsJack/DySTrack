@@ -88,7 +88,10 @@ for i in range(max_iterations):
 
 # Reuse settings and move to new position
     experiment2 = Zen.Acquisition.Experiments.GetByFileName(job_fpath)
+    
     experiment2.ModifyTileRegionsWithXYZOffset(0, new_pos_x, new_pos_y,new_pos_z)
+    experiment1.ModifyTileRegionsWithXYZOffset(0, new_pos_x, new_pos_y,new_pos_z)
+
     Zen.Acquisition.Experiments.ActiveExperiment.Save()
 
 #acquire
@@ -97,7 +100,7 @@ for i in range(max_iterations):
 # Save job image
     outputexperiment2.Name = 'job_%d.czi'%i #save with different name
     saved2 = Zen.Application.Save(outputexperiment2, Path.Combine(output_folder, outputexperiment2.Name), False) 
-    print("Saved:")
+    print("Timepoint no. %d saved"%i)
 
 #timing
     while (time_after > DateTime.Now):
