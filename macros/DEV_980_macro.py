@@ -125,8 +125,11 @@ for i in range(max_iterations):
 
     # Reuse settings and move stage
     experiment2 = Zen.Acquisition.Experiments.GetByFileName(job_fpath)
+    
     experiment2.ModifyTileRegionsWithXYZOffset(0, new_pos_x, new_pos_y, new_pos_z)
     experiment1.ModifyTileRegionsWithXYZOffset(0, new_pos_x, new_pos_y,new_pos_z)
+    Zen.Devices.Stage.MoveTo(new_pos_x, new_pos_y)
+
     Zen.Acquisition.Experiments.ActiveExperiment.Save()
 
     # Acquire
