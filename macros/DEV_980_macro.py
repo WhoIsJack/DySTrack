@@ -10,6 +10,8 @@ Created on Tue Feb 6 17:59:38 2024
 @usage:     TODO!
 """
 
+### Prep
+
 ### Imports
 
 from __future__ import division, print_function
@@ -21,18 +23,18 @@ from time import sleep
 ### User input
 
 # Prescan paths
-prescan_fpath = r'D:\Zimeng\_settings\MATE_prescan.czexp'  #.czexp file
-prescan_czi =   r'D:\Zimeng\_settings\MATE_prescan.czi'
+prescan_fpath = r'D:\Zimeng\_settings\PRESCAN_488.czexp'  #.czexp file
+prescan_czi =   r'D:\Zimeng\_settings\PRESCAN_488.czi'
 
 # Job path
-job_fpath = r'D:\Zimeng\_settings\MATE_job_488.czexp'  #.czexp file
+job_fpath = r'D:\Zimeng\_settings\JOB_488_561.czexp'  #.czexp file
 
 # Output path
-output_folder = r'D:\Zimeng\20240328_MATE_test_2'
+output_folder = r'D:\Zimeng\20240402_KTR_MATE'
 
 # Loop settings
-max_iterations = 20  # Number of loops
-interval_min   =  5  # Interval in minutes  
+max_iterations = 90  # Number of loops
+interval_min   =  2  # Interval in minutes  
 
 
 ### Start experiment
@@ -43,7 +45,7 @@ Zen.Application.Documents.RemoveAll()
 # Prep
 interval = interval_min * 60000
 lines_read = 0
-coords_fpath = Path.Combine(output_folder, 'mate_coords.txt')
+coords_fpath = os.path.join(output_folder, 'mate_coords.txt')
 
 # Start the loop
 for i in range(max_iterations):
@@ -69,11 +71,7 @@ for i in range(max_iterations):
     
     # Save prescan image
     output_experiment1.Name = 'prescan_%d.czi'%i 
-    output_experiment1 = Zen.Application.Save(
-        outpute_experiment1, 
-        Path.Combine(output_folder, output_experiment1.Name),  # JH: Use os.path.join instead, if possible
-        False) 
-
+    output_experiment1.Save(os.path.join(output_folder, output_experiment1.Name))
 
     ### Read coords from mate_manager
         
@@ -126,9 +124,11 @@ for i in range(max_iterations):
     # Reuse settings and move stage
     experiment2 = Zen.Acquisition.Experiments.GetByFileName(job_fpath)
     
-    experiment2.ModifyTileRegionsWithXYZOffset(0, new_pos_x, new_pos_y, new_pos_z)
-    experiment1.ModifyTileRegionsWithXYZOffset(0, new_pos_x, new_pos_y,new_pos_z)
+    experiment2.ModifyTileRegionsWithXYZOffset(0, scaled_x, scaled_y, scaled_z)
+    experiment1.ModifyTileRegionsWithXYZOffset(0, scaled_x, scaled_y, scaled_z)
+
     Zen.Devices.Stage.MoveTo(new_pos_x, new_pos_y)
+    Zen.Devices.Focus.MoveTo(new_pos_z)
 
     Zen.Acquisition.Experiments.ActiveExperiment.Save()
 
@@ -137,10 +137,7 @@ for i in range(max_iterations):
 
     # Save image
     output_experiment2.Name = 'job_%d.czi' % i  # Output file name
-    saved2 = Zen.Application.Save(
-        output_experiment2, 
-        Path.Combine(output_folder, output_experiment2.Name),  # JH: Use os.path.join instead, if possible
-        False)
+    output_experiment2.Save(os.path.join(output_folder, output_experiment2.Name))
     print("Saved: timepoint %d" % i)     
 
 
