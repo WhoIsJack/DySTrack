@@ -257,9 +257,19 @@ def main_scheduler(target_dir, interval=1, fileStart='', fileEnd='',
                     except:
                         warn("IMAGE ANALYSIS FAILED! Using previous position...")
                         # TODO: Would be nice to have a default shift here, or
-                        #       even the same shift as for the last timepoint!
-                        z_pos, y_pos, x_pos = (None, None, None)
-                        codeM  = "nothing"  # Continues with previous position
+                        #       even the same shift as for the last timepoint,
+                        #       or best of all a PID-calculated shift (lol...).
+                        if write_winreg:
+                            # Will continue with previous position in MyPiC
+                            z_pos, y_pos, x_pos = (None, None, None)
+                            codeM = "nothing"
+                        else:
+                            # Will write previous position again on new line in coords txt file
+                            # FIXME: If this point is hit during the first loop, there will be a hard error 
+                            #        when trying to write the coords txt file, as in that case the *_pos are
+                            #        undefined. Ultimately, the cleanest way to handle this is to implement 
+                            #        reuse of previous position in the macro itself!
+                            codeM = "IMAGE_ANALYSIS_FAILED"
                         errMsg = "Image analysis failed."
                     
                     
@@ -304,9 +314,9 @@ def main_scheduler(target_dir, interval=1, fileStart='', fileEnd='',
                                 errMsg="Coordinate communication failed!",
                                 **scope_params)
                         else:
-                            raise NotImplementedError("Retrying with the previous position is not yet implemented for send_coords_txt!")  # TODO!
+                            raise NotImplementedError("No fallback option implemented yet for failure to write coordinate text file.")  # TODO!
                                                      
-                        # Report if this final attempts worked or not
+                        # Report if this final attempt worked or not
                         if no_error:
                             warn("Coordinate communication failed! Using previous coordinates.")
                         else: 
