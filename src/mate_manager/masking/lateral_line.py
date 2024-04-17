@@ -258,9 +258,6 @@ def analyze_image(target_file, channel=None, show=False, verbose=False):
         if z_pos < z_limit_bot:
             warn("z_pos < z_limit_bot; using z_limit_bot!")
             z_pos = z_limit_bot
-
-        # Invert resulting z_position for scope frame of reference
-        z_pos = (raw.shape[0]-1) - z_pos
     
     # Get positions for 2D
     else:
