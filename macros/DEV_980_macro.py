@@ -23,20 +23,18 @@ from time import sleep
 ### User input
 
 # Prescan paths
-#prescan_fpath = r'D:\Zimeng\_settings\PRESCAN_488.czexp'  #.czexp file
-prescan_czi =   r'D:\Zimeng\_settings\PRESCAN_488.czi'
+prescan_buffer = "LSM512" #for ZEN3.6 and below
+prescan_name = "PRESCAN_4888"  #.czexp from menu
 
 # Job path
-#job_fpath = r'D:\Zimeng\_settings\JOB_488_561.czexp'  #.czexp file
-job_czi = r'D:\Zimeng\_settings\JOB_488.czi'
+job_name = "MATE_JOB_cldnb_cxcr4" #.czexp from menu
 
 # Output path
-output_folder = r'D:\Zimeng\20240402_KTR_MATE'
+output_folder = r'D:\Zimeng\20240530_MATE'
 
 # Loop settings
 max_iterations = 90  # Number of loops
 interval_min   =  2  # Interval in minutes  
-
 
 ### Start experiment
 
@@ -51,7 +49,6 @@ coords_fpath = os.path.join(output_folder, 'mate_coords.txt')
 # Start the loop
 for i in range(max_iterations):
 
-
     ### Prep
 
     # Timing
@@ -60,29 +57,34 @@ for i in range(max_iterations):
 
     # Clear open images
     Zen.Application.Documents.RemoveAll()
-
     
     ### Prescan
 
     # Reuse prescan settings
+    
     experiment1 = ZenExperiment()
-    experiment1.LoadFromImage(Zen.Application.LoadImage(prescan_czi))
+    experiment1.Load(prescan_buffer)
+    experiment1.Load(prescan_name)
     experiment1.SetActive()
 
     # AutoSave
-    experiment1.AutoSave.Name = 'prescan_%d.czi' % i
+    experiment1.AutoSave.IsActivated = True
+    experiment1.AutoSave.StorageFolder = output_folder
+    experiment1.AutoSave.Name = 'prescan_%04d' % i
     experiment1.Save()
-
-    # Acquire prescan
-    output_experiment1 = Zen.Acquisition.Execute(experiment1) 
-
-    prescan_x = outputexperiment1.Bounds.SizeX
-    prescan_y = outputexperiment1.Bounds.SizeY
-    prescan_z = outputexperiment1.Bounds.SizeZ
+    output_experiment1 = Zen.Acquisition.Execute(experiment1)
     
-    # Save prescan image
-    #output_experiment1.Name = 'prescan_%d.czi'%i 
-    #output_experiment1.Save(os.path.join(output_folder, 'prescan_%d.czi'%i))
+    print(experiment1.GetSinglePositionInfos(0)[0].Z)
+
+    # Save prescimage size
+    prescan_x = output_experiment1.Bounds.SizeX
+    prescan_y = output_experiment1.Bounds.SizeY
+    prescan_z = output_experiment1.Bounds.SizeZ
+    
+    scaling_x = output_experiment1.Scaling.X
+    scaling_y = output_experiment1.Scaling.Y
+    scaling_z = output_experiment1.Scaling.Z
+    
 
     ### Read coords from mate_manager
         
@@ -118,40 +120,44 @@ for i in range(max_iterations):
     relative_z = z_pos - ((prescan_z-1)/2)
 
     # Scale from pixels to microns
-    scaled_x = relative_x * image1.Scaling.X
-    scaled_y = relative_y * image1.Scaling.Y
-    scaled_z = relative_z * image1.Scaling.Z
+    scaled_x = relative_x * scaling_x
+    scaled_y = relative_y * scaling_y
+    scaled_z = relative_z * scaling_z
+    
     
     # Convert from center-of-image FOR to the stage's FOR
     new_pos_x = Zen.Devices.Stage.ActualPositionX + scaled_x
     new_pos_y = Zen.Devices.Stage.ActualPositionY + scaled_y
-    new_pos_z = Zen.Devices.Focus.ActualPosition  + scaled_z
+    new_pos_z = Zen.Devices.Focus.ActualPosition  - scaled_z
 
     ### Update position and run main scan
-
+    
+    experiment1.ModifyTileRegionsWithXYZOffset(0, scaled_x, scaled_y, -scaled_z) #negative for inverted
+    ##TODO: get X/Y/Z here
+    experiment1.Save()
+    
     # Reuse settings and move stage
     experiment2 = ZenExperiment()
-    experiment2.LoadFromImage(Zen.Application.LoadImage(job_czi))
+    experiment2.Load(job_name)
     experiment2.SetActive()
     
-    #experiment2.ModifyTileRegionsWithXYZOffset(0, scaled_x, scaled_y, scaled_z)
-    #experiment1.ModifyTileRegionsWithXYZOffset(0, scaled_x, scaled_y, scaled_z)
+    ##TODO: set X.Y/Z from earlier
+    #experiment2.ClearTileRegionsAndPositions(0)
+    #experiment2.AddSinglePosition(0, new_pos_x, new_pos_y, new_pos_z)
 
-    Zen.Devices.Stage.MoveTo(new_pos_x, new_pos_y)
-    Zen.Devices.Focus.MoveTo(new_pos_z)
+    
+    experiment2.ModifyTileRegionsWithXYZOffset(0, scaled_x, scaled_y, -scaled_z) #negative for inverted
 
-    Zen.Acquisition.Experiments.ActiveExperiment.Save()
 
-    #AutoSave        
-    experiment2.AutoSave.Name = 'job_%d.czi' % i
+    #AutoSave
+    experiment2.AutoSave.IsActivated = True
+    experiment2.AutoSave.StorageFolder = output_folder
+    experiment2.AutoSave.Name = 'job_%04d' % i
     experiment2.Save()
 
     # Acquire
     output_experiment2 = Zen.Acquisition.Execute(experiment2) 
 
-    # Save image
-    #output_experiment2.Name = 'job_%d.czi' % i  # Output file name
-    #output_experiment2.Save(os.path.join(output_folder, 'job_%d.czi' % i))
     print("Saved: timepoint %d" % i)     
 
 
