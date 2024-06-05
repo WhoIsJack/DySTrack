@@ -200,6 +200,8 @@ def main_scheduler(target_dir, interval=1, fileStart='', fileEnd='',
     while True:
     
         # Listen for ESC keypress to exit loop
+        # FIXME: I think this sometimes doesn't work if other keys were pressed
+        #        prior to ESC being pressed. To be investigated!
         if kbhit():
             if ord(getch()) == 27:
                 break

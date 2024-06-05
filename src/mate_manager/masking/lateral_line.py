@@ -66,27 +66,54 @@ def analyze_image(target_file, channel=None, show=False, verbose=False):
 
     ### Load data
 
-    # Make sure the file has finished writing
-    # NOTE: This works in general but still seems to randomly fail sometimes.  # FIXME!
+    ## Check if file has finished writing (by checking file size)
+    ## NOTE: This works in general but still seems to randomly fail sometimes.
+    ## NOTE: This may fail when ZEN Blue's autosave is used!
+    #sleep(2)  # Initial delay; helps with stability
+    #file_size = -1
+    #while True:
+    #    new_file_size = os.stat(target_file).st_size
+    #    if new_file_size > file_size:
+    #        file_size = new_file_size
+    #        sleep(2)
+    #    else:
+    #        break
+
+    # Check if file has finished writing (by trying to rename it)
+    # FIXME: A possible issue with this is that it tests for write access, not
+    #        just read access (which would be sufficient), so it may fail if
+    #        the output file is open within the microscope software or some
+    #        other viewer. However, testing for read access by opening the file
+    #        and reading the first 10 chars did not seem to work; it lets files
+    #        pass that are being written to. Another alternative would be to
+    #        catch the specific errors thrown by tifread, cziread, etc. when
+    #        they try to read a locked or incomplete file, but this will need 
+    #        to be tested directly on the scopes as it's hard to imitate...
     sleep(2)  # Initial delay; helps with stability
-    file_size = -1
+    first_round = True
     while True:
-        new_file_size = os.stat(target_file).st_size
-        if new_file_size > file_size:
-            file_size = new_file_size
-            sleep(2)
-        else:
+        try: 
+            os.rename(target_file, target_file+'.lockcheck')
+            sleep(0.1)
+            os.rename(target_file+'.lockcheck', target_file)
             break
+        except PermissionError:
+            if not os.access(target_file, os.R_OK):
+                raise  # Error out for *actual* permission errors!
+            if first_round:
+                print("      Waiting for file lock to be freed.")
+                first_round = False
+            sleep(2)
+        except Exception:
+            print("Unexpected exception during file lock check:\n", repr(e))
+            raise
 
     # Load the image if it is a tif file
     if target_file.endswith('.tif'):
         raw = tifread(target_file)
 
     # Load the image if it is a czi file
-    # NOTE: This uses Christoph Gohlke's czifile, which does not seem to be as
-    #       stable and well-maintained as his tifffile. It may be better to go
-    #       with bio-formats (loci) instead. However, the advantage of czifile
-    #       is that it is pure (c)python (no javabridge required).
+    # TODO: Consider swapping to bio-formats? Maybe not; requires javabridge...
     if target_file.endswith('.czi'):
         raw = cziread(target_file)
         raw = np.squeeze(raw)  # Remove excess dimensions
