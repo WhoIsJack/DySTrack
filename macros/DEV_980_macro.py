@@ -12,7 +12,7 @@ Created on Tue Feb 6 17:59:38 2024
 
 ### Prep
 
-# Imports
+## Imports
 
 from __future__ import division, print_function
 import sys, os
@@ -21,19 +21,17 @@ from System import DateTime
 from time import sleep
 
 
-# User input
+## User input
 
 # Prescan paths
-#prescan_fpath = r'D:\Zimeng\_settings\PRESCAN_488.czexp'  #.czexp file
-prescan_czi =   r'D:\Zimeng\_settings\PRESCAN_488.czi'
+prescan_buffer = "LSM512" #for ZEN3.6 and below
+prescan_name = "PRESCAN_4888"  #.czexp from menu
 
 # Job path
-#job_fpath = r'D:\Zimeng\_settings\JOB_488_561.czexp'  #.czexp file
-job_czi = r'D:\Zimeng\_settings\JOB_488.czi'
-# JH: Almost certainly irrelevant, but the .czexp was "JOB_488_561", whereas job_czi is just "JOB_488"
+job_name = "MATE_JOB_cldnb_cxcr4" #.czexp from menu
 
 # Output path
-output_folder = r'D:\Zimeng\20240402_KTR_MATE'
+output_folder = r'D:\Zimeng\20240530_MATE'
 
 # Loop settings
 max_iterations = 90  # Number of loops
@@ -62,39 +60,35 @@ for i in range(max_iterations):
 
     # Clear open images
     Zen.Application.Documents.RemoveAll()
-
+    
     
     ### Prescan
 
     # Reuse prescan settings
     experiment1 = ZenExperiment()
-    experiment1.LoadFromImage(Zen.Application.LoadImage(prescan_czi))
+    experiment1.Load(prescan_buffer)
+    experiment1.Load(prescan_name)
     experiment1.SetActive()
 
     # AutoSave
-    experiment1.AutoSave.Name = 'prescan_%d.czi' % i
-    # JH: Check if .Name is the only thing to set; what about .StorageFolder?
-    #     See e.g. here for all properties (also includes "ConvertTo8Bit"; maybe relevant?): https://shorturl.at/qBw82
+    experiment1.AutoSave.IsActivated = True
+    experiment1.AutoSave.StorageFolder = output_folder
+    experiment1.AutoSave.Name = 'prescan_%04d' % i
     experiment1.Save()
-    # JH: What exactly is this for? Does this save a ZenExperiment? If so, where and as what file does it get saved? When is it reused?
-    #     (Note to self: this wouldn't save into 'prescan_%d.czi', as that presumably says where ZenImages acquired under this ZenExperiment
-    #      will be stored, not where the ZenExperiment will be stored, which should presumably be a .czexp file.)
 
     # Acquire prescan
     output_experiment1 = Zen.Acquisition.Execute(experiment1)
-    # JH: It would make sense to use variable names that indicate whether it is a ZenExperiment object or a ZenImage.
-    #     I'd propose renaming `experiment1` into `prescan_exp` and `output_experiment1` into `prescan_img`
+    print(experiment1.GetSinglePositionInfos(0)[0].Z)
+
+    # Get prescan image size and scaling for later calculations
+    prescan_x = output_experiment1.Bounds.SizeX
+    prescan_y = output_experiment1.Bounds.SizeY
+    prescan_z = output_experiment1.Bounds.SizeZ
+    scaling_x = output_experiment1.Scaling.X
+    scaling_y = output_experiment1.Scaling.Y
+    scaling_z = output_experiment1.Scaling.Z
     
-    # Get prescan image size for later calculations
-    prescan_x = outputexperiment1.Bounds.SizeX
-    prescan_y = outputexperiment1.Bounds.SizeY
-    prescan_z = outputexperiment1.Bounds.SizeZ
-    
-    ## Save prescan image
-    #output_experiment1.Name = 'prescan_%d.czi'%i 
-    #output_experiment1.Save(os.path.join(output_folder, 'prescan_%d.czi'%i))
-    
-    
+
     ### Read coords from mate_manager
         
     # During first loop, wait for mate_coords.txt to be generated
@@ -129,56 +123,47 @@ for i in range(max_iterations):
     relative_z = z_pos - ((prescan_z-1)/2)
 
     # Scale from pixels to microns
-    # JH: Where does `image1` come from? It doesn't seem to be defined anywhere!
-    #     Should that be `output_experiment1`? Strange that this doesn't raise
-    #     an Exception; could be a possible source of issues?!
-    scaled_x = relative_x * image1.Scaling.X
-    scaled_y = relative_y * image1.Scaling.Y
-    scaled_z = relative_z * image1.Scaling.Z
+    scaled_x = relative_x * scaling_x
+    scaled_y = relative_y * scaling_y
+    scaled_z = relative_z * scaling_z
     
     # Convert from center-of-image FOR to the stage's FOR
     new_pos_x = Zen.Devices.Stage.ActualPositionX + scaled_x
     new_pos_y = Zen.Devices.Stage.ActualPositionY + scaled_y
-    new_pos_z = Zen.Devices.Focus.ActualPosition  + scaled_z
-    
-    
-    ### Update position and run main scan
+    new_pos_z = Zen.Devices.Focus.ActualPosition  - scaled_z
 
+
+    ### Update position and run main scan
+    
+    experiment1.ModifyTileRegionsWithXYZOffset(0, scaled_x, scaled_y, -scaled_z)  # Negative for inverted
+    # TODO: Get X/Y/Z here
+    experiment1.Save()
+    
     # Reuse settings
-    # JH: Proposing to rename experiment2 into mainscan_exp
     experiment2 = ZenExperiment()
-    experiment2.LoadFromImage(Zen.Application.LoadImage(job_czi))
+    experiment2.Load(job_name)
     experiment2.SetActive()
     
-    # Move the stage
-    #experiment2.ModifyTileRegionsWithXYZOffset(0, scaled_x, scaled_y, scaled_z)
-    #experiment1.ModifyTileRegionsWithXYZOffset(0, scaled_x, scaled_y, scaled_z)
-    Zen.Devices.Stage.MoveTo(new_pos_x, new_pos_y)
-    Zen.Devices.Focus.MoveTo(new_pos_z)
-    
-    # JH: What does this do?
-    Zen.Acquisition.Experiments.ActiveExperiment.Save()
+    # Move stage using tile regions
+    # TODO: Set X/Y/Z from earlier
+    #experiment2.ClearTileRegionsAndPositions(0)
+    #experiment2.AddSinglePosition(0, new_pos_x, new_pos_y, new_pos_z)
+    experiment2.ModifyTileRegionsWithXYZOffset(0, scaled_x, scaled_y, -scaled_z)  # Negative for inverted
 
-    #AutoSave        
-    experiment2.AutoSave.Name = 'job_%d.czi' % i
-    experiment2.Save()  # JH: Also here, unclear what this does.
+    # AutoSave
+    experiment2.AutoSave.IsActivated = True
+    experiment2.AutoSave.StorageFolder = output_folder
+    experiment2.AutoSave.Name = 'job_%04d' % i
+    experiment2.Save()
 
     # Acquire
     # JH: Proposing to rename `output_experiment2` into `mainscan_img`
-    output_experiment2 = Zen.Acquisition.Execute(experiment2) 
+    output_experiment2 = Zen.Acquisition.Execute(experiment2)
+    
+    print("Saved: timepoint %d" % i)     
 
-    ## Save image
-    #output_experiment2.Name = 'job_%d.czi' % i  # Output file name
-    #output_experiment2.Save(os.path.join(output_folder, 'job_%d.czi' % i))
-    #print("Saved: timepoint %d" % i)     
-    
-    print("Completed: timepoint %d" % i)     
-    
 
     ### Interval timing
 
     while (time_after > DateTime.Now):
         sleep(0.1)
-
-
-
