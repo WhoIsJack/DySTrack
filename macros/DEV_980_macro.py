@@ -68,13 +68,13 @@ for i in range(max_iterations):
     experiment1.SetActive()
 
     # AutoSave
-    experiment1.AutoSave.IsActivated = True
-    experiment1.AutoSave.StorageFolder = output_folder
-    experiment1.AutoSave.Name = 'prescan_%04d' % i
-    experiment1.Save()
+    #experiment1.AutoSave.IsActivated = True
+    #experiment1.AutoSave.StorageFolder = output_folder
+    #experiment1.AutoSave.Name = 'prescan_%04d' % i
+    #experiment1.Save()
     output_experiment1 = Zen.Acquisition.Execute(experiment1)
-    
-    print(experiment1.GetSinglePositionInfos(0)[0].Z)
+    output_experiment1.Name = 'prescan_%04d' % i
+    output_experiment1.Save(os.path.join(output_folder, output_experiment1.Name))
 
     # Save prescimage size
     prescan_x = output_experiment1.Bounds.SizeX
