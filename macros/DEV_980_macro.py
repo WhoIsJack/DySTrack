@@ -12,7 +12,7 @@ Created on Tue Feb 6 17:59:38 2024
 
 ### Prep
 
-### Imports
+## Imports
 
 from __future__ import division, print_function
 import sys, os
@@ -20,7 +20,8 @@ from System.IO import Path
 from System import DateTime
 from time import sleep
 
-### User input
+
+## User input
 
 # Prescan paths
 prescan_buffer = "LSM512" #for ZEN3.6 and below
@@ -36,6 +37,7 @@ output_folder = r'D:\Zimeng\20240530_MATE'
 max_iterations = 90  # Number of loops
 interval_min   =  2  # Interval in minutes  
 
+
 ### Start experiment
 
 # Clear open images
@@ -49,6 +51,7 @@ coords_fpath = os.path.join(output_folder, 'mate_coords.txt')
 # Start the loop
 for i in range(max_iterations):
 
+
     ### Prep
 
     # Timing
@@ -58,29 +61,29 @@ for i in range(max_iterations):
     # Clear open images
     Zen.Application.Documents.RemoveAll()
     
+    
     ### Prescan
 
     # Reuse prescan settings
-    
     experiment1 = ZenExperiment()
     experiment1.Load(prescan_buffer)
     experiment1.Load(prescan_name)
     experiment1.SetActive()
 
     # AutoSave
-    #experiment1.AutoSave.IsActivated = True
-    #experiment1.AutoSave.StorageFolder = output_folder
-    #experiment1.AutoSave.Name = 'prescan_%04d' % i
-    #experiment1.Save()
-    output_experiment1 = Zen.Acquisition.Execute(experiment1)
-    output_experiment1.Name = 'prescan_%04d' % i
-    output_experiment1.Save(os.path.join(output_folder, output_experiment1.Name))
+    experiment1.AutoSave.IsActivated = True
+    experiment1.AutoSave.StorageFolder = output_folder
+    experiment1.AutoSave.Name = 'prescan_%04d' % i
+    experiment1.Save()
 
-    # Save prescimage size
+    # Acquire prescan
+    output_experiment1 = Zen.Acquisition.Execute(experiment1)
+    print(experiment1.GetSinglePositionInfos(0)[0].Z)
+
+    # Get prescan image size and scaling for later calculations
     prescan_x = output_experiment1.Bounds.SizeX
     prescan_y = output_experiment1.Bounds.SizeY
     prescan_z = output_experiment1.Bounds.SizeZ
-    
     scaling_x = output_experiment1.Scaling.X
     scaling_y = output_experiment1.Scaling.Y
     scaling_z = output_experiment1.Scaling.Z
@@ -124,40 +127,39 @@ for i in range(max_iterations):
     scaled_y = relative_y * scaling_y
     scaled_z = relative_z * scaling_z
     
-    
     # Convert from center-of-image FOR to the stage's FOR
     new_pos_x = Zen.Devices.Stage.ActualPositionX + scaled_x
     new_pos_y = Zen.Devices.Stage.ActualPositionY + scaled_y
     new_pos_z = Zen.Devices.Focus.ActualPosition  - scaled_z
 
+
     ### Update position and run main scan
     
-    experiment1.ModifyTileRegionsWithXYZOffset(0, scaled_x, scaled_y, -scaled_z) #negative for inverted
-    ##TODO: get X/Y/Z here
+    experiment1.ModifyTileRegionsWithXYZOffset(0, scaled_x, scaled_y, -scaled_z)  # Negative for inverted
+    # TODO: Get X/Y/Z here
     experiment1.Save()
     
-    # Reuse settings and move stage
+    # Reuse settings
     experiment2 = ZenExperiment()
     experiment2.Load(job_name)
     experiment2.SetActive()
     
-    ##TODO: set X.Y/Z from earlier
+    # Move stage using tile regions
+    # TODO: Set X/Y/Z from earlier
     #experiment2.ClearTileRegionsAndPositions(0)
     #experiment2.AddSinglePosition(0, new_pos_x, new_pos_y, new_pos_z)
+    experiment2.ModifyTileRegionsWithXYZOffset(0, scaled_x, scaled_y, -scaled_z)  # Negative for inverted
 
-    
-    experiment2.ModifyTileRegionsWithXYZOffset(0, scaled_x, scaled_y, -scaled_z) #negative for inverted
-
-
-    #AutoSave
+    # AutoSave
     experiment2.AutoSave.IsActivated = True
     experiment2.AutoSave.StorageFolder = output_folder
     experiment2.AutoSave.Name = 'job_%04d' % i
     experiment2.Save()
 
     # Acquire
-    output_experiment2 = Zen.Acquisition.Execute(experiment2) 
-
+    # JH: Proposing to rename `output_experiment2` into `mainscan_img`
+    output_experiment2 = Zen.Acquisition.Execute(experiment2)
+    
     print("Saved: timepoint %d" % i)     
 
 
