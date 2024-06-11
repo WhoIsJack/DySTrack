@@ -67,9 +67,9 @@ def analyze_image(target_file, channel=None, show=False, verbose=False):
     ### Load data
 
     # Make multiple attempts in case loading fails
-    n_attempts = 5
+    attempts_left = 5
     file_size = -1
-    for attempt in range(1, n_attempts+1):
+    while True:
 
         # Wait until the file is no longer being written to
         # Note: In some cases microscope software may intermittently stop
@@ -80,6 +80,7 @@ def analyze_image(target_file, channel=None, show=False, verbose=False):
            new_file_size = os.stat(target_file).st_size
            if new_file_size > file_size:
                file_size = new_file_size
+               attempts_left = 5
            else:
                break
 
@@ -124,9 +125,10 @@ def analyze_image(target_file, channel=None, show=False, verbose=False):
         # In case of failure, retry if there are still attempts left, 
         # otherwise raise the Exception
         except Exception as err:
-            if attempt == n_attempts:
+            attempts_left -= 1
+            if attempts_left == 0:
                 print(
-                    f"\n  All {n_attempts} attempts to load the image failed;",
+                    f"\n  Multiple attempts to load the image have failed;",
                      "the final one with this Exception:\n  ", repr(err), '\n')
                 raise
             else:
