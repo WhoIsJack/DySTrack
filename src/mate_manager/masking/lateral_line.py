@@ -66,65 +66,72 @@ def analyze_image(target_file, channel=None, show=False, verbose=False):
 
     ### Load data
 
-    ## Check if file has finished writing (by checking file size)
-    ## NOTE: This works in general but still seems to randomly fail sometimes.
-    ## NOTE: This may fail when ZEN Blue's autosave is used!
-    #sleep(2)  # Initial delay; helps with stability
-    #file_size = -1
-    #while True:
-    #    new_file_size = os.stat(target_file).st_size
-    #    if new_file_size > file_size:
-    #        file_size = new_file_size
-    #        sleep(2)
-    #    else:
-    #        break
+    # Initial delay; can help with stability
+    sleep(2)
 
-    # Check if file has finished writing (by trying to rename it)
-    # FIXME: A possible issue with this is that it tests for write access, not
-    #        just read access (which would be sufficient), so it may fail if
-    #        the output file is open within the microscope software or some
-    #        other viewer. However, testing for read access by opening the file
-    #        and reading the first 10 chars did not seem to work; it lets files
-    #        pass that are being written to. Another alternative would be to
-    #        catch the specific errors thrown by tifread, cziread, etc. when
-    #        they try to read a locked or incomplete file, but this will need 
-    #        to be tested directly on the scopes as it's hard to imitate...
-    sleep(2)  # Initial delay; helps with stability
-    first_round = True
-    while True:
-        try: 
-            os.rename(target_file, target_file+'.lockcheck')
-            sleep(0.1)
-            os.rename(target_file+'.lockcheck', target_file)
+    # Make multiple attempts in case loading fails
+    n_attempts = 5
+    for attempt in range(1, n_attempts+1):
+
+        # Wait until the file is no longer being written to
+        # Note: In some cases microscope software may intermittently stop
+        #       writing, so this is not a perfect check for whether the file
+        #       is complete, hence the multiple attempts!
+        file_size = -1
+        while True:
+           new_file_size = os.stat(target_file).st_size
+           if new_file_size > file_size:
+               file_size = new_file_size
+               sleep(2)
+           else:
+               break
+
+        # If the file writing looks done, make a loading attempt
+        try:
+
+            # Load the image if it is a tif file
+            if target_file.endswith('.tif') or target_file.endswith('.tiff'):
+                raw = tifread(target_file)
+
+            # Load the image if it is a czi file
+            # TODO: Consider swapping to bio-formats? Maybe not; requires javabridge...
+            elif target_file.endswith('.czi'):
+                raw = cziread(target_file)
+                raw = np.squeeze(raw)  # Remove excess dimensions
+
+            # Load the image if it is an nd2 file
+            elif target_file.endswith('.nd2'):
+                raw = nd2read(target_file)
+                raw = np.squeeze(raw)  # TODO: Check if this is actually needed!
+            
+            # Handle unknown file endings
+            else:
+                errmsg = (
+                    "File ending not recognized! Use `run_mate -e END` to " +
+                    "control which file endings trigger image analysis.")
+                raise ValueError(errmsg)
+
+            # Some basic checks to ensure a loader didn't fail silently...
+            if not isinstance(raw, np.ndarray):
+                errmsg = ("Loaded image object is not instance of `np.array`,"+
+                          " indicating that the loader has failed silently!")
+                raise IOError(errmsg)
+            if raw.size == 0:
+                errmsg =  ("Loaded image array is of size 0, indicating that"+
+                           "that the loader has failed silently!")
+                raise IOError(errmsg)
+
+            # Exit the loop of loading attempts if loading was successful
             break
-        except PermissionError:
-            if not os.access(target_file, os.R_OK):
-                raise  # Error out for *actual* permission errors!
-            if first_round:
-                print("      Waiting for file lock to be freed.")
-                first_round = False
-            sleep(2)
-        except Exception:
-            print("Unexpected exception during file lock check:\n", repr(e))
-            raise
 
-    # Load the image if it is a tif file
-    if target_file.endswith('.tif'):
-        raw = tifread(target_file)
-
-    if target_file.endswith('.tiff'):
-        raw = tifread(target_file)
-
-    # Load the image if it is a czi file
-    # TODO: Consider swapping to bio-formats? Maybe not; requires javabridge...
-    if target_file.endswith('.czi'):
-        raw = cziread(target_file)
-        raw = np.squeeze(raw)  # Remove excess dimensions
-
-    # Load the image if it is an nd2 file
-    if target_file.endswith('.nd2'):
-        raw = nd2read(target_file)
-        raw = np.squeeze(raw)  # TODO: Check if this is actually needed!
+        # In case of failure, retry if there are still attempts left, 
+        # otherwise raise the Exception
+        except Exception as err:
+            if attempt == n_attempts:
+                print(
+                    f"\n  All {n_attempts} attempts to load the image failed;",
+                     "the final one with this Exception:\n  ", repr(err), '\n')
+                raise
 
     # Report
     if verbose: print("      Loaded image of shape:", raw.shape)
