@@ -112,6 +112,9 @@ def analyze_image(target_file, channel=None, show=False, verbose=False):
     if target_file.endswith('.tif'):
         raw = tifread(target_file)
 
+    if target_file.endswith('.tiff'):
+        raw = tifread(target_file)
+
     # Load the image if it is a czi file
     # TODO: Consider swapping to bio-formats? Maybe not; requires javabridge...
     if target_file.endswith('.czi'):
