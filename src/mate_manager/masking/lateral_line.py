@@ -66,23 +66,20 @@ def analyze_image(target_file, channel=None, show=False, verbose=False):
 
     ### Load data
 
-    # Initial delay; can help with stability
-    sleep(2)
-
     # Make multiple attempts in case loading fails
     n_attempts = 5
+    file_size = -1
     for attempt in range(1, n_attempts+1):
 
         # Wait until the file is no longer being written to
         # Note: In some cases microscope software may intermittently stop
         #       writing, so this is not a perfect check for whether the file
         #       is complete, hence the multiple attempts!
-        file_size = -1
         while True:
+           sleep(2)
            new_file_size = os.stat(target_file).st_size
            if new_file_size > file_size:
                file_size = new_file_size
-               sleep(2)
            else:
                break
 
@@ -132,6 +129,8 @@ def analyze_image(target_file, channel=None, show=False, verbose=False):
                     f"\n  All {n_attempts} attempts to load the image failed;",
                      "the final one with this Exception:\n  ", repr(err), '\n')
                 raise
+            else:
+                sleep(2)
 
     # Report
     if verbose: print("      Loaded image of shape:", raw.shape)
