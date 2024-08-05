@@ -25,8 +25,8 @@ simplefilter('always', UserWarning)
 from msvcrt import kbhit, getch
 from time import sleep
 
-from masking.lateral_line import analyze_image
-from feedback import send_coords_winreg, send_coords_txt
+from mate.pipelines.lateral_line import analyze_image
+from mate.manager.feedback import send_coords_winreg, send_coords_txt
 
 
 ### Main function
