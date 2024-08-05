@@ -3,21 +3,42 @@ requires = ["setuptools>=61.0"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "mate-manager"
+name = "mate-tool"
 version = "0.0.1"
 authors = [
   { name="Jonas Hartmann", email="jonas.hartmann@ucl.ac.uk" },
   { name="Zimeng Wu", email="zimeng.wu.18@ucl.ac.uk" },
 ]
-description = "Automated feedback microscopy to track moving tissues."
+description = "Microscope automation for tracking experiments."
 readme = "README.md"
 requires-python = ">=3.9"
+
 classifiers = [
     "Programming Language :: Python :: 3",
     "License :: OSI Approved :: MIT License",
     "Operating System :: Microsoft :: Windows",
 ]
+
 dependencies = [
-  "PLACEHOLDER>=1.20",
-  "PLACEHOLDER>=0.16"
+  "numpy>=1.24",
+  "scipy>=1.10",
+  "matplotlib>=3.7",
+  "tifffile>=2021.7",
+  "czifile>=2019.7",
+  "nd2>=0.9"
+]
+
+[project.urls]
+"Homepage" = "https://charliebritton.github.io/website-placeholder"
+"Source Code" = "https://github.com/WhoIsJack/MATE"
+"Documentation" = "https://charliebritton.github.io/website-placeholder"
+"Issues" = "https://github.com/WhoIsJack/MATE/issues"
+"Bug Tracker" = "https://github.com/WhoIsJack/MATE/issues"
+"User Support" = "https://github.com/WhoIsJack/MATE/issues"
+
+[project.optional-dependencies]
+dev = [
+  "pytest",
+  "pytest-cov",
+  "coverage"
 ]
