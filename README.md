@@ -14,7 +14,7 @@ A simple automated feedback microscopy tool for tracking of moving tissues. WIP.
 
 For users:
 
-```pip install -e```
+```pip install -e .```
 
 For developers:
 
