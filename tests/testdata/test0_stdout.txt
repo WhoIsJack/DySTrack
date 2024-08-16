@@ -1,12 +1,10 @@
 
-[test_run_mate.py:] Starting MATE monitoring in thread.
-
 
   MATE MONITORING SESSION IN PROGRESS...
   Press <Esc> to terminate.
 
 
-    Target file detected: ./tests/testdata\testrun_20240816-115418\test0_prescan_prim_cldnb.czi
+    Target file detected: ./tests/testdata\testrun_20240816-132819\test0_prescan_prim_cldnb.czi
     Running image analysis...
       Loaded image of shape: (20, 100, 200)
       Detected treshold: 10
@@ -15,6 +13,3 @@
     Pushing coords to scope...
     Coords pushed.
     Resuming monitoring...
-
-[test_run_mate.py:] Finished waiting for MATE monitoring.
-

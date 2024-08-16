@@ -63,6 +63,12 @@ def test_main_scheduler(capsys):
     # this will make the test fail, but it's very useful for debugging!
     print_MATE_outputs = False
 
+    # DEV: Set this to True to generate a new reference stdout file (which will
+    # overwrite the old) if the stdout behavior of the scheduler has changed.
+    # This will force the test to fail, since generating a new reference from
+    # the output and then checking them against each other will always pass.
+    create_MATE_stdout = False
+
     # Config
     datadir        = "./tests/testdata"
     prescan_fname  = "test0_prescan_prim_cldnb.czi"
@@ -72,60 +78,58 @@ def test_main_scheduler(capsys):
     MATE_fileEnd   = ".czi"
 
     # Create transient testing folder
-    now = datetime.now().strftime("%Y%m%d-%H%M%S")
+    now = datetime.now().strftime(r"%Y%m%d-%H%M%S")
     testdir = os.path.join(datadir, "testrun_"+now)
     os.mkdir(testdir)
 
-    # Handle conditional printing of MATE outputs
-    # Note: ExitStack is just a way of running a context manager conditionally!
-    with ExitStack() as capsys_stack:
-        if print_MATE_outputs:
-            _ = capsys_stack.enter_context(capsys.disabled())
+    # Prepare thread object to run MATE monitoring with main_scheduler
+    scheduler_args = (testdir, )
+    scheduler_kwargs = {
+        'img_params'   : {'channel':None, 'show':False},
+        'fileStart'    : MATE_fileStart,
+        'fileEnd'      : MATE_fileEnd,
+        'write_winreg' : False,
+        'verbose'      : True}
+    thread = threading.Thread(
+        target=run_mate.main_scheduler,
+        args=scheduler_args,
+        kwargs=scheduler_kwargs,
+        daemon=True)  # Ensures MATE thread will terminate at end of test
+    
+    # For nicer output when printing
+    if print_MATE_outputs:
+        print("\n\n[test_run_mate.py:] Starting MATE monitoring in thread.")
 
-        # Prepare thread object to run MATE monitoring with main_scheduler
-        scheduler_args = (testdir, )
-        scheduler_kwargs = {
-            'img_params'   : {'channel':None, 'show':False},
-            'fileStart'    : MATE_fileStart,
-            'fileEnd'      : MATE_fileEnd,
-            'write_winreg' : False,
-            'verbose'      : True}
-        thread = threading.Thread(
-            target=run_mate.main_scheduler,
-            args=scheduler_args,
-            kwargs=scheduler_kwargs,
-            daemon=True)  # Ensures MATE thread will terminate at end of test
-        
-        # For nicer output when capsys is off
-        print("\n[test_run_mate.py:] Starting MATE monitoring in thread.")
+    # Start the MATE monitoring thread
+    thread.start()
 
-        # Start the MATE monitoring thread
-        thread.start()
+    # Wait for startup
+    # TODO: Would there be a more adaptive way to wait?
+    time.sleep(6)
 
-        # Wait for startup
-        # TODO: Would there be a more adaptive way to wait?
-        time.sleep(6)
+    # Move example test scan into folder
+    shutil.copy(prescan_fpath, testdir)
+    assert os.path.isfile(os.path.join(testdir, prescan_fname))
 
-        # Move example test scan into folder
-        shutil.copy(prescan_fpath, testdir)
-        assert os.path.isfile(os.path.join(testdir, prescan_fname))
+    # Wait for completion
+    # TODO: Would there be a more adaptive way to wait?
+    time.sleep(12)
 
-        # Wait for completion
-        # TODO: Would there be a more adaptive way to wait?
-        time.sleep(12)
-
-        # For nicer output when capsys is off
+    # Print the outputs (for debugging)
+    if print_MATE_outputs:
         print("\n[test_run_mate.py:] Finished waiting for MATE monitoring.\n")
+        captured = capsys.readouterr()
+        with capsys.disabled():
+            print(captured.out)
 
     # Check command line output against expectations
     if not print_MATE_outputs:
         captured = capsys.readouterr()
 
-        # # Generate reference file
-        # # DEV: Comment this in to generate an updated output reference
-        # with open(stdout_fpath, "w") as outfile:
-        #     outfile.write(captured.out)
-        #     assert False, "Generated new console output reference file; forcing test failure."
+        # Generate reference file
+        if create_MATE_stdout:
+            with open(stdout_fpath, "w") as outfile:
+                outfile.write(captured.out)
 
         # Compare against reference file (with updated testdir time label)
         with open(stdout_fpath, "r") as infile:
@@ -145,5 +149,6 @@ def test_main_scheduler(capsys):
     shutil.rmtree(testdir)
     assert not os.path.isdir(testdir)
 
-    # Ensure the test fails if the command line output test was skipped
-    assert not print_MATE_outputs, "Cannot test MATE command line outputs when print_MATE_outputs is set to True; forcing test failure."
+    # Ensure the test fails if any of the DEV mode flags were set to True
+    assert not print_MATE_outputs, "Cannot test MATE stdout when print_MATE_outputs is set to True; forcing test failure."
+    assert not create_MATE_stdout, "Generated new MATE stdout reference file; forcing test failure."
