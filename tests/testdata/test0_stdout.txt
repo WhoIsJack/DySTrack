@@ -1,0 +1,15 @@
+
+
+  MATE MONITORING SESSION IN PROGRESS...
+  Press <Esc> to terminate.
+
+
+    Target file detected: ./tests/testdata\testrun_20240816-134621\test0_prescan_prim_cldnb.czi
+    Running image analysis...
+      Loaded image of shape: (20, 100, 200)
+      Detected treshold: 10
+      Resulting coords (zyx): 10.2637, 47.2761, 119.0000
+    Image analysis complete.
+    Pushing coords to scope...
+    Coords pushed.
+    Resuming monitoring...

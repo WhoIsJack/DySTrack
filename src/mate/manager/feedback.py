@@ -51,7 +51,7 @@ def _write_reg(key, name, value):
 ### Function to send coordinates to scope via a txt file
 
 def send_coords_txt(
-    fpath, z_pos=None, y_pos=None, x_pos=None, codeM='focus'):
+    fpath, z_pos=None, y_pos=None, x_pos=None, codeM='focus', precision=4):
     """Communicate new position for stage movement to the microscope through a
     text file, which should be monitored by the microscope software's macro.
 
@@ -65,6 +65,8 @@ def send_coords_txt(
     codeM : str, optional
         Action for the microscope to take.
         Default is 'focus'.
+    precision : int, optional, default 4
+        Number of decimal places to write.
         
     Returns
     -------
@@ -72,6 +74,7 @@ def send_coords_txt(
         True if file writing operation completed without an error.
         False otherwise.
     """
+    p = precision
 
     # Create the file if it doesn't exist yet
     if not os.path.isfile(fpath):
@@ -84,7 +87,8 @@ def send_coords_txt(
     # Write new coordinates
     try:
         with open(fpath, "a") as coordsfile:
-            coordsfile.write(f"{z_pos}\t{y_pos}\t{x_pos}\t{codeM}\n")
+            coordsfile.write(
+                f"{z_pos:.{p}f}\t{y_pos:.{p}f}\t{x_pos:.{p}f}\t{codeM}\n")
 
     # Handle failure cases
     # FIXME: This is too unspecific and should be revisited in the context of

@@ -39,6 +39,12 @@ dependencies = [
 [project.optional-dependencies]
 dev = [
   "pytest",
+  "pytest-mock",
   "pytest-cov",
   "coverage"
+]
+
+[tool.pytest.ini_options]
+addopts = [
+    "--import-mode=importlib",
 ]

@@ -19,3 +19,8 @@ For users:
 For developers:
 
 ```pip install -e ".[dev]"```
+
+[DEV-NOTE:] The '-e' means the installation is updated "live" as changes are 
+made to the source code (either directly or through e.g. `git pull`). However,
+when changes are made in `pyproject.toml` (e.g. if a new dependency is added)
+the pip installation needs to be updated with `pip install -Ue ".[dev]"`!
