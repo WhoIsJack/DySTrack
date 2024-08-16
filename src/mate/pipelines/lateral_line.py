@@ -277,7 +277,7 @@ def analyze_image(target_file, channel=None, show=False, verbose=False):
     ### Find new z and y positions
 
     # Get centroid
-    cen = ndi.measurements.center_of_mass(mask)
+    cen = ndi.center_of_mass(mask)
 
     # Get positions for 3D
     if raw.ndim == 3:

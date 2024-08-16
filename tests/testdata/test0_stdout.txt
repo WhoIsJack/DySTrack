@@ -4,7 +4,7 @@
   Press <Esc> to terminate.
 
 
-    Target file detected: ./tests/testdata\testrun_20240816-132819\test0_prescan_prim_cldnb.czi
+    Target file detected: ./tests/testdata\testrun_20240816-134621\test0_prescan_prim_cldnb.czi
     Running image analysis...
       Loaded image of shape: (20, 100, 200)
       Detected treshold: 10
