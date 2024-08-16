@@ -13,8 +13,8 @@ Created on Thu Aug 15 13:21:42 2024
 ### Imports
 
 import pytest
-import sys, os, shutil, time
-import multiprocessing
+import sys, os, shutil, time, re
+import threading
 from datetime import datetime
 from contextlib import ExitStack
 
@@ -67,6 +67,7 @@ def test_main_scheduler(capsys):
     datadir        = "./tests/testdata"
     prescan_fname  = "test0_prescan_prim_cldnb.czi"
     prescan_fpath  = os.path.join(datadir, prescan_fname)
+    stdout_fpath   = os.path.join(datadir, "test0_stdout.txt")
     MATE_fileStart = "test0_prescan_"
     MATE_fileEnd   = ".czi"
 
@@ -76,11 +77,12 @@ def test_main_scheduler(capsys):
     os.mkdir(testdir)
 
     # Handle conditional printing of MATE outputs
+    # Note: ExitStack is just a way of running a context manager conditionally!
     with ExitStack() as capsys_stack:
         if print_MATE_outputs:
             _ = capsys_stack.enter_context(capsys.disabled())
 
-        # Start monitoring with scheduler (in separate process)
+        # Prepare thread object to run MATE monitoring with main_scheduler
         scheduler_args = (testdir, )
         scheduler_kwargs = {
             'img_params'   : {'channel':None, 'show':False},
@@ -88,11 +90,17 @@ def test_main_scheduler(capsys):
             'fileEnd'      : MATE_fileEnd,
             'write_winreg' : False,
             'verbose'      : True}
-        process = multiprocessing.Process(
+        thread = threading.Thread(
             target=run_mate.main_scheduler,
             args=scheduler_args,
-            kwargs=scheduler_kwargs)
-        process.start()
+            kwargs=scheduler_kwargs,
+            daemon=True)  # Ensures MATE thread will terminate at end of test
+        
+        # For nicer output when capsys is off
+        print("\n[test_run_mate.py:] Starting MATE monitoring in thread.")
+
+        # Start the MATE monitoring thread
+        thread.start()
 
         # Wait for startup
         # TODO: Would there be a more adaptive way to wait?
@@ -106,21 +114,25 @@ def test_main_scheduler(capsys):
         # TODO: Would there be a more adaptive way to wait?
         time.sleep(12)
 
-        # Terminate scheduler monitoring
-        # TODO: Have the scheduler exit gracefully when terminated?!
-        process.terminate()
-
         # For nicer output when capsys is off
-        print("\n[test_run_mate.py:] MATE process has been terminated.\n\n")
+        print("\n[test_run_mate.py:] Finished waiting for MATE monitoring.\n")
 
     # Check command line output against expectations
     if not print_MATE_outputs:
-        # NOTE: Turns out this is kinda hard, since capsys/capfd do not seem
-        #       able to capture stdout from multiprocessing.Process, and there
-        #       doesn't seem to be simple method to do so otherwise either. The
-        #       closest to success (but also very complicated) is to change the
-        #       sys.stdout inside the process into a file object...
-        pass  # TODO! YAH!
+        captured = capsys.readouterr()
+
+        # # Generate reference file
+        # # DEV: Comment this in to generate an updated output reference
+        # with open(stdout_fpath, "w") as outfile:
+        #     outfile.write(captured.out)
+        #     assert False, "Generated new console output reference file; forcing test failure."
+
+        # Compare against reference file (with updated testdir time label)
+        with open(stdout_fpath, "r") as infile:
+            check_captured = infile.read()
+        ref_time = re.search(r"testrun_\d{8}-\d{6}", check_captured).group()
+        check_captured = check_captured.replace(ref_time, "testrun_"+now)
+        assert captured.out == check_captured
 
     # Check resulting mate_coords.txt file
     with open(os.path.join(testdir, "mate_coords.txt"), "r") as infile:
@@ -134,4 +146,4 @@ def test_main_scheduler(capsys):
     assert not os.path.isdir(testdir)
 
     # Ensure the test fails if the command line output test was skipped
-    assert not print_MATE_outputs, "Cannot test MATE command line outputs when print_MATE_outputs is set to True."
+    assert not print_MATE_outputs, "Cannot test MATE command line outputs when print_MATE_outputs is set to True; forcing test failure."
