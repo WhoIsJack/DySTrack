@@ -13,29 +13,25 @@ Created on Sun Jan 15 00:34:07 2017
 """
 
 
-### Imports
-
 import os
 from time import sleep
 from warnings import simplefilter, warn
-simplefilter('always', UserWarning)
 
+simplefilter("always", UserWarning)
+
+import matplotlib.pyplot as plt
 import numpy as np
 import scipy.ndimage as ndi
-import matplotlib.pyplot as plt
-
-from tifffile import imread as tifread
 from czifile import imread as cziread
 from nd2 import imread as nd2read
+from tifffile import imread as tifread
 
-
-### Complete pipeline function for lateral line masking
 
 def analyze_image(target_file, channel=None, show=False, verbose=False):
-    """Compute new positions for the microscope to track the zebrafish lateral 
+    """Compute new positions for the microscope to track the zebrafish lateral
     line primordium's movement based on a 2D or 3D image. The primordium is
-    masked using object-count thresolding. The new y (and z, if 3D) positions 
-    are computed as the respective centers of mass of the image. The new x 
+    masked using object-count thresolding. The new y (and z, if 3D) positions
+    are computed as the respective centers of mass of the image. The new x
     position is computed relative to the leading edge position of the mask.
 
     Parameters
@@ -63,7 +59,6 @@ def analyze_image(target_file, channel=None, show=False, verbose=False):
     #       use without cmdline forwarding in run_mate.py, so either a config
     #       file or just a parameter section here at the top might be best?
 
-
     ### Load data
 
     # Make sure the file has finished writing
@@ -79,7 +74,7 @@ def analyze_image(target_file, channel=None, show=False, verbose=False):
             break
 
     # Load the image if it is a tif file
-    if target_file.endswith('.tif'):
+    if target_file.endswith(".tif"):
         raw = tifread(target_file)
 
     # Load the image if it is a czi file
@@ -87,17 +82,18 @@ def analyze_image(target_file, channel=None, show=False, verbose=False):
     #       stable and well-maintained as his tifffile. It may be better to go
     #       with bio-formats (loci) instead. However, the advantage of czifile
     #       is that it is pure (c)python (no javabridge required).
-    if target_file.endswith('.czi'):
+    if target_file.endswith(".czi"):
         raw = cziread(target_file)
         raw = np.squeeze(raw)  # Remove excess dimensions
 
     # Load the image if it is an nd2 file
-    if target_file.endswith('.nd2'):
+    if target_file.endswith(".nd2"):
         raw = nd2read(target_file)
         raw = np.squeeze(raw)  # TODO: Check if this is actually needed!
 
     # Report
-    if verbose: print("      Loaded image of shape:", raw.shape)
+    if verbose:
+        print("      Loaded image of shape:", raw.shape)
 
     # Check dimensionality
     if raw.ndim > 4:
@@ -117,25 +113,26 @@ def analyze_image(target_file, channel=None, show=False, verbose=False):
     # NOTE: This conversion scales min to 0 and max to 255!
     if raw.dtype != np.uint8:
         warn("Image had to be converted down to 8bit!")
-        raw = ( (raw.astype(np.float) - raw.min()) / (raw.max() - raw.min()) * 255 ).astype(np.uint8)
+        raw = (
+            (raw.astype(np.float) - raw.min()) / (raw.max() - raw.min()) * 255
+        ).astype(np.uint8)
 
     # Show loaded image
     if show and raw.ndim == 3:
-        plt.imshow(np.max(raw, axis=0),interpolation="none",cmap="gray")
+        plt.imshow(np.max(raw, axis=0), interpolation="none", cmap="gray")
         plt.show()
 
         ## DEV-TEMP: Plot without blocking (untested; work in progress)  # TODO!
-        #plt.ion()
-        #plt.show(block=False)
-        #plt.imshow(np.max(raw, axis=0),interpolation="none",cmap="gray")
-        #plt.draw()
-        #plt.pause(0.001)  # To give mpl time to draw
-        #plt.pause(2.0)    # To give user time to view (optional)
+        # plt.ion()
+        # plt.show(block=False)
+        # plt.imshow(np.max(raw, axis=0),interpolation="none",cmap="gray")
+        # plt.draw()
+        # plt.pause(0.001)  # To give mpl time to draw
+        # plt.pause(2.0)    # To give user time to view (optional)
 
     elif show and raw.ndim == 2:
-        plt.imshow(raw,interpolation="none",cmap="gray")
+        plt.imshow(raw, interpolation="none", cmap="gray")
         plt.show()
-
 
     ### Mask by object-count thresholding
 
@@ -162,10 +159,10 @@ def analyze_image(target_file, channel=None, show=False, verbose=False):
     counts = np.zeros_like(thresholds)
 
     # Run threshold series
-    for index,threshold in enumerate(thresholds):
+    for index, threshold in enumerate(thresholds):
 
         # Apply current threshold and count objects
-        counts[index] = ndi.label(raw>=threshold)[1]
+        counts[index] = ndi.label(raw >= threshold)[1]
 
     # Smoothen the thresholds a bit
     counts_smooth = ndi.gaussian_filter1d(counts, 3)
@@ -178,14 +175,16 @@ def analyze_image(target_file, channel=None, show=False, verbose=False):
 
             # Criterion 2a: Is the current value below the maximum value divided by thresh_div?
             # FIXME: This criterion doesn't seem particularly robust!
-            if counts_smooth[threshold] <= (np.max(counts_smooth[:threshold]) / thresh_div):
+            if counts_smooth[threshold] <= (
+                np.max(counts_smooth[:threshold]) / thresh_div
+            ):
                 break
 
             # Criterion 2b: Alternatively, if the threshold is followed by an
             #               increase in counts again (i.e. it is a local min)
-            # FIXME: If there ever is an "early dip" despite smoothing, this 
+            # FIXME: If there ever is an "early dip" despite smoothing, this
             #        will lead to a low threshold being accepted!
-            elif counts_smooth[threshold+1] > counts_smooth[threshold]:
+            elif counts_smooth[threshold + 1] > counts_smooth[threshold]:
                 break
 
     # Fallback: If the detected threshold has 0 objects, take the next one
@@ -200,11 +199,14 @@ def analyze_image(target_file, channel=None, show=False, verbose=False):
                 break
 
     # Terminal fallback: If the final result is still nonesense, give up
-    if threshold>=250 or threshold==0 or counts[threshold]==0:
-        raise Exception("THRESHOLD DETECTION FAILED! Image analysis run aborted...")
+    if threshold >= 250 or threshold == 0 or counts[threshold] == 0:
+        raise Exception(
+            "THRESHOLD DETECTION FAILED! Image analysis run aborted..."
+        )
 
     # Binarize with the target threshold
-    if verbose: print("      Detected treshold:", threshold)
+    if verbose:
+        print("      Detected treshold:", threshold)
     mask = raw >= threshold
 
     # TODO: Add plotting before largest-object retention step?
@@ -222,19 +224,18 @@ def analyze_image(target_file, channel=None, show=False, verbose=False):
         # Plot of counts over threshold series
         plt.plot(counts_smooth)
         plt.plot(counts)
-        plt.vlines(threshold, 0, counts.max(), color='g')
+        plt.vlines(threshold, 0, counts.max(), color="g")
         plt.show()
 
         # Plots of final masks
         if mask.ndim == 3:
-            plt.imshow(np.max(mask,axis=0), interpolation="none", cmap="gray")
+            plt.imshow(np.max(mask, axis=0), interpolation="none", cmap="gray")
             plt.show()
-            plt.imshow(np.max(mask,axis=1), interpolation="none", cmap="gray")
+            plt.imshow(np.max(mask, axis=1), interpolation="none", cmap="gray")
             plt.show()
         else:
-            plt.imshow(mask,interpolation="none", cmap="gray")
+            plt.imshow(mask, interpolation="none", cmap="gray")
             plt.show()
-
 
     ### Find new z and y positions
 
@@ -250,8 +251,8 @@ def analyze_image(target_file, channel=None, show=False, verbose=False):
 
         # z limit: An absolute limitation on how much it can move!
         z_limit = 0.1  # Fraction of image size
-        z_limit_top = (raw.shape[0]-1)/2.0 + z_limit * (raw.shape[0]-1)
-        z_limit_bot = (raw.shape[0]-1)/2.0 - z_limit * (raw.shape[0]-1)
+        z_limit_top = (raw.shape[0] - 1) / 2.0 + z_limit * (raw.shape[0] - 1)
+        z_limit_bot = (raw.shape[0] - 1) / 2.0 - z_limit * (raw.shape[0] - 1)
         if z_pos > z_limit_top:
             warn("z_pos > z_limit_top; using z_limit_top!")
             z_pos = z_limit_top
@@ -260,13 +261,12 @@ def analyze_image(target_file, channel=None, show=False, verbose=False):
             z_pos = z_limit_bot
 
         # Invert resulting z_position for scope frame of reference
-        z_pos = (raw.shape[0]-1) - z_pos
-    
+        z_pos = (raw.shape[0] - 1) - z_pos
+
     # Get positions for 2D
     else:
         z_pos = None
         y_pos = cen[0]
-
 
     ### Find leading edge position
 
@@ -278,7 +278,6 @@ def analyze_image(target_file, channel=None, show=False, verbose=False):
 
     # Find frontal-most non-zero pixel
     front_pos = np.max(np.nonzero(collapsed)[0])
-
 
     ### Check if leading edge position is sensible
 
@@ -292,26 +291,40 @@ def analyze_image(target_file, channel=None, show=False, verbose=False):
     if front_pos < collapsed.shape[0] / 2.0:
 
         # In this case, the mask probably missed a lot at the tip...
-        warn("The detected front_pos is too far back, likely due to a masking error. Moving default distance.")
+        warn(
+            "The detected front_pos is too far back, likely due to a masking error. Moving default distance."
+        )
 
         # Handle it...
         default_step_fract = 1.0 / 8.0  # Param!
-        x_pos = 0.5 * collapsed.shape[0] + default_step_fract * collapsed.shape[0]
-        if verbose: print(f"      Resulting coords (zyx): {z_pos:.4f}, {y_pos:.4f}, {x_pos:.4f}")
+        x_pos = (
+            0.5 * collapsed.shape[0] + default_step_fract * collapsed.shape[0]
+        )
+        if verbose:
+            print(
+                f"      Resulting coords (zyx): {z_pos:.4f}, {y_pos:.4f}, {x_pos:.4f}"
+            )
         return z_pos, y_pos, x_pos
 
     # If the tip of the mask touches the front end of the image
     elif front_pos == collapsed.shape[0] - 1:
 
         # In this case, the prim has probably moved out of the frame
-        warn("The prim has probably moved out of the frame. Moving default catch-up distance.")
+        warn(
+            "The prim has probably moved out of the frame. Moving default catch-up distance."
+        )
 
         # Handle it...
         default_catchup_fract = 1.0 / 5.0  # Param!
-        x_pos = 0.5 * collapsed.shape[0] + default_catchup_fract * collapsed.shape[0]
-        if verbose: print(f"      Resulting coords (zyx): {z_pos:.4f}, {y_pos:.4f}, {x_pos:.4f}")
+        x_pos = (
+            0.5 * collapsed.shape[0]
+            + default_catchup_fract * collapsed.shape[0]
+        )
+        if verbose:
+            print(
+                f"      Resulting coords (zyx): {z_pos:.4f}, {y_pos:.4f}, {x_pos:.4f}"
+            )
         return z_pos, y_pos, x_pos
-
 
     ### Compute new x-position for scope
 
@@ -326,19 +339,22 @@ def analyze_image(target_file, channel=None, show=False, verbose=False):
     #       - Use some controller function (PID?) to buffer speed variability
     #         and masking errors?
     blank_fract = 1.0 / 5.0
-    x_pos = front_pos + blank_fract * collapsed.shape[0] - 0.5 * collapsed.shape[0]
-
+    x_pos = (
+        front_pos + blank_fract * collapsed.shape[0] - 0.5 * collapsed.shape[0]
+    )
 
     ### Return results
 
-    if verbose: print(f"      Resulting coords (zyx): {z_pos:.4f}, {y_pos:.4f}, {x_pos:.4f}")
+    if verbose:
+        print(
+            f"      Resulting coords (zyx): {z_pos:.4f}, {y_pos:.4f}, {x_pos:.4f}"
+        )
     return z_pos, y_pos, x_pos
 
 
-### Handle direct calls
+# Handle direct calls
 
-if __name__ == '__main__':
-    raise Exception("Can't run this module directly. See 'python run_mate.py -h' for help.")
-
-
-
+if __name__ == "__main__":
+    raise Exception(
+        "Can't run this module directly. See 'python run_mate.py -h' for help."
+    )
