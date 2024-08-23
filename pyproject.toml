@@ -41,7 +41,9 @@ dev = [
   "pytest",
   "pytest-mock",
   "pytest-cov",
-  "coverage"
+  "coverage",
+  "black[jupyter]",
+  "isort"
 ]
 
 [tool.pytest.ini_options]
@@ -52,3 +54,10 @@ addopts = [
 
 [tool.coverage.run]
 data_file = "tests/.coverage"
+
+[tool.black]
+skip-string-normalization = false
+line-length = 79
+
+[tool.isort]
+profile = "black"
