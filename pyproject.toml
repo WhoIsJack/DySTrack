@@ -43,7 +43,8 @@ dev = [
   "pytest-cov",
   "coverage",
   "black[jupyter]",
-  "isort"
+  "isort",
+  "pre-commit"
 ]
 
 [tool.pytest.ini_options]
