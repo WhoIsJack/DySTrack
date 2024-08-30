@@ -44,7 +44,10 @@ dev = [
   "coverage",
   "black[jupyter]",
   "isort",
-  "pre-commit"
+  "pre-commit",
+  "sphinx",
+  "nbsphinx",
+  "pydata-sphinx-theme"
 ]
 
 [tool.pytest.ini_options]
