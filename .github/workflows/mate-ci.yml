@@ -36,22 +36,26 @@ jobs:
         python -m pip install ".[dev]"
 
     # Code formatting
-    # DEV-TEMP: Instead of specifying src and test explicitly here, at a later point we can
-    #           add an extend-exclude kwarg to pyproject.toml that stops black from looking
-    #           at folders we don't want checked. For now, I want folders like prototype and
-    #           macros excluded here, but not in pyproject.toml... but also it seems that
-    #           use_pyproject is also supported for python 3.11 or higher, so...
+    # DEV-TEMP: Instead of specifying src and test explicitly here, we could
+    # add an extend-exclude kwarg to pyproject.toml that stops black from
+    # looking at folders we don't want checked. But for now, I want folders 
+    # like prototype and macros excluded here, but not in pyproject.toml...
+    # Update: Seems like use_pyproject is only supported for python 3.11 or
+    # higher, so for now I guess this should stay as it is anyways.
     - name: Code formatting with black
+      if: success() || failure()
       uses: psf/black@stable
       with:
         src: "./src ./tests"
-        #use_pyproject: true  # Requires python 3.11 or higher...
+        #use_pyproject: true  # Requires python 3.11 or higher
     - name: Code formatting with isort
+      if: success() || failure()
       uses: isort/isort-action@v1
       with:
         sort-paths: "./src ./tests"
 
     # Testing
     - name: Test with pytest
+      if: success() || failure()
       run: |
         pytest
