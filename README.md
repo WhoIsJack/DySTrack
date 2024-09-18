@@ -41,7 +41,7 @@ the pip installation needs to be updated with `pip install -Ue ".[dev]"`!
 - Get your feature branch up to date with any changes that have happened on the main branch: `git checkout main`, `git pull`, `git checkout <feature_branch_name>`, `git merge main` (+if there are merge conflicts, resolve them and commit the result)
 - Ensure that `isort`, `black`, and `pytest` have been run, and that everything is clean and ready to go
 - `git push` the final product
-- On GitHub, create a pull request and then wait for Jonas to check it and - if everything's good - to merge it into main
+- On GitHub, create a pull request. This will automatically trigger a GitHub Actions workflow to check if isort, black, and pytest all come up green. If this fails, the output from that automated test can be used for debugging. Once the checks all pass, wait for Jonas to review the pull request and (if everything's good) to merge it into main
 - Once the merge is complete, you can delete the feature branch locally with `git branch -d <feature_branch_name>` and on GitHub with `git push -d origin <feature_branch_name>`
 - "I feel a profound sense of pride and accomplishment!"
 
