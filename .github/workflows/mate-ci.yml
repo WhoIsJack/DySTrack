@@ -52,7 +52,7 @@ jobs:
       if: success() || failure()
       uses: isort/isort-action@v1
       with:
-        sort-paths: "./src ./tests"
+        sort-paths: "./src"
 
     # Testing
     - name: Test with pytest
