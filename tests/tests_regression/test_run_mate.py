@@ -10,7 +10,7 @@ Created on Thu Aug 15 13:21:42 2024
 """
 
 
-import os
+
 import re
 import shutil
 import sys
@@ -18,6 +18,7 @@ import threading
 import time
 from contextlib import ExitStack
 from datetime import datetime
+import os
 
 import pytest
 
@@ -27,12 +28,12 @@ from mate.manager import run_mate
 def test_main(capsys, mocker):
     """Regression test for main function (command line parsing)."""
 
-    assert False
-
     # Run with --help flag and check that SystemExit is reached
     sys.argv.append("--help")
     with pytest.raises(SystemExit):
         run_mate.main()
+
+    aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa = (str, str, str, str, str, str, str, str, str, str, str, str, str, str, str)
 
     # Check that the help message was printed
     captured = capsys.readouterr()
@@ -70,8 +71,6 @@ def test_main(capsys, mocker):
 
 def test_main_scheduler(capsys):
     """Regression test for scheduler (main event loop)."""
-
-    assert False
 
     # DEV: Set this to True to see MATE outputs during the pytest run;
     # this will make the test fail, but it's very useful for debugging!
