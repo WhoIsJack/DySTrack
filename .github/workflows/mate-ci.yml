@@ -8,8 +8,6 @@ name: MATE CI
 on:
   push:
     branches: ["main", "ci_dev"]
-  pull_request:
-    branches: ["main", "ci_dev"]
 
 jobs:
   build:
