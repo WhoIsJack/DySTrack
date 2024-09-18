@@ -33,6 +33,12 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         python -m pip install ".[dev]"
+    - name: Code style formatting
+      run: |
+        black src/
+        black tests/
+        isort src/
+        isort tests/
     - name: Test with pytest
       run: |
         pytest
