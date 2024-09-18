@@ -1,0 +1,67 @@
+# Continuous Integration workflow for MATE
+# On a push or on creation of a pull request to branches main or ci_dev, this 
+# workflow will install python and MATE (along with dependencies) and run black
+# isort, and pytest.
+
+name: MATE CI
+
+on:
+  push:
+    branches: ["main", "ci_dev"]
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      fail-fast: false
+      matrix:
+        #os: [windows-2019, windows-2022, windows-latest]
+        os: [windows-latest]  # DEV-TEMP: To save minutes while repo is not yet public!
+        #python-version: ["3.9", "3.10", "3.11", "3.12"]
+        python-version: ["3.9"]  # DEV-TEMP: To save minutes while repo is not yet public!
+
+    # Setup
+    steps:
+    - uses: actions/checkout@v4
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v3
+      with:
+        python-version: ${{ matrix.python-version }}
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        python -m pip install ".[dev]"
+
+    # Code formatting
+    # DEV-TEMP: Instead of specifying src and test explicitly here, we could
+    # add an extend-exclude kwarg to pyproject.toml that stops black from
+    # looking at folders we don't want checked. But for now, I want folders 
+    # like prototype and macros excluded here, but not in pyproject.toml...
+    # Update: Seems like use_pyproject is only supported for python 3.11 or
+    # higher, so for now I guess this should stay as it is anyways.
+    - name: Code formatting with black
+      if: success() || failure()
+      uses: psf/black@stable
+      with:
+        src: "./src ./tests"
+        #use_pyproject: true  # Requires python 3.11 or higher
+    - name: Code formatting with isort
+      if: success() || failure()
+      run: |
+        isort --check-only --diff ./src ./tests
+      # Using the isort action fails for an obscure reason...
+      #uses: isort/isort-action@v1
+      #with:
+      #  sort-paths: "./src ./tests"
+
+    # Testing
+    - name: Test with pytest
+      if: success() || failure()
+      run: |
+        pytest
+    # TODO: Would be nice to have a good way of reporting the outcome of each
+    # test (as well as black and isort) in a report that gets automatically
+    # generated and posted on the PR. Seems like there's several tools for 
+    # doing this, but they don't seem to do exactly what I want, nor are they 
+    # straightforward. This is low-priority for now.
