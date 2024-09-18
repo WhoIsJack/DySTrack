@@ -39,28 +39,19 @@ jobs:
     # DEV-TEMP: Instead of specifying src and test explicitly here, at a later point we can
     #           add an extend-exclude kwarg to pyproject.toml that stops black from looking
     #           at folders we don't want checked. For now, I want folders like prototype and
-    #           macros excluded here, but not in pyproject.toml...
-    - name: Black code formatting on src
+    #           macros excluded here, but not in pyproject.toml... but also it seems that
+    #           use_pyproject is also supported for python 3.11 or higher, so...
+    - name: Code formatting with black
       uses: psf/black@stable
       with:
-        src: "./src"
-        use_pyproject: true
-    - name: Black code formatting on tests
-      uses: psf/black@stable
+        src: "./src ./tests"
+        #use_pyproject: true  # Requires python 3.11 or higher...
+    - name: Code formatting with isort
+      uses: isort/isort-action@v1
       with:
-        src: "./tests"
-        use_pyproject: true
-    # - name: isort code formatting on src
-    #   uses: psf/black@stable
-    #   with:
-    #     src: "./src"
-    #     use_pyproject: true
-    # - name: isort code formatting on tests
-    #   uses: psf/black@stable
-    #   with:
-    #     src: "./tests"
-    #     use_pyproject: true
+        sort-paths: "./src ./tests"
 
+    # Testing
     - name: Test with pytest
       run: |
         pytest
