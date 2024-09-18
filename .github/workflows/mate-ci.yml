@@ -18,8 +18,10 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [windows-2019, windows-2022, windows-latest]
-        python-version: ["3.9", "3.10", "3.11", "3.12"]        
+        #os: [windows-2019, windows-2022, windows-latest]
+        os: [windows-latest]  # DEV-TEMP: To save minutes while repo is not yet public!
+        #python-version: ["3.9", "3.10", "3.11", "3.12"]
+        python-version: ["3.9"]  # DEV-TEMP: To save minutes while repo is not yet public!
 
     steps:
     - uses: actions/checkout@v4
