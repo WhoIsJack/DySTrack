@@ -50,9 +50,12 @@ jobs:
         #use_pyproject: true  # Requires python 3.11 or higher
     - name: Code formatting with isort
       if: success() || failure()
-      uses: isort/isort-action@v1
+      run: |
+        isort --check-only --diff ./src ./tests
+      # Using the isort action fails for an obscure reason...
+      #uses: isort/isort-action@v1
       #with:
-      #  #sort-paths: "./src ./tests"
+      #  sort-paths: "./src ./tests"
 
     # Testing
     - name: Test with pytest
