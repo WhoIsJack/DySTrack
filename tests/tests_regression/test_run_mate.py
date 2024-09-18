@@ -27,6 +27,8 @@ from mate.manager import run_mate
 def test_main(capsys, mocker):
     """Regression test for main function (command line parsing)."""
 
+    assert False
+
     # Run with --help flag and check that SystemExit is reached
     sys.argv.append("--help")
     with pytest.raises(SystemExit):
@@ -68,6 +70,8 @@ def test_main(capsys, mocker):
 
 def test_main_scheduler(capsys):
     """Regression test for scheduler (main event loop)."""
+
+    assert False
 
     # DEV: Set this to True to see MATE outputs during the pytest run;
     # this will make the test fail, but it's very useful for debugging!
