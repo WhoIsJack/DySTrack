@@ -44,7 +44,6 @@ dev = [
   "coverage",
   "black[jupyter]",
   "isort",
-  "pre-commit",
   "sphinx",
   "nbsphinx",
   "pydata-sphinx-theme"
