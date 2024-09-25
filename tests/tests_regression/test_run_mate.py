@@ -76,7 +76,7 @@ def test_main_scheduler(capsys):
     # DEV: Set this to True to generate a new reference stdout file (which will
     # overwrite the old) if the stdout behavior of the scheduler has changed.
     # This will force the test to fail, since generating a new reference from
-    # the output and then checking them against each other will always pass.
+    # the output and then checking them against each other would always pass.
     create_MATE_stdout = False
 
     # Config
