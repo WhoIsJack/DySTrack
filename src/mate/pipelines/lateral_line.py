@@ -161,7 +161,7 @@ def analyze_image(target_file, channel=None, show=False, verbose=False):
     if raw.dtype != np.uint8:
         warn("Image had to be converted down to 8bit!")
         raw = (
-            (raw.astype(np.float) - raw.min()) / (raw.max() - raw.min()) * 255
+            (raw.astype(float) - raw.min()) / (raw.max() - raw.min()) * 255
         ).astype(np.uint8)
 
     # Show loaded image
