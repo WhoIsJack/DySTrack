@@ -46,7 +46,8 @@ dev = [
   "isort",
   "sphinx",
   "nbsphinx",
-  "pydata-sphinx-theme"
+  "pydata-sphinx-theme",
+  "ipykernel"
 ]
 
 [tool.pytest.ini_options]
