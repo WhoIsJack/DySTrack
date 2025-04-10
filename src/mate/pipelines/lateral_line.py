@@ -21,10 +21,7 @@ simplefilter("always", UserWarning)
 import matplotlib.pyplot as plt
 import numpy as np
 import scipy.ndimage as ndi
-from czifile import imread as cziread
-from nd2 import imread as nd2read
-from tifffile import imread as tifread
-
+from aicsimageio import AICSImage
 
 def analyze_image(target_file, channel=None, show=False, verbose=False):
     """Compute new positions for the microscope to track the zebrafish lateral
@@ -83,20 +80,21 @@ def analyze_image(target_file, channel=None, show=False, verbose=False):
 
             # Load the image if it is a tif file
             if target_file.endswith(".tif") or target_file.endswith(".tiff"):
-                raw = tifread(target_file)
+                raw = AICSImage(target_file)
+                raw = raw.data
 
             # Load the image if it is a czi file
             # TODO: Consider swapping to bio-formats? Maybe not; requires javabridge...
             elif target_file.endswith(".czi"):
-                raw = cziread(target_file)
+                raw = AICSImage(target_file)
+                raw = raw.data
                 raw = np.squeeze(raw)  # Remove excess dimensions
 
             # Load the image if it is an nd2 file
             elif target_file.endswith(".nd2"):
-                raw = nd2read(target_file)
-                raw = np.squeeze(
-                    raw
-                )  # TODO: Check if this is actually needed!
+                raw = AICSImage(target_file)
+                raw = raw.data
+                raw = np.squeeze(raw)  # TODO: Check if this is actually needed!
 
             # Handle unknown file endings
             else:
