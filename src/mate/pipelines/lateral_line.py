@@ -23,6 +23,7 @@ import numpy as np
 import scipy.ndimage as ndi
 from aicsimageio import AICSImage
 
+
 def analyze_image(target_file, channel=None, show=False, verbose=False):
     """Compute new positions for the microscope to track the zebrafish lateral
     line primordium's movement based on a 2D or 3D image. The primordium is
@@ -77,24 +78,10 @@ def analyze_image(target_file, channel=None, show=False, verbose=False):
 
         # If the file writing looks done, make a loading attempt
         try:
-
-            # Load the image if it is a tif file
-            if target_file.endswith(".tif") or target_file.endswith(".tiff"):
+            if target_file.split(".")[-1] in ["tif", "tiff", "czi", "nd2"]:
                 raw = AICSImage(target_file)
                 raw = raw.data
-
-            # Load the image if it is a czi file
-            # TODO: Consider swapping to bio-formats? Maybe not; requires javabridge...
-            elif target_file.endswith(".czi"):
-                raw = AICSImage(target_file)
-                raw = raw.data
-                raw = np.squeeze(raw)  # Remove excess dimensions
-
-            # Load the image if it is an nd2 file
-            elif target_file.endswith(".nd2"):
-                raw = AICSImage(target_file)
-                raw = raw.data
-                raw = np.squeeze(raw)  # TODO: Check if this is actually needed!
+                raw = np.squeeze(raw)
 
             # Handle unknown file endings
             else:

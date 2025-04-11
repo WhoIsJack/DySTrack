@@ -10,8 +10,8 @@ Created on Sun Jan 15 00:34:07 2017
             that fit certain criteria, then triggers an image analysis pipeline
             that determines the new coordinates to be sent to the microscope,
             or rather to the relevant macro running in the scope's software.
-            
-@usage:     Run from Windows command line. 
+
+@usage:     Run from Windows command line.
             See 'python run_mate.py -h' for help.
 """
 

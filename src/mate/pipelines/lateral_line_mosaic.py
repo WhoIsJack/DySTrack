@@ -96,7 +96,9 @@ def analyze_image(target_file, channel=None, show=False, verbose=False):
             elif target_file.endswith(".nd2"):
                 raw = AICSImage(target_file)
                 raw = raw.data
-                raw = np.squeeze(raw)  # TODO: Check if this is actually needed!
+                raw = np.squeeze(
+                    raw
+                )  # TODO: Check if this is actually needed!
 
             # Handle unknown file endings
             else:
