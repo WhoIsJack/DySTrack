@@ -22,9 +22,7 @@ simplefilter("always", UserWarning)
 import matplotlib.pyplot as plt
 import numpy as np
 import scipy.ndimage as ndi
-from czifile import imread as cziread
-from nd2 import imread as nd2read
-from tifffile import imread as tifread
+from aicsimageio import AICSImage
 
 
 def analyze_image(target_file, channel=None, show=False, verbose=False):
@@ -61,35 +59,86 @@ def analyze_image(target_file, channel=None, show=False, verbose=False):
 
     ### Load data
 
-    # Make sure the file has finished writing
-    # NOTE: This works in general but still seems to randomly fail sometimes.  # FIXME!
-    sleep(2)  # Initial delay; helps with stability
+    # Make multiple attempts in case loading fails
+    attempts_left = 5
     file_size = -1
     while True:
-        new_file_size = os.stat(target_file).st_size
-        if new_file_size > file_size:
-            file_size = new_file_size
+
+        # Wait until the file is no longer being written to
+        # Note: In some cases microscope software may intermittently stop
+        #       writing, so this is not a perfect check for whether the file
+        #       is complete, hence the multiple attempts!
+        while True:
             sleep(2)
-        else:
+            new_file_size = os.stat(target_file).st_size
+            if new_file_size > file_size:
+                file_size = new_file_size
+                attempts_left = 5
+            else:
+                break
+
+        # If the file writing looks done, make a loading attempt
+        try:
+
+            # Load the image if it is a tif file
+            if target_file.endswith(".tif") or target_file.endswith(".tiff"):
+                raw = AICSImage(target_file)
+                raw = raw.data
+
+            # Load the image if it is a czi file
+            # TODO: Consider swapping to bio-formats? Maybe not; requires javabridge...
+            elif target_file.endswith(".czi"):
+                raw = AICSImage(target_file)
+                raw = raw.data
+                raw = np.squeeze(raw)  # Remove excess dimensions
+
+            # Load the image if it is an nd2 file
+            elif target_file.endswith(".nd2"):
+                raw = AICSImage(target_file)
+                raw = raw.data
+                raw = np.squeeze(
+                    raw
+                )  # TODO: Check if this is actually needed!
+
+            # Handle unknown file endings
+            else:
+                errmsg = (
+                    "File ending not recognized! Use `run_mate -e END` to "
+                    + "control which file endings trigger image analysis."
+                )
+                raise ValueError(errmsg)
+
+            # Some basic checks to ensure a loader didn't fail silently...
+            if not isinstance(raw, np.ndarray):
+                errmsg = (
+                    "Loaded image object is not instance of `np.array`,"
+                    + " indicating that the loader has failed silently!"
+                )
+                raise IOError(errmsg)
+            if raw.size == 0:
+                errmsg = (
+                    "Loaded image array is of size 0, indicating that"
+                    + "that the loader has failed silently!"
+                )
+                raise IOError(errmsg)
+
+            # Exit the loop of loading attempts if loading was successful
             break
 
-    # Load the image if it is a tif file
-    if target_file.endswith(".tif"):
-        raw = tifread(target_file)
-
-    # Load the image if it is a czi file
-    # NOTE: This uses Christoph Gohlke's czifile, which does not seem to be as
-    #       stable and well-maintained as his tifffile. It may be better to go
-    #       with bio-formats (loci) instead. However, the advantage of czifile
-    #       is that it is pure (c)python (no javabridge required).
-    if target_file.endswith(".czi"):
-        raw = cziread(target_file)
-        raw = np.squeeze(raw)  # Remove excess dimensions
-
-    # Load the image if it is an nd2 file
-    if target_file.endswith(".nd2"):
-        raw = nd2read(target_file)
-        raw = np.squeeze(raw)  # TODO: Check if this is actually needed!
+        # In case of failure, retry if there are still attempts left,
+        # otherwise raise the Exception
+        except Exception as err:
+            attempts_left -= 1
+            if attempts_left == 0:
+                print(
+                    f"\n  Multiple attempts to load the image have failed;",
+                    "the final one with this Exception:\n  ",
+                    repr(err),
+                    "\n",
+                )
+                raise
+            else:
+                sleep(2)
 
     # Report
     if verbose:

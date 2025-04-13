@@ -1,0 +1,7 @@
+Read settings from previous
+Trigger acquisition
+Read current multiposition coordinates
+Moving stage (changing coordinates)
+
+- hidden files
+- file neame endings

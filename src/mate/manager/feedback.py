@@ -5,10 +5,10 @@ Created on Sun Jan 15 00:34:07 2017
 @authors:   Jonas Hartmann @ Gilmour group (EMBL) & Mayor lab (UCL)
             Zimeng Wu @ Wong group (UCL)
 
-@descript:  Functions for sending coordinates and commands to microscopes, or 
+@descript:  Functions for sending coordinates and commands to microscopes, or
             rather to the macros that are running in their software.
             See `run_mate.py` for more info.
-            
+
 @usage:     Called by `run_mate.py`.
 """
 

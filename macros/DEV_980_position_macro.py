@@ -27,14 +27,14 @@ prescan_buffer = "LSM512" #for ZEN3.6 and below
 prescan_name = "PRESCAN_4888"  #.czexp from menu
 
 # Job path
-job_name = "MATE_JOB_cldnb_cxcr4" #.czexp from menu
+job_name = "MATE_JOB_cldnb" #.czexp from menu
 
 # Output path
-output_folder = r'D:\Zimeng\20240530_MATE'
+output_folder = r'F:\Zimeng\20241002_MATE_tile'
 
 # Loop settings
 max_iterations = 90  # Number of loops
-interval_min   =  2  # Interval in minutes  
+interval_min   =  10  # Interval in minutes  
 
 ### Start experiment
 
@@ -46,6 +46,15 @@ interval = interval_min * 60000
 lines_read = 0
 coords_fpath = os.path.join(output_folder, 'mate_coords.txt')
 
+#Get positions
+Zen.Application.Documents.RemoveAll()
+
+experiment1 = ZenExperiment()
+experiment1.Load(prescan_name)
+experiment1.SetActive()
+
+tile_positions = experiment1.GetSinglePositionInfos(0)
+
 # Start the loop
 for i in range(max_iterations):
 
@@ -55,17 +64,10 @@ for i in range(max_iterations):
     time_before = DateTime.Now
     time_after = time_before.AddMilliseconds(interval)
 
-    
     # Clear open images
     Zen.Application.Documents.RemoveAll()
 
-    experiment1 = ZenExperiment()
-    experiment1.Load(prescan_name)
-    experiment1.SetActive()
-
-    tile_positions = experiment1.GetSinglePositionInfos(0)
-
-    for position in tile_positions[1:]:
+    for pos_idx, position in enumerate(tile_positions):
 
         # Prescan
         experiment2 = ZenExperiment()
@@ -73,21 +75,21 @@ for i in range(max_iterations):
         experiment2.Load(prescan_name)
         experiment2.SetActive()
 
-        x_pos = experiment2.GetSinglePositionInfos(0)[position].X
-        y_pos = experiment2.GetSinglePositionInfos(0)[position].Y
-        z_pos = experiment2.GetSinglePositionInfos(0)[position].Z
+        x_pos = position.X
+        y_pos = position.Y
+        z_pos = position.Z
 
-        experiment2.ModifyTileRegionsWithXYZOffset(0, x_pos, y_pos, z_pos)[0]
+        experiment2.ClearTileRegionsAndPositions(0)
+        experiment2.AddSinglePosition(0, x_pos, y_pos, z_pos)
 
         # AutoSave
         experiment2.AutoSave.IsActivated = True
         experiment2.AutoSave.StorageFolder = output_folder
-        experiment2.AutoSave.Name = f'prescan_pos_{position}_{i:04d}'
+        experiment2.AutoSave.Name = 'prescan_%d_pos_%d' %(i, pos_idx)
         experiment2.Save()
         output_experiment2 = Zen.Acquisition.Execute(experiment2)
     
-
-        # Save prescimage size
+        # Save prescan image size
         prescan_x = output_experiment2.Bounds.SizeX
         prescan_y = output_experiment2.Bounds.SizeY
         prescan_z = output_experiment2.Bounds.SizeZ
@@ -126,44 +128,48 @@ for i in range(max_iterations):
         ### Convert new coordinates into the stage's Frame Of Reference (FOR)
 
         # Convert from corner-of-image FOR to center-of-image FOR
-        relative_x = x_pos - (prescan_x/2)
-        relative_y = y_pos - (prescan_y/2)
+        #relative_x = x_pos - (prescan_x/2)
+        #relative_y = y_pos - (prescan_y/2)
         relative_z = z_pos - ((prescan_z-1)/2)
 
         # Scale from pixels to microns
-        scaled_x = relative_x * scaling_x
-        scaled_y = relative_y * scaling_y
+        scaled_x = x_pos * scaling_x
+        scaled_y = y_pos * scaling_y
         scaled_z = relative_z * scaling_z
-    
+
+        # Get stage coordinates
+        x_coord = output_experiment2.GetPositionLeftTop().X
+        y_coord = output_experiment2.GetPositionLeftTop().Y
+        z_coord = output_experiment2.Metadata.FocusPositionMicron 
     
         # Convert from center-of-image FOR to the stage's FOR
-        new_pos_x = Zen.Devices.Stage.ActualPositionX + scaled_x
-        new_pos_y = Zen.Devices.Stage.ActualPositionY + scaled_y
-        new_pos_z = Zen.Devices.Focus.ActualPosition  - scaled_z
+        new_pos_x = x_coord + scaled_x
+        new_pos_y = y_coord + scaled_y
+        new_pos_z = z_coord  - scaled_z
 
         ### Update position and run main scan
-    
-        experiment2.ModifyTileRegionsWithXYZOffset(0, scaled_x, scaled_y, -scaled_z)[position] #negative z for inverted
-        experiment2.Save()
+        position.X = new_pos_x
+        position.Y = new_pos_y
+        position.Z = new_pos_z
     
         # Reuse settings and move stage
         experiment3 = ZenExperiment()
         experiment3.Load(job_name)
         experiment3.SetActive()
-    
-        experiment3.ModifyTileRegionsWithXYZOffset(0, scaled_x, scaled_y, -scaled_z) #negative z for inverted
 
+        experiment3.ClearTileRegionsAndPositions(0)
+        experiment3.AddSinglePosition(0, new_pos_x, new_pos_y, new_pos_z) #negative z for inverted
 
         #AutoSave
         experiment3.AutoSave.IsActivated = True
         experiment3.AutoSave.StorageFolder = output_folder
-        experiment3.AutoSave.Name = f'job_pos_{position}_{i:04d}'
+        experiment3.AutoSave.Name = 'job_%d_pos_%d' %(i, pos_idx)
         experiment3.Save()
 
         # Acquire
         output_experiment3 = Zen.Acquisition.Execute(experiment3) 
 
-        print(f'Saved: position {position}, timepoint {i:04d} ')     
+        # print('Saved: position %s, timepoint %04d' % (position, i))     
 
     ### Interval timing
 
