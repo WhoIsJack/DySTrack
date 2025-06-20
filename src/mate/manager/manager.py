@@ -235,9 +235,9 @@ def run_mate_manager(
     write_txt=True,
     verbose=True,
 ):
-    """Manages an event loop that monitors a target directory for new files. 
+    """Manages an event loop that monitors a target directory for new files.
     For each new file found that matches user-defined criteria, the speficied
-    image analysis pipeline is triggered and the results are transmitted to the 
+    image analysis pipeline is triggered and the results are transmitted to the
     microscope.
 
     The loop keeps going until `max_checks` checks for added files have been
@@ -302,7 +302,7 @@ def run_mate_manager(
         Whether to resume monitoring after transmission of detected coordinates
         to the microscope has terminally failed.
     write_txt : bool, optional, default True
-        If True, coordinates are recorded in a text file ("mate_coords.txt") in 
+        If True, coordinates are recorded in a text file ("mate_coords.txt") in
         `target_dir` *regardless* of the specified `tra_method`. If said method
         is "txt", this has no effect as the text file is generated anyway.
     verbose : bool, optional, default True
@@ -356,9 +356,9 @@ def run_mate_manager(
             for fname in os.listdir(target_dir)
             if os.path.isfile(os.path.join(target_dir, fname))
         ]
-    
+
     # Generate txt file to record coordinates (if necessary)
-    if tra_method=="txt" or write_txt:
+    if (tra_method == "txt") or write_txt:
         txt_path = os.path.join(target_dir, "mate_coords.txt")
         if not os.path.isfile(txt_path):
             with open(txt_path, "w") as coordsfile:
@@ -523,7 +523,7 @@ def run_mate_manager(
                             print("[!!] >>", repr(tra_err))
 
                     # Record coordinates in file if necessary
-                    if tra_err is None: 
+                    if tra_err is None:
                         if write_txt and (tra_method != "txt"):
                             txt_err = _trigger_coords_transmission(
                                 "txt",
@@ -531,13 +531,13 @@ def run_mate_manager(
                                 y_pos,
                                 x_pos,
                                 img_msg,
-                                target_dir=target_dir
+                                target_dir=target_dir,
                             )
                             if txt_err is not None:
                                 print(
-                                    "[!!] Failed to record coords in txt file"
-                                    + "skipping. This should not affect"
-                                    + "anything else. The error was:"
+                                    "[!!] Failed to record coords in txt file;"
+                                    + " skipping. This should not affect"
+                                    + " anything else. The error was:"
                                 )
                                 print("[!!] >>", repr(txt_err))
 
