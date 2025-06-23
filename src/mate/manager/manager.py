@@ -258,6 +258,8 @@ def run_mate_manager(
         ```
     max_checks : int or None, optional, default None
         Maximum number of checks for new files performed before exiting.
+    max_triggers : int or None, optional, default None
+        Maximum number of image analysis pipeline calls before exiting.
     max_targets : int or None, optional, default None
         Maximum number of target files sent to analysis before exiting.
     end_on_esc : bool, optional, default True
@@ -343,6 +345,13 @@ def run_mate_manager(
     if end_on_esc:
         print("Press <Esc> to terminate.\n")
 
+    # Generate txt file to record coordinates (if necessary)
+    if (tra_method == "txt") or write_txt:
+        txt_path = os.path.join(target_dir, "mate_coords.txt")
+        if not os.path.isfile(txt_path):
+            with open(txt_path, "w") as coordsfile:
+                coordsfile.write("Z\tY\tX\tmsg\n")
+
     # Find existing files in the target dir (and its subdirs)
     if recurse:
         paths = [
@@ -356,13 +365,6 @@ def run_mate_manager(
             for fname in os.listdir(target_dir)
             if os.path.isfile(os.path.join(target_dir, fname))
         ]
-
-    # Generate txt file to record coordinates (if necessary)
-    if (tra_method == "txt") or write_txt:
-        txt_path = os.path.join(target_dir, "mate_coords.txt")
-        if not os.path.isfile(txt_path):
-            with open(txt_path, "w") as coordsfile:
-                coordsfile.write("Z\tY\tX\tmsg\n")
 
     # Initialize coordinate list
     coordinates = []
@@ -574,11 +576,3 @@ def run_mate_manager(
 
     # Return
     return coordinates, stats_dict
-
-
-# Handle direct execution
-if __name__ == "__main__":
-    raise Exception(
-        "This module not intended to be run directly. "
-        + "See 'python run_mate.py -h' for help."
-    )

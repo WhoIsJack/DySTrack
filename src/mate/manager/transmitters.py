@@ -112,11 +112,3 @@ def send_coords_winreg(
 
     # Submit codeM, triggering microscope action
     _write_reg(reg_key, name_codemic, codeM)
-
-
-# Handle direct execution
-if __name__ == "__main__":
-    raise Exception(
-        "This module not intended to be run directly. "
-        + "See 'python run_mate.py -h' for help."
-    )
