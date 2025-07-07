@@ -7,7 +7,7 @@ Created on Fri Jun 20 19:30:55 2025
 
 @descript:  MATE config file for zebrafish posterior lateral line tracking.
 
-@usage:     From the command line, with python and the MATE package installed,
+@usage:     From the command line (with python and the MATE package installed)
             run `python mate_lateral_line.py <target_dir> [args]`.
 """
 
@@ -26,17 +26,17 @@ from mate.manager.cmdline import run_via_cmdline
 # - Import the desired image analysis pipeline as `image_analysis_func`
 # - Pipeline functions included in mate are in `mate.pipelines.lateral_line`,
 #   but this could also be a custom function
-
+#
 # - Pipeline functions will be called by MATE with the following signature:
+#
 #     ```
 #     z_pos, y_pos, x_pos, img_msg, img_cache = image_analysis_func(
-#         target_path, verbose=verbose, **img_kwargs, **img_cache)
+#         target_path, **img_kwargs, **img_cache)
 #     ```
-# - They must therefore accept only one positional argument, which is the path
-#   to the image file (prescan) to be analyzed
-# - They must also accept `verbose` as a positional argument, a Boolean that
-#   can be used to control whether outputs should be printed
-# - They may accept any number of extra arguments (img_kwargs and img_cache)
+#
+# - They must accept only one positional argument, which is the path to the
+#   image file to be analyzed
+# - They may accept any number of additional keyword arguments
 
 from mate.pipelines.lateral_line import analyze_image as image_analysis_func
 
@@ -51,8 +51,9 @@ from mate.pipelines.lateral_line import analyze_image as image_analysis_func
 # - If they are also not specified there, the function's default value is used
 
 analysis_kwargs = {
-    "verbose" : True,
-    "show"    : False,
+    "gauss_sigma" : 3,      # Use 3 for cldnb, 1 for KTR green
+    "verbose"     : True,
+    "show"        : False,
 }
 
 
@@ -83,7 +84,7 @@ analysis_cache = {}
 
 manager_kwargs = {
     "file_start" : "Prescan_",
-    "file_end"   : ".tiff",
+    "file_end"   : ".tif",
 }
 
 
