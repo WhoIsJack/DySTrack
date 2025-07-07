@@ -6,8 +6,8 @@ Created on Sun Jan 15 00:34:07 2017
             Zimeng Wu @ Wong group (UCL)
 
 @descript:  Provides a command line interface to run MATE. This is intended for
-            import in MATE execution files to handle command line inputs and
-            launch the MATE manager event loop.
+            import in MATE config files (see `run` dir) to handle command line
+            inputs and launch the MATE manager event loop.
 """
 
 
@@ -16,7 +16,7 @@ import argparse
 import mate.manager.manager as mate_manager
 
 
-def _get_func_arcs(func):
+def _get_func_args(func):
     func_n_args = func.__code__.co_argcount
     func_vars = func.__code__.co_varnames
     return func_vars[:func_n_args]
@@ -55,22 +55,21 @@ def run_via_cmdline(
 ):
     """Parses command-line arguments and launches the MATE manager event loop.
 
-    This is intended to be called through a MATE execution file (see `run` dir
-    for examples), which specifies the image analysis pipeline function to use
-    (`image_analysis_func`) and optionally fixes any other parameters. The MATE
-    event loop target directory (`target_dir`) must be provided as the first
-    positional argument of the command line invocation.
+    This is intended to be called through a MATE config file (see `run` dir for
+    examples), which specifies the image analysis pipeline function to use
+    (`image_analysis_func`) and optionally fixes any other parameters.
 
-    The argparse command line tool used is dynamically generated to expose any
-    suitable keyword arguments of `run_mate_manager` that are *not* already
-    given via `manager_kwargs`, and any keyword arguments in the provided
-    `image_analysis_func` that are *not* already given via `analysis_kwargs`.
-    Note that proper functionality depends on numpy-style doc strings.
+    The MATE event loop target directory (`target_dir`) must be provided as the
+    first positional argument of the command line invocation.
+
+    For all other arguments, the command line tool is dynamically generated to
+    expose any suitable kwargs of `run_mate_manager` (that are *not* already
+    specified in `manager_kwargs`), as well as any suitable kwargs of the
+    `image_analysis_func` (that are *not* already given in `analysis_kwargs`.
+    (Note that this feature depends on numpy-style doc strings.)
 
     For more information on the MATE event loop, see the function that this
     ultimately calls: `mate.manager.manager.run_mate_manager()`.
-
-    [Not sure if this approach is too clever for its own good...]
     """
 
     # Prep description
@@ -97,7 +96,7 @@ def run_via_cmdline(
     )
 
     # Get run_mate_manager arguments
-    mgr_args = _get_func_arcs(mate_manager.run_mate_manager)
+    mgr_args = _get_func_args(mate_manager.run_mate_manager)
 
     # Get run_mate_manager argument descriptions from doc string
     mgr_argtypes, mgr_argdescr = _get_docstr_args_numpy(
@@ -111,7 +110,7 @@ def run_via_cmdline(
         if arg in ["target_dir", "image_analysis_func"]:
             continue
 
-        # Skip arguments provided via execution config file
+        # Skip arguments provided via config file
         if arg in manager_kwargs:
             continue
 
@@ -127,7 +126,7 @@ def run_via_cmdline(
         )
 
     # Get image_analysis_func arguments
-    ana_args = _get_func_arcs(image_analysis_func)
+    ana_args = _get_func_args(image_analysis_func)
 
     # Get image_analysis_func argument descriptions from doc string
     try:
@@ -148,7 +147,7 @@ def run_via_cmdline(
         if arg in ["target_path", "verbose"]:
             continue
 
-        # Skip arguments provided via execution config file
+        # Skip arguments provided via config file
         if arg in analysis_kwargs:
             continue
 
@@ -199,33 +198,33 @@ def run_via_cmdline(
         if ana_argtypes[arg].startswith("float"):
             cmd_ana_kwargs[arg] = float(cmd_ana_kwargs[arg])
 
-    # Combine with arguments from execution config file
+    # Combine with arguments from config file
     manager_kwargs = manager_kwargs | cmd_mgr_kwargs
     analysis_kwargs = analysis_kwargs | cmd_ana_kwargs
 
     # Combine analysis_kwargs into manager_kwargs
     manager_kwargs["img_kwargs"] = analysis_kwargs
 
-    # DEV-TEMP! For testing!
-    print("\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n")
-    print(target_dir, "\n")
-    for kwarg in manager_kwargs:
-        if not isinstance(manager_kwargs[kwarg], dict):
-            print(
-                kwarg,
-                manager_kwargs[kwarg],
-                f"[{type(manager_kwargs[kwarg])}]\n",
-            )
-        else:
-            for kwargkwarg in manager_kwargs[kwarg]:
-                print(
-                    "~~",
-                    kwargkwarg,
-                    manager_kwargs[kwarg][kwargkwarg],
-                    f"[{type(manager_kwargs[kwarg][kwargkwarg])}]\n",
-                )
-    print("\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n")
-    # return
+    # # DEV-TEMP! For testing!
+    # print("\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n")
+    # print(target_dir, "\n")
+    # for kwarg in manager_kwargs:
+    #     if not isinstance(manager_kwargs[kwarg], dict):
+    #         print(
+    #             kwarg,
+    #             manager_kwargs[kwarg],
+    #             f"[{type(manager_kwargs[kwarg])}]\n",
+    #         )
+    #     else:
+    #         for kwargkwarg in manager_kwargs[kwarg]:
+    #             print(
+    #                 "~~",
+    #                 kwargkwarg,
+    #                 manager_kwargs[kwarg][kwargkwarg],
+    #                 f"[{type(manager_kwargs[kwarg][kwargkwarg])}]\n",
+    #             )
+    # print("\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n")
+    # # return
 
     # Start MATE event loop
     coordinates, stats_dict = mate_manager.run_mate_manager(
@@ -264,6 +263,6 @@ def my_img_ana_func(target_path, verbose=False, channel=None, sigma=3.0):
 if __name__ == "__main__":
     run_via_cmdline(
         my_img_ana_func,
-        analysis_kwargs={"channel": 1},
+        # analysis_kwargs={"channel": 1},
         manager_kwargs={"file_end": ".tif", "file_start": "Prescan_"},
     )

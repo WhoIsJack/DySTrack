@@ -57,7 +57,6 @@ def _check_fname(fname, file_start="", file_end="", file_regex=""):
 def _trigger_image_analysis(
     target_path,
     image_analysis_func,
-    verbose=False,
     img_kwargs={},
     img_cache={},
 ):
@@ -71,8 +70,6 @@ def _trigger_image_analysis(
     image_analysis_func : callable
         Image analysis pipeline function. See doc string of `run_mate_manager`
         for more information.
-    verbose : bool, optional, default False
-        Forwarded to image analysis function to control verbosity.
     img_kwargs : dict, optional, default {}
         Additional keyword arguments forwarded to the image analysis function
         using `**img_kwargs`.
@@ -98,7 +95,7 @@ def _trigger_image_analysis(
     # Try running the image analysis
     try:
         z_pos, y_pos, x_pos, img_msg, img_cache = image_analysis_func(
-            target_path, verbose=verbose, **img_kwargs, **img_cache
+            target_path, **img_kwargs, **img_cache
         )
         img_error = None
 
@@ -233,7 +230,6 @@ def run_mate_manager(
     tra_kwargs={},
     tra_err_resume=False,
     write_txt=True,
-    verbose=True,
 ):
     """Manages an event loop that monitors a target directory for new files.
     For each new file found that matches user-defined criteria, the speficied
@@ -254,7 +250,7 @@ def run_mate_manager(
         coordinates for transmission to the microscope. Call signature:
         ```
         z_pos, y_pos, x_pos, img_msg, img_cache = image_analysis_func(
-            target_path, verbose=False, **img_kwargs, **img_cache)
+            target_path, **img_kwargs, **img_cache)
         ```
     max_checks : int or None, optional, default None
         Maximum number of checks for new files performed before exiting.
@@ -307,9 +303,6 @@ def run_mate_manager(
         If True, coordinates are recorded in a text file ("mate_coords.txt") in
         `target_dir` *regardless* of the specified `tra_method`. If said method
         is "txt", this has no effect as the text file is generated anyway.
-    verbose : bool, optional, default True
-        Flag forwarded to the image analysis pipeline to set whether it should
-        print information.
 
     Returns
     -------
@@ -436,7 +429,6 @@ def run_mate_manager(
                     img_out, img_err = _trigger_image_analysis(
                         target_path,
                         image_analysis_func,
-                        verbose,
                         img_kwargs,
                         img_cache,
                     )
@@ -543,11 +535,11 @@ def run_mate_manager(
                                 )
                                 print("[!!] >>", repr(txt_err))
 
+                    # Continue monitoring
+                    print("Resuming monitoring...")
+
             # Update the paths list
             paths = new_paths
-
-            # Continue monitoring
-            print("Resuming monitoring...")
             continue
 
         # If nothing has changed, wait for the interval to pass,
