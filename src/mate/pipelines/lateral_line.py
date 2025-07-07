@@ -22,9 +22,9 @@ from aicsimageio import AICSImage
 
 
 def analyze_image(
-    target_file,
+    target_path,
     channel=None,
-    gauss_sigma=3,
+    gauss_sigma=3.0,
     count_reduction=0.5,
     show=False,
     verbose=False,
@@ -37,12 +37,12 @@ def analyze_image(
 
     Parameters
     ----------
-    target_file : path-like
+    target_path : path-like
         Path to the image file that is to be analyzed.
     channel : int, optional, default None
-        Channel index to use for masking in case of multi-channel images.
+        Index of channel to use for masking in case of multi-channel images.
         If not specified, a single-channel image is assumed.
-    gauss_sigma : numeric, optional, default 3
+    gauss_sigma : float, optional, default 3.0
         Sigma for Gaussian filter prior to masking.
     count_reduction : float, optional, default 0.5
         Factor by which object count has to be reduced below its initial peak
@@ -52,7 +52,7 @@ def analyze_image(
         Note that figures will be shown without blocking execution, so if many
         iterations are performed, many figures will be opened. Also, note that
         all figures will be closed when the python process exits.
-    verbose: bool, optional, default False
+    verbose : bool, optional, default False
         If True, more information is printed.
 
     Returns
@@ -84,7 +84,7 @@ def analyze_image(
         #       hence the multiple loading attempts...
         while True:
             sleep(2)
-            new_file_size = os.stat(target_file).st_size
+            new_file_size = os.stat(target_path).st_size
             if new_file_size > file_size:
                 file_size = new_file_size
                 attempts_left = 5
@@ -93,8 +93,8 @@ def analyze_image(
 
         # If the file writing looks done, make a loading attempt
         try:
-            if target_file.split(".")[-1] in ["tif", "tiff", "czi", "nd2"]:
-                raw = AICSImage(target_file)
+            if target_path.split(".")[-1] in ["tif", "tiff", "czi", "nd2"]:
+                raw = AICSImage(target_path)
                 raw = raw.data
                 raw = np.squeeze(raw)
 

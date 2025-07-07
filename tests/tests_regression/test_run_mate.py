@@ -21,48 +21,78 @@ from datetime import datetime
 
 import pytest
 
-from mate.manager import run_mate
+from mate.manager.cmdline import run_via_cmdline
+from mate.manager.manager import run_mate_manager
 
 
-def test_main(capsys, mocker):
-    """Regression test for main function (command line parsing)."""
+def test_run_via_cmdline(capsys, mocker):
+    """Regression test for ~main function~* (command line parsing).
+
+    *ULTRAREFACTORING: Now tests cmdline.run_via_cmdline!
+    """
+
+    # Prep dummy image analysis function
+    def dummy_img_ana_func(target_path, channel=1, verbose=False):
+        """Dummy image analysis function.
+
+        Parameters
+        ----------
+        target_path : path-like
+            Path to the image file that is to be analyzed.
+        channel : int, optional, default None
+            DUMMY TEST
+        verbose : bool, optional, default False
+            If True, more information is printed.
+
+        Returns
+        -------
+        None
+        """
+        return None
+
+    # Fix docs string parsing...                                               # FIXME: Use regex or numpydoc in doc string parsing instead!
+    dummy_img_ana_func.__doc__ = dummy_img_ana_func.__doc__.replace(
+        "        ", "    "
+    )
 
     # Run with --help flag and check that SystemExit is reached
     sys.argv.append("--help")
     with pytest.raises(SystemExit):
-        run_mate.main()
+        run_via_cmdline(dummy_img_ana_func)
 
     # Check that the help message was printed
     captured = capsys.readouterr()
-    s1 = "run_mate TARGET_DIR [-s START] [-e END] [-c CHANNEL] [-w] [-v] [-p]"
-    s2 = "Start up a MATE manager session."
-    assert s1 in captured.out
-    assert s2 in captured.out
+    assert "usage: pytest [-h]" in captured.out
+    assert "Start a MATE session." in captured.out
+    assert "  image_analysis_func: dummy_img_ana_func" in captured.out
+    assert "[int, optional, default None] DUMMY TEST" in captured.out
 
-    # Run with mocked main_scheduler function
-    mocked_scheduler = mocker.patch("mate.manager.run_mate.main_scheduler")
-    mocked_scheduler.return_value = "mocked_scheduler_output_stats"
+    # Run with mocked run_mate_manager function
+    mocked_manager = mocker.patch("mate.manager.manager.run_mate_manager")
+    mocked_manager.return_value = (None, None)
+    mocked_manager.__code__ = run_mate_manager.__code__
+    mocked_manager.__doc__ = run_mate_manager.__doc__
     sys.argv = [
         sys.argv[0],
         "./tests",
-        "-s",
+        "--file_start",
         "prescan_",
-        "-e",
+        "--file_end",
         ".czi",
-        "-c",
+        "--channel",
         "0",
-        "-v",
+        "--verbose",
+        "True",
     ]
-    assert run_mate.main() == "mocked_scheduler_output_stats"
+    assert run_via_cmdline(dummy_img_ana_func) == (None, None)
 
-    # Check that mocked main_scheduler was called with appropriate values
-    mocked_scheduler.assert_called_with(
+    # Check that mocked run_mate_manager was called with appropriate values
+    mocked_manager.assert_called_with(
         "./tests",
-        img_params={"channel": 0, "show": False},
-        fileStart="prescan_",
-        fileEnd=".czi",
-        write_winreg=False,
-        verbose=True,
+        dummy_img_ana_func,
+        file_start="prescan_",
+        file_end=".czi",
+        img_kwargs={"channel": 0, "verbose": True},
     )
 
 

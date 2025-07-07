@@ -32,7 +32,7 @@ def _get_docstr_args_numpy(func, args):
     argstr = docstr.split("Parameters\n    ----")[1]
     argstr = argstr.split("Returns\n    ----")[0]
 
-    # Split intos text belonging with each argument
+    # Split into text belonging with each argument
     argstrs = {}
     for arg, arg_next in zip(args[:-1], args[1:]):
         argstrs[arg] = argstr.split(arg + " : ")[1]
@@ -143,8 +143,8 @@ def run_via_cmdline(
     # Add image_analysis_func arguments to parser
     for arg in ana_args:
 
-        # Skip fixed or "inherited" arguments
-        if arg in ["target_path", "verbose"]:
+        # Skip fixed arguments
+        if arg in ["target_path"]:
             continue
 
         # Skip arguments provided via config file
@@ -202,7 +202,7 @@ def run_via_cmdline(
     manager_kwargs = manager_kwargs | cmd_mgr_kwargs
     analysis_kwargs = analysis_kwargs | cmd_ana_kwargs
 
-    # Combine analysis_kwargs into manager_kwargs
+    # Add analysis_kwargs into manager_kwargs
     manager_kwargs["img_kwargs"] = analysis_kwargs
 
     # # DEV-TEMP! For testing!
