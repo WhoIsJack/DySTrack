@@ -49,7 +49,8 @@ def test_analyze_image(capsys):
 
         if w8bit:  # Check that expected 8bit conversion warning is emitted
             with pytest.warns(
-                UserWarning, match="Image had to be converted down to 8bit!"
+                UserWarning, 
+                match="Image converted down to 8bit using min-max scaling!"
             ) as w:
                 out = lateral_line.analyze_image(
                     os.path.join(datadir, prescan_fname),
@@ -72,7 +73,8 @@ def test_analyze_image(capsys):
                     verbose=True,
                 )
 
-        out = [f"{c:.4f}" for c in out]
+        out = list(out)
+        out[:3] = [f"{c:.4f}" for c in out[:3]]
         outputs[prescan_fname] = out
         stdouts[prescan_fname] = capsys.readouterr().out
 
@@ -87,7 +89,10 @@ def test_analyze_image(capsys):
     if create_plaintext_of_outputs:
         with open(coords_fpath.replace(".pkl", ".txt"), "w") as outfile:
             for fn in outputs:
-                outfile.write(fn + "\t" + "\t".join(outputs[fn]) + "\n")
+                outfile.write(
+                    fn + "\t" + 
+                    "\t".join([o.__repr__() for o in outputs[fn]]) 
+                    + "\n")
         with open(stdout_fpath.replace(".pkl", ".txt"), "w") as outfile:
             for fn in stdouts:
                 outfile.write("### " + fn + "\n")
