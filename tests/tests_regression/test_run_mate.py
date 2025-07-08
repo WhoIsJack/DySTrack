@@ -23,6 +23,7 @@ import pytest
 
 from mate.manager.cmdline import run_via_cmdline
 from mate.manager.manager import run_mate_manager
+from mate.pipelines import lateral_line
 
 
 def test_run_via_cmdline(capsys, mocker):
@@ -96,17 +97,20 @@ def test_run_via_cmdline(capsys, mocker):
     )
 
 
-def test_main_scheduler(capsys):
-    """Regression test for scheduler (main event loop)."""
+def test_run_mate_manager(capsys):
+    """Regression test for ~scheduler (main event loop).~
+
+    ULTRAREFACTORING: now called manager (`run_mate_manager` func)"""
 
     # DEV: Set this to True to see MATE outputs during the pytest run;
     # this will make the test fail, but it's very useful for debugging!
     print_MATE_outputs = False
 
     # DEV: Set this to True to generate a new reference stdout file (which will
-    # overwrite the old) if the stdout behavior of the scheduler has changed.
+    # overwrite the old) if the stdout behavior of the manager has changed.
     # This will force the test to fail, since generating a new reference from
     # the output and then checking them against each other would always pass.
+    # Also, note that this will not work if print_MATE_outputs is True.
     create_MATE_stdout = False
 
     # Config
@@ -114,25 +118,23 @@ def test_main_scheduler(capsys):
     prescan_fname = "test0_prescan_prim_cldnb.czi"
     prescan_fpath = os.path.join(datadir, prescan_fname)
     stdout_fpath = os.path.join(datadir, "test0_stdout.txt")
-    MATE_fileStart = "test0_prescan_"
-    MATE_fileEnd = ".czi"
+    MATE_file_start = "test0_prescan_"
+    MATE_file_end = ".czi"
 
     # Create transient testing folder
     now = datetime.now().strftime(r"%Y%m%d-%H%M%S")
     testdir = os.path.join(datadir, "testrun_" + now)
     os.mkdir(testdir)
 
-    # Prepare thread object to run MATE monitoring with main_scheduler
-    scheduler_args = (testdir,)
+    # Prepare thread object to run MATE monitoring with run_mate_manager
+    scheduler_args = (testdir, lateral_line.analyze_image)
     scheduler_kwargs = {
-        "img_params": {"channel": None, "show": False},
-        "fileStart": MATE_fileStart,
-        "fileEnd": MATE_fileEnd,
-        "write_winreg": False,
-        "verbose": True,
+        "img_kwargs": {"channel": None, "show": False, "verbose": True},
+        "file_start": MATE_file_start,
+        "file_end": MATE_file_end,
     }
     thread = threading.Thread(
-        target=run_mate.main_scheduler,
+        target=run_mate_manager,
         args=scheduler_args,
         kwargs=scheduler_kwargs,
         daemon=True,  # Ensures MATE thread will terminate at end of test
@@ -176,8 +178,6 @@ def test_main_scheduler(capsys):
         # Compare against reference file (with updated testdir time label)
         with open(stdout_fpath, "r") as infile:
             check_captured = infile.read()
-        ref_time = re.search(r"testrun_\d{8}-\d{6}", check_captured).group()
-        check_captured = check_captured.replace(ref_time, "testrun_" + now)
         assert captured.out == check_captured
 
     # Check resulting mate_coords.txt file
