@@ -43,6 +43,7 @@ dev = [
   "pytest-mock",
   "pytest-cov",
   "coverage",
+  "fake-winreg",
   "black[jupyter]",
   "isort",
   "sphinx",
