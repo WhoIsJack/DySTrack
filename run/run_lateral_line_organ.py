@@ -5,10 +5,11 @@ Created on Fri Jun 20 19:30:55 2025
 @authors:   Jonas Hartmann @ Mayor lab (UCL)
             Zimeng Wu @ Wong group (UCL)
 
-@descript:  MATE config file for zebrafish posterior lateral line tracking.
+@descript:  MATE config file for zebrafish posterior lateral line deposited 
+            neuromast tracking/stabilization.
 
 @usage:     From the command line (with python and the MATE package installed)
-            run `python run_lateral_line.py <target_dir> [args]`.
+            run `python run_lateral_line_organ.py <target_dir> [args]`.
 """
 
 ### Prep
@@ -38,7 +39,7 @@ from mate.manager.cmdline import run_via_cmdline
 #   image file to be analyzed
 # - They may accept any number of additional keyword arguments
 
-from mate.pipelines.lateral_line import analyze_image as image_analysis_func
+from mate.pipelines.lateral_line_organ import analyze_image as image_analysis_func
 
 
 # -----------------------------------------------------------------------------
@@ -51,7 +52,7 @@ from mate.pipelines.lateral_line import analyze_image as image_analysis_func
 # - If they are also not specified there, the function's default value is used
 
 analysis_kwargs = {
-    "gauss_sigma" : 3,      # Use 3 for cldnb, 1 for KTR green
+    "gauss_sigma" : 3,
     "verbose"     : True,
     "show"        : False,
 }

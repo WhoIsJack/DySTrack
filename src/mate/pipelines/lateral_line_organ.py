@@ -5,9 +5,12 @@ Created on Sun Jan 15 00:34:07 2017
 @authors:   Jonas Hartmann @ Gilmour group (EMBL) & Mayor lab (UCL)
             Zimeng Wu @ Wong group (UCL)
 
-@descript:  Image analysis pipeline for live tracking of the posterior lateral
-            line primordium using MATE.
-            Developed mainly for the cldnb:EGFP line.
+@descript:  Image analysis pipeline for live tracking/stabilizing of deposited
+            posterior lateral line primordium organs (neuromasts) using MATE.
+            This is a very simple adaptation of lateral_line.py, with the only
+            difference being that x is computed as the centroid of the mask
+            (just like y and z), not as the leading edge.
+            TODO: There's room for customizing this further for its purpose!
 """
 
 import os
@@ -30,11 +33,14 @@ def analyze_image(
     show=False,
     verbose=False,
 ):
-    """Compute new coordinates for the scope to track the zebrafish lateral
-    line primordium's movement based on a 2D or 3D image. The primordium is
-    masked using object-count thresholding. The new y (and z, if 3D) positions
-    are computed as the respective centers of mass of the mask. The new x
-    position is computed relative to the leading edge position of the mask.
+    """Compute new coordinates for the scope to track/stabilize neuromasts, the
+    organs deposited by the zebrafish lateral line primordium. They are not
+    particularly motile, so this is more about microscope stage drift.
+
+    This is a simple adaptation of lateral_line.py and therefore also based on
+    object-count thresholding. It only differs from the other pipeline insofar
+    as the new x positions (just like z and y), are based on the center of mass
+    instead of tracking the leading edge.
 
     Note: This was developed for and (mainly) tested on the cldnb:EGFP line.
     While it has been used for some other lines with adjusted parameters, it is
@@ -180,7 +186,9 @@ def analyze_image(
 
     # NOTE: This is an old approach that has empirically proven to work well
     # with cldnb:EGFP under standard conditions. However, there would be a lot
-    # of room for improvement or for an altogether new approach!  # TODO!
+    # of room for improvement or for an altogether new approach, including one
+    # that diverges further from the primordium tracking pipeline and is more
+    # bespoke for the neuromasts.  # TODO!
 
     # Preprocessing: Gaussian smoothing
     raw = ndi.gaussian_filter(raw, sigma=gauss_sigma)
@@ -293,12 +301,13 @@ def analyze_image(
     # Get centroid
     cen = ndi.center_of_mass(mask)
 
-    # Get z and y positions for 3D
+    # Get positions for 3D
     if raw.ndim == 3:
 
-        # Use centroid of mask
+        # Use centroid positions as focusing targets
         z_pos = cen[0]
         y_pos = cen[1]
+        x_pos = cen[2]
 
         # Z limit: An absolute limitation on how much MATE may move in z
         z_limit = 0.1  # Fraction of image size
@@ -311,87 +320,11 @@ def analyze_image(
             warn("z_pos < z_limit_bot; using z_limit_bot!")
             z_pos = z_limit_bot
 
-    # Get "z" and y positions for 2D
+    # Get positions for 2D
     else:
         z_pos = None
         y_pos = cen[0]
-
-    ### Find new x (leading edge) position
-
-    # Collapse to x axis
-    if raw.ndim == 3:
-        collapsed = np.max(np.max(mask, axis=0), axis=0)
-    else:
-        collapsed = np.max(mask, axis=0)
-
-    # Find frontal-most non-zero pixel
-    front_pos = np.max(np.nonzero(collapsed)[0])
-
-    ### Check if leading edge position is sensible
-
-    # - If the new position is too far back (not in the leading half of the
-    #   image), this triggers a small default movement (1/8th of the image)
-    # - If the new position is touching the front boundary, this triggers a
-    #   large default movement (1/5th of the image)
-
-    # If the tip of the mask is behind the center of the image...
-    if front_pos < collapsed.shape[0] / 2.0:
-
-        # In this case, the mask is probably missing a lot at the tip
-        warn(
-            "The detected front_pos is too far back, likely due to a masking"
-            + " error. Moving default distance."
-        )
-
-        # Handle it...
-        default_step_fract = 1.0 / 8.0
-        x_pos = (
-            0.5 * collapsed.shape[0] + default_step_fract * collapsed.shape[0]
-        )
-        if verbose:
-            print(
-                f"      Resulting coords (zyx): "
-                + f"{z_pos:.4f}, {y_pos:.4f}, {x_pos:.4f}"
-            )
-
-        return z_pos, y_pos, x_pos, "WARN:MASK-FAIL-DEFAULT-STEP", {}
-
-    # If the tip of the mask touches the front end of the image
-    elif front_pos == collapsed.shape[0] - 1:
-
-        # In this case, the prim has probably moved out of the frame
-        warn(
-            "The prim has probably moved out of frame. "
-            + "Moving catch-up distance."
-        )
-
-        # Handle it...
-        default_catchup_fract = 1.0 / 5.0
-        x_pos = (
-            0.5 * collapsed.shape[0]
-            + default_catchup_fract * collapsed.shape[0]
-        )
-        if verbose:
-            print(
-                f"      Resulting coords (zyx): "
-                + f"{z_pos:.4f}, {y_pos:.4f}, {x_pos:.4f}"
-            )
-
-        return z_pos, y_pos, x_pos, "WARN:CATCH-UP-STEP", {}
-
-    ### If the above issues did not trigger, compute new x-position for scope
-
-    # - This is currently based on putting 1/5th of the image size between the
-    #   current leading edge and the end of the image. This is an estimate that
-    #   should work for standard image sizes and timecourses of about 5min/tp.
-    # - Would be nice to make this more "adaptive", e.g. using a PID controller
-    #   based on previous coordinates stored in img_cache.
-    # - Would it be beneficial to use micron scale instead of pixel scale?
-
-    blank_fract = 1.0 / 5.0
-    x_pos = (
-        front_pos + blank_fract * collapsed.shape[0] - 0.5 * collapsed.shape[0]
-    )
+        x_pos = cen[1]
 
     ### Return results
 
