@@ -7,6 +7,7 @@ Created on Sun Jan 15 00:34:07 2017
 
 @descript:  Image analysis pipeline for live tracking of the posterior lateral
             line primordium using MATE.
+            Developed mainly for the cldnb:EGFP line.
 """
 
 import os
@@ -34,6 +35,10 @@ def analyze_image(
     masked using object-count thresolding. The new y (and z, if 3D) positions
     are computed as the respective centers of mass of the mask. The new x
     position is computed relative to the leading edge position of the mask.
+
+    Note: This was developed for and (mainly) test on the well-known cldnb:EGFP
+    transgenic line. While it has been used for some other lines with adjusted
+    parameters, it is absolutely not guaranteed to work universally.
 
     Parameters
     ----------
