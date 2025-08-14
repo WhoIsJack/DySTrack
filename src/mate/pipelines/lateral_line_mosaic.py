@@ -12,6 +12,9 @@ Created on Sun Jan 15 00:34:07 2017
 @usage:     Called by `run_mate.py`.
 """
 
+raise NotImplementedError(
+    "THIS PIPELINE HAS NOT YET BEEN UPDATED TO WORK WITH THE REFACTORED VERSION!"
+)
 
 import os
 from time import sleep

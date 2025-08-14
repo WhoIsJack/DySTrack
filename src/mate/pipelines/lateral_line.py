@@ -66,11 +66,6 @@ def analyze_image(
         pipeline; required by MATE but here unused; set to {}.
     """
 
-    # TODO: Think about how best to expose the various image analysis params
-    #       of this pipeline to the user. Adding them as kwargs seems of little
-    #       use without cmdline forwarding in run_mate.py, so either a config
-    #       file or just a parameter section here at the top might be best?
-
     ### Load data
 
     # Make multiple attempts in case loading fails
@@ -178,6 +173,10 @@ def analyze_image(
 
     ### Mask by object-count thresholding
 
+    # NOTE: This is an old approach that has empirically proven to work well
+    # with cldnb:EGFP under standard conditions. However, there would be a lot
+    # of room for improvement or for an altogether new approach!  # TODO!
+
     # Preprocessing: Gaussian smoothing
     raw = ndi.gaussian_filter(raw, sigma=gauss_sigma)
 
@@ -201,21 +200,21 @@ def analyze_image(
         if np.max(counts_smooth[:threshold]) > counts_smooth[threshold]:
 
             # Criterion 2a: Has the number of objects sufficiently reduced?
-            # FIXME: It is not clear if this criterion is robust enough!
+            # Note: It is not clear if this criterion is robust enough!
             if counts_smooth[threshold] <= (
                 np.max(counts_smooth[:threshold]) * count_reduction
             ):
                 break
 
-            # Criterion 2b: Alternatively, it the current number of objects a
-            # local minimum (i.e. followed by an increase afterwards?)
-            # FIXME: An "early dip" despite smoothing could trigger this early!
+            # Criterion 2b: Alternatively, it the current number of objects is
+            # a local minimum (i.e. followed by an increase afterwards)
+            # Note: An "early dip" despite smoothing could trigger this early!
             elif counts_smooth[threshold + 1] > counts_smooth[threshold]:
                 break
 
     # Fallback: If the detected threshold has zero objects, take the highest
     # previous threshold that did. Important to avoid smoothing issues
-    # FIXME: It is not clear if this approach is robust enough!
+    # Note: It is not clear if this approach is robust enough!
     if counts[threshold] == 0:
         for backstep in range(1, threshold):
             if counts[threshold - backstep] > 0:
