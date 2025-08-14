@@ -127,16 +127,17 @@ def test_run_mate_manager(capsys):
     os.mkdir(testdir)
 
     # Prepare thread object to run MATE monitoring with run_mate_manager
-    scheduler_args = (testdir, lateral_line.analyze_image)
-    scheduler_kwargs = {
+    manager_args = (testdir, lateral_line.analyze_image)
+    manager_kwargs = {
         "img_kwargs": {"channel": None, "show": False, "verbose": True},
         "file_start": MATE_file_start,
         "file_end": MATE_file_end,
+        "max_triggers": 1,
     }
     thread = threading.Thread(
         target=run_mate_manager,
-        args=scheduler_args,
-        kwargs=scheduler_kwargs,
+        args=manager_args,
+        kwargs=manager_kwargs,
         daemon=True,  # Ensures MATE thread will terminate at end of test
     )
 

@@ -39,18 +39,18 @@ def test_get_docstr_args_numpy():
         Nothing
         """
         pass
-    
+
     argtypes, argdescr = cmdline._get_docstr_args_numpy(test_func)
 
     expected_argtypes = {
-        'a': 'dummy type a', 
-        'b': 'dummy type b', 
-        'c': 'dummy type c, optional, default None'
+        "a": "dummy type a",
+        "b": "dummy type b",
+        "c": "dummy type c, optional, default None",
     }
     expected_argdescr = {
-        'a': 'Dummy parameter a', 
-        'b': 'Dummy parameter b with a long multi-line description.', 
-        'c': 'Dummy parameter c.'
+        "a": "Dummy parameter a",
+        "b": "Dummy parameter b with a long multi-line description.",
+        "c": "Dummy parameter c.",
     }
 
     assert argtypes == expected_argtypes
@@ -61,12 +61,11 @@ def test_run_via_cmdline():
     assert False, "# TODO: Implement this test!"  # YAH!
 
 
-
 # -----------------------------------------------------------------------------
 # TAKEN FROM BOTTOM OF cmdline.py FOR REFERENCE!
 # -----------------------------------------------------------------------------
 
-# DEV-TEMP! For testing!  
+# DEV-TEMP! For testing!
 
 # def my_img_ana_func(target_path, verbose=False, channel=None, sigma=3.0):
 #     """This my doc string.
@@ -128,7 +127,6 @@ def test_run_via_cmdline():
 # -----------------------------------------------------------------------------
 
 if __name__ == "_DEV_TEMP_":  # (Protect from pytest)
-
 
     import os
     import re

@@ -2,6 +2,7 @@
 
 MATE MANAGER SESSION STARTED!
 Monitoring target dir(s) for new files...
+Will terminate after 1 pipeline trigger events.
 Press <Esc> to terminate.
 
 
@@ -14,3 +15,13 @@ Image analysis complete.
 Pushing coords to scope...
 Coords pushed.
 Resuming monitoring...
+
+
+MATE MONITORING SESSION TERMINATED!
+
+Stats:
+  Total checks made:        7
+  Total new files found:    1
+  Total target files found: 1
+    No. successfully analyzed: 1
+    No. coords sent to scope:  1
