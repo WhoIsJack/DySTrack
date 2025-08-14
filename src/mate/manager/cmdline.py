@@ -12,39 +12,51 @@ Created on Sun Jan 15 00:34:07 2017
 
 
 import argparse
+import re
 
 import mate.manager.manager as mate_manager
 
 
 def _get_func_args(func):
+    """Get a tuple of all arguments in the function definition of `func`."""
     func_n_args = func.__code__.co_argcount
     func_vars = func.__code__.co_varnames
     return func_vars[:func_n_args]
 
 
-def _get_docstr_args_numpy(func, args):
-    # TODO: This is simultaneously fun and cringe; look into numpydoc module!
+def _get_docstr_args_numpy(func):
+    """Get the argument types and argument descriptions from a numpy-style doc
+    string of function `func`."""
+    # TODO: This is simultaneously fun and cringe; look into numpydoc module?!
 
-    # Get doc string
+    # Get arguments and doc string
+    args = _get_func_args(func)
     docstr = func.__doc__
 
     # Filter out Parameters section
-    argstr = docstr.split("Parameters\n    ----")[1]
-    argstr = argstr.split("Returns\n    ----")[0]
+    argstr = re.split(
+        r"^\s+Parameters$\n^\s+----------$", docstr, flags=re.MULTILINE
+    )[1]
+    argstr = re.split(
+        r"^\s+Returns$\n^\s+-------$", argstr, flags=re.MULTILINE
+    )[0]
 
-    # Split into text belonging with each argument
-    argstrs = {}
+    # Identify type annotations and text descriptions for each argument
+    argtypes, argdescr = {}, {}
     for arg, arg_next in zip(args[:-1], args[1:]):
-        argstrs[arg] = argstr.split(arg + " : ")[1]
-        argstrs[arg] = argstrs[arg].split(arg_next + " : ")[0]
-    argstrs[args[-1]] = argstr.split(args[-1] + " : ")[1]
+        argtypes[arg], argdescr[arg] = re.search(
+            rf"^\s+({arg} : )(.+)$\s^\s+([\S\s]+)({arg_next} : )",
+            argstr,
+            flags=re.MULTILINE,
+        ).groups()[1:3]
+    argtypes[args[-1]], argdescr[args[-1]] = re.search(
+        rf"^\s+({args[-1]} : )(.+)$\s^\s+([\S\s]+)", argstr, flags=re.MULTILINE
+    ).groups()[1:]
 
-    # Split and clean type indicators and descriptions
-    argtypes = {k: v.split("\n")[0].strip() for k, v in argstrs.items()}
-    argdescr = {
-        k: "\n".join(v.split("\n")[1:]).replace("\n    ", " ").strip()
-        for k, v in argstrs.items()
-    }
+    # Clean text descriptions
+    for arg in args:
+        argdescr[arg] = argdescr[arg].strip()
+        argdescr[arg] = re.sub(r"\n[\s]*", " ", argdescr[arg])
 
     # Done
     return argtypes, argdescr
@@ -100,7 +112,7 @@ def run_via_cmdline(
 
     # Get run_mate_manager argument descriptions from doc string
     mgr_argtypes, mgr_argdescr = _get_docstr_args_numpy(
-        mate_manager.run_mate_manager, mgr_args
+        mate_manager.run_mate_manager
     )
 
     # Add run_mate_manager arguments to parser
@@ -131,7 +143,7 @@ def run_via_cmdline(
     # Get image_analysis_func argument descriptions from doc string
     try:
         ana_argtypes, ana_argdescr = _get_docstr_args_numpy(
-            image_analysis_func, ana_args
+            image_analysis_func
         )
     except:
         ana_argtypes = {
@@ -205,27 +217,6 @@ def run_via_cmdline(
     # Add analysis_kwargs into manager_kwargs
     manager_kwargs["img_kwargs"] = analysis_kwargs
 
-    # # DEV-TEMP! For testing!
-    # print("\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n")
-    # print(target_dir, "\n")
-    # for kwarg in manager_kwargs:
-    #     if not isinstance(manager_kwargs[kwarg], dict):
-    #         print(
-    #             kwarg,
-    #             manager_kwargs[kwarg],
-    #             f"[{type(manager_kwargs[kwarg])}]\n",
-    #         )
-    #     else:
-    #         for kwargkwarg in manager_kwargs[kwarg]:
-    #             print(
-    #                 "~~",
-    #                 kwargkwarg,
-    #                 manager_kwargs[kwarg][kwargkwarg],
-    #                 f"[{type(manager_kwargs[kwarg][kwargkwarg])}]\n",
-    #             )
-    # print("\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n")
-    # # return
-
     # Start MATE event loop
     coordinates, stats_dict = mate_manager.run_mate_manager(
         target_dir, image_analysis_func, **manager_kwargs
@@ -233,36 +224,3 @@ def run_via_cmdline(
 
     # Done
     return coordinates, stats_dict
-
-
-# -----------------------------------------------------------------------------
-# DEV-TEMP! For testing!
-
-
-def my_img_ana_func(target_path, verbose=False, channel=None, sigma=3.0):
-    """This my doc string.
-
-    Parameters
-    ----------
-    target_path : str
-        Path to target image file. [MY_IMG_ANA_FUNC]
-    verbose : bool, optional, default False
-        Whether to print extra information. [MY_IMG_ANA_FUNC]
-    channel : int or None, optional, default None
-        The channel to use for analysis. [MY_IMG_ANA_FUNC]
-    sigma : float, optional, default 3.0
-        Sigma of the Gaussian smoothing, in pixels. [MY_IMG_ANA_FUNC]
-
-    Returns
-    -------
-    Nothing especially
-    """
-    print(target_path, verbose, channel, sigma)
-
-
-if __name__ == "__main__":
-    run_via_cmdline(
-        my_img_ana_func,
-        # analysis_kwargs={"channel": 1},
-        manager_kwargs={"file_end": ".tif", "file_start": "Prescan_"},
-    )

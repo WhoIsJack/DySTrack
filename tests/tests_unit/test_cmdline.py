@@ -7,11 +7,128 @@ Created on Fri Jun 20 19:21:51 2025
 @descript:  Unit tests against `cmdline.py`.
 """
 
+from mate.manager import cmdline
+
+
+def test_get_func_args():
+
+    def test_func(a, b, c=None):
+        pass
+
+    func_args = cmdline._get_func_args(test_func)
+    assert func_args == ("a", "b", "c")
+
+
+def test_get_docstr_args_numpy():
+
+    def test_func(a, b, c=None):
+        """A test function for testing of doc string argument retrieval.
+
+        Parameters
+        ----------
+        a : dummy type a
+            Dummy parameter a
+        b : dummy type b
+            Dummy parameter b with a long
+            multi-line description.
+        c : dummy type c, optional, default None
+            Dummy parameter c.
+
+        Returns
+        -------
+        Nothing
+        """
+        pass
+    
+    argtypes, argdescr = cmdline._get_docstr_args_numpy(test_func)
+
+    expected_argtypes = {
+        'a': 'dummy type a', 
+        'b': 'dummy type b', 
+        'c': 'dummy type c, optional, default None'
+    }
+    expected_argdescr = {
+        'a': 'Dummy parameter a', 
+        'b': 'Dummy parameter b with a long multi-line description.', 
+        'c': 'Dummy parameter c.'
+    }
+
+    assert argtypes == expected_argtypes
+    assert argdescr == expected_argdescr
+
+
+def test_run_via_cmdline():
+    assert False, "# TODO: Implement this test!"  # YAH!
+
+
+
+# -----------------------------------------------------------------------------
+# TAKEN FROM BOTTOM OF cmdline.py FOR REFERENCE!
+# -----------------------------------------------------------------------------
+
+# DEV-TEMP! For testing!  
+
+# def my_img_ana_func(target_path, verbose=False, channel=None, sigma=3.0):
+#     """This my doc string.
+
+#     Parameters
+#     ----------
+#     target_path : str
+#         Path to target image file. [MY_IMG_ANA_FUNC]
+#     verbose : bool, optional, default False
+#         Whether to print extra information. [MY_IMG_ANA_FUNC]
+#     channel : int or None, optional, default None
+#         The channel to use for analysis. [MY_IMG_ANA_FUNC]
+#     sigma : float, optional, default 3.0
+#         Sigma of the Gaussian smoothing, in pixels. [MY_IMG_ANA_FUNC]
+
+#     Returns
+#     -------
+#     Nothing especially
+#     """
+#     print(target_path, verbose, channel, sigma)
+
+
+# if __name__ == "__main__":
+#     run_via_cmdline(
+#         my_img_ana_func,
+#         # analysis_kwargs={"channel": 1},
+#         manager_kwargs={"file_end": ".tif", "file_start": "Prescan_"},
+#     )
+
+
+# -----------------------------------------------------------------------------
+# TAKEN FROM FUNCTION BODY OF run_via_cmdline() FOR REFERENCE!
+# -----------------------------------------------------------------------------
+
+#     # DEV-TEMP! For testing!
+#     print("\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n")
+#     print(target_dir, "\n")
+#     for kwarg in manager_kwargs:
+#         if not isinstance(manager_kwargs[kwarg], dict):
+#             print(
+#                 kwarg,
+#                 manager_kwargs[kwarg],
+#                 f"[{type(manager_kwargs[kwarg])}]\n",
+#             )
+#         else:
+#             for kwargkwarg in manager_kwargs[kwarg]:
+#                 print(
+#                     "~~",
+#                     kwargkwarg,
+#                     manager_kwargs[kwarg][kwargkwarg],
+#                     f"[{type(manager_kwargs[kwarg][kwargkwarg])}]\n",
+#                 )
+#     print("\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n")
+#     # return
+
+
+# -----------------------------------------------------------------------------
+# A COPY FOR THE OLD `test_run_mate.py` FOR REFERENCE
+# -----------------------------------------------------------------------------
 
 if __name__ == "_DEV_TEMP_":  # (Protect from pytest)
-    # -------------------------------------------------------------------
-    # YAH! The below is just a copy of the old `test_run_mate.py`; ADAPT!
-    # -------------------------------------------------------------------
+
 
     import os
     import re
