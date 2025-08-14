@@ -10,8 +10,6 @@ Created on Sun Jan 15 00:34:07 2017
             Developed mainly for the cldnb:EGFP line.
 """
 
-import os
-from time import sleep
 from warnings import simplefilter, warn
 
 simplefilter("always", UserWarning)
@@ -19,7 +17,8 @@ simplefilter("always", UserWarning)
 import matplotlib.pyplot as plt
 import numpy as np
 import scipy.ndimage as ndi
-from aicsimageio import AICSImage
+
+from mate.pipelines.utilities.loading import robustly_load_image_after_write
 
 
 def analyze_image(
@@ -73,70 +72,8 @@ def analyze_image(
 
     ### Load data
 
-    # Make multiple attempts in case loading fails
-    attempts_left = 5
-    file_size = -1
-    while True:
-
-        # Wait until the file is no longer being written to
-        # Note: Some microscope software may intermittently stop writing, so
-        #       this is not a perfect check for whether the file is complete;
-        #       hence the multiple loading attempts...
-        while True:
-            sleep(2)
-            new_file_size = os.stat(target_path).st_size
-            if new_file_size > file_size:
-                file_size = new_file_size
-                attempts_left = 5
-            else:
-                break
-
-        # If the file writing looks done, make a loading attempt
-        try:
-            if target_path.split(".")[-1] in ["tif", "tiff", "czi", "nd2"]:
-                raw = AICSImage(target_path)
-                raw = raw.data
-                raw = np.squeeze(raw)
-
-            # Handle unknown file endings
-            else:
-                errmsg = (
-                    "File ending not recognized! Use MATE's `file_end` argument"
-                    + " to control which file endings trigger image analysis."
-                )
-                raise ValueError(errmsg)
-
-            # Some basic checks to ensure a loader didn't fail silently...
-            if not isinstance(raw, np.ndarray):
-                errmsg = (
-                    "The loaded image object is not an instance of `np.array`,"
-                    + " indicating that the loader may have failed silently!"
-                )
-                raise IOError(errmsg)
-            if raw.size == 0:
-                errmsg = (
-                    "The loaded image array is of size 0, indicating that the"
-                    + " loader may have failed silently!"
-                )
-                raise IOError(errmsg)
-
-            # Exit the loop of loading attempts if loading was successful
-            break
-
-        # In case of failure, retry if there are still attempts left, otherwise
-        # raise the Exception
-        except Exception as err:
-            attempts_left -= 1
-            if attempts_left == 0:
-                print(
-                    f"\n  Multiple attempts to load the image have failed;",
-                    "the final one with this Exception:\n  ",
-                    repr(err),
-                    "\n",
-                )
-                raise
-            else:
-                sleep(2)
+    # Wait for image to be written and then load it
+    raw = robustly_load_image_after_write(target_path)
 
     # Report
     if verbose:
