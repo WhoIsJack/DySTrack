@@ -51,15 +51,9 @@ def test_run_via_cmdline(capsys, mocker):
         """
         return None
 
-    # Fix docs string parsing...                                               # FIXME: Use regex or numpydoc in doc string parsing instead!
-    dummy_img_ana_func.__doc__ = dummy_img_ana_func.__doc__.replace(
-        "        ", "    "
-    )
-
     # Run with --help flag and check that SystemExit is reached
-    sys.argv.append("--help")
     with pytest.raises(SystemExit):
-        run_via_cmdline(dummy_img_ana_func)
+        run_via_cmdline(["dummy", "--help"], dummy_img_ana_func)
 
     # Check that the help message was printed
     captured = capsys.readouterr()
@@ -73,8 +67,8 @@ def test_run_via_cmdline(capsys, mocker):
     mocked_manager.return_value = (None, None)
     mocked_manager.__code__ = run_mate_manager.__code__
     mocked_manager.__doc__ = run_mate_manager.__doc__
-    sys.argv = [
-        sys.argv[0],
+    argv = [
+        "dummy",
         "./tests",
         "--file_start",
         "prescan_",
@@ -85,7 +79,7 @@ def test_run_via_cmdline(capsys, mocker):
         "--verbose",
         "True",
     ]
-    assert run_via_cmdline(dummy_img_ana_func) == (None, None)
+    assert run_via_cmdline(argv, dummy_img_ana_func) == (None, None)
 
     # Check that mocked run_mate_manager was called with appropriate values
     mocked_manager.assert_called_with(
@@ -94,6 +88,7 @@ def test_run_via_cmdline(capsys, mocker):
         file_start="prescan_",
         file_end=".czi",
         img_kwargs={"channel": 0, "verbose": True},
+        img_cache={},
     )
 
 

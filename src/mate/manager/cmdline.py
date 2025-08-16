@@ -26,12 +26,22 @@ def _get_func_args(func):
 
 def _get_docstr_args_numpy(func):
     """Get the argument types and argument descriptions from a numpy-style doc
-    string of function `func`."""
+    string of function `func`. Requires the docstring to contain Parameters and
+    Returns sections and to document *all* its parameters."""
     # TODO: This is simultaneously fun and cringe; look into numpydoc module?!
 
     # Get arguments and doc string
     args = _get_func_args(func)
     docstr = func.__doc__
+
+    # Fail if there is no (proper) doc string
+    if docstr is None:
+        raise ValueError("Provided `func` has no doc string.")
+    if "Parameters" not in docstr or "Returns" not in docstr:
+        raise ValueError(
+            "Provided `func` does not have a numpy-style doc string with both "
+            + "a Parameters section and a Returns section."
+        )
 
     # Filter out Parameters section
     argstr = re.split(
@@ -63,7 +73,11 @@ def _get_docstr_args_numpy(func):
 
 
 def run_via_cmdline(
-    image_analysis_func, analysis_kwargs={}, manager_kwargs={}
+    argv,
+    image_analysis_func,
+    analysis_kwargs={},
+    analysis_cache={},
+    manager_kwargs={},
 ):
     """Parses command-line arguments and launches the MATE manager event loop.
 
@@ -77,11 +91,47 @@ def run_via_cmdline(
     For all other arguments, the command line tool is dynamically generated to
     expose any suitable kwargs of `run_mate_manager` (that are *not* already
     specified in `manager_kwargs`), as well as any suitable kwargs of the
-    `image_analysis_func` (that are *not* already given in `analysis_kwargs`.
-    (Note that this feature depends on numpy-style doc strings.)
+    `image_analysis_func` (that are *not* already given in `analysis_kwargs` or
+    in `analysis_cache`). Any arguments that do not have one of "bool", "int",
+    "float", or "str" as their type (per their doc string) are ignored.
+    Note: This feature *strictly* depends on numpy-style doc strings for the
+    provided `image_analysis_func`!
 
     For more information on the MATE event loop, see the function that this
     ultimately calls: `mate.manager.manager.run_mate_manager()`.
+
+    Parameters
+    ----------
+    argv : list
+        List of command line arguments exactly as returned by `sys.argv`.
+    image_analysis_func : callable
+        Function that performs image analysis on detected files and returns new
+        coordinates for transmission to the microscope.
+        This function *must* have a numpy-style doc string that documents *all*
+        parameters and has both a Parameters and a Returns section.
+        Call signature:
+        ```
+        z_pos, y_pos, x_pos, img_msg, img_cache = image_analysis_func(
+            target_path, **img_kwargs, **img_cache)
+        ```
+        The `target_path` argument corresponds to the first and only required
+        argument in the cmdline call signature generated here. The keyword
+        arguments (both `img_kwargs` and `img_cache`) will be parsed from the
+        function's numpy-style doc string and exposed to the cmdline interface
+        unless they are already set in `analysis_kwargs` and `analysis_cache`,
+        respectively (see below).
+        Note that all keyword arguments of the image analysis function will be
+        treated as `img_kwargs`, not as `img_cache`, so caching arguments
+        *must* be provided in `analysis_cache` to work as intended.
+    analysis_kwargs : dict, optional, default {}
+        Additional keyword arguments to be passed to the image analysis func as
+        `**img_kwargs`. These will not be exposed to the cmdline interface.
+    analysis_cache : dict, optional, default {}
+        Additional keyword arguments to be passed to the image analysis func as
+        `**img_cache`. These will not be exposed to the cmdline interface.
+    manager_kwargs : dict, optional, default {}
+        Additional keyword arguments to be passed to `run_mate_manager`. These
+        will not be exposed to the cmdline interface.
     """
 
     # Prep description
@@ -95,6 +145,10 @@ def run_via_cmdline(
         description += "\n  analysis_kwargs:"
         for k in analysis_kwargs:
             description += f"\n    {k}: {analysis_kwargs[k].__repr__()}"
+    if analysis_cache:
+        description += "\n  analysis_cache:"
+        for k in analysis_cache:
+            description += f"\n    {k}: {analysis_cache[k].__repr__()}"
 
     # Prep parser
     parser = argparse.ArgumentParser(
@@ -106,6 +160,9 @@ def run_via_cmdline(
     parser.add_argument(
         "target_dir", help="Path to the directory that is to be monitored."
     )
+
+    # Configure supported types for keyword arguments
+    type_dict = {"bool": bool, "int": int, "float": float, "str": str}
 
     # Get run_mate_manager arguments
     mgr_args = _get_func_args(mate_manager.run_mate_manager)
@@ -127,7 +184,7 @@ def run_via_cmdline(
             continue
 
         # Skip arguments that cannot be provided via cmdline
-        if arg in ["img_kwargs", "img_cache", "tra_kwargs"]:
+        if not any([mgr_argtypes[arg].startswith(t) for t in type_dict]):
             continue
 
         # Add argument
@@ -145,12 +202,15 @@ def run_via_cmdline(
         ana_argtypes, ana_argdescr = _get_docstr_args_numpy(
             image_analysis_func
         )
-    except:
-        ana_argtypes = {
-            k: "Failed to parse image analysis function doc string!"
-            for k in ana_args
-        }
-        ana_argdescr = {k: "" for k in ana_args}
+    except Exception as e:
+        print(
+            "[!!] Failed to parse doc string of `image_analysis_func`; may "
+            + "not be a proper numpy-style doc string, may be missing either "
+            + "the Parameters and/or the Returns section, or may not have all"
+            + "its parameters fully documented."
+        )
+        print("[!!] The exception raised was:")
+        raise (e)
 
     # Add image_analysis_func arguments to parser
     for arg in ana_args:
@@ -162,9 +222,12 @@ def run_via_cmdline(
         # Skip arguments provided via config file
         if arg in analysis_kwargs:
             continue
+        if arg in analysis_cache:
+            continue
 
         # Skip arguments that cannot be provided via cmdline
-        # ->> This can't easily be done for arbitrary functions
+        if not any([ana_argtypes[arg].startswith(t) for t in type_dict]):
+            continue
 
         # Add argument
         parser.add_argument(
@@ -174,12 +237,13 @@ def run_via_cmdline(
         )
 
     # Parse arguments
-    cmd_args = vars(parser.parse_args())
+    cmd_args = vars(parser.parse_args(argv[1:]))
 
     # Pop out target_dir
     target_dir = cmd_args.pop("target_dir")
 
     # Separate manager and analysis arguments
+    # Note: There's currently no way of separating out img_cache arguments.
     cmd_mgr_kwargs = {k: v for k, v in cmd_args.items() if k in mgr_args}
     cmd_ana_kwargs = {k: v for k, v in cmd_args.items() if k in ana_args}
 
@@ -193,22 +257,16 @@ def run_via_cmdline(
 
     # Handle argument types
     # Note: Argparse fails at this because there's no way of providing defaults
-    #       of a different type, which is required here to give deference to
-    #       the defaults of the functions themselves...
+    #       of a different type, which would be required here to give deference
+    #       to the defaults of the functions themselves.
     for arg in cmd_mgr_kwargs:
-        if mgr_argtypes[arg].startswith("bool"):
-            cmd_mgr_kwargs[arg] = bool(cmd_mgr_kwargs[arg])
-        if mgr_argtypes[arg].startswith("int"):
-            cmd_mgr_kwargs[arg] = int(cmd_mgr_kwargs[arg])
-        if mgr_argtypes[arg].startswith("float"):
-            cmd_mgr_kwargs[arg] = float(cmd_mgr_kwargs[arg])
+        for t in type_dict:
+            if mgr_argtypes[arg].startswith(t):
+                cmd_mgr_kwargs[arg] = type_dict[t](cmd_mgr_kwargs[arg])
     for arg in cmd_ana_kwargs:
-        if ana_argtypes[arg].startswith("bool"):
-            cmd_ana_kwargs[arg] = bool(cmd_ana_kwargs[arg])
-        if ana_argtypes[arg].startswith("int"):
-            cmd_ana_kwargs[arg] = int(cmd_ana_kwargs[arg])
-        if ana_argtypes[arg].startswith("float"):
-            cmd_ana_kwargs[arg] = float(cmd_ana_kwargs[arg])
+        for t in type_dict:
+            if ana_argtypes[arg].startswith(t):
+                cmd_ana_kwargs[arg] = type_dict[t](cmd_ana_kwargs[arg])
 
     # Combine with arguments from config file
     manager_kwargs = manager_kwargs | cmd_mgr_kwargs
@@ -216,6 +274,7 @@ def run_via_cmdline(
 
     # Add analysis_kwargs into manager_kwargs
     manager_kwargs["img_kwargs"] = analysis_kwargs
+    manager_kwargs["img_cache"] = analysis_cache
 
     # Start MATE event loop
     coordinates, stats_dict = mate_manager.run_mate_manager(

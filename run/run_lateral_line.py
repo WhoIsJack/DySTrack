@@ -24,19 +24,20 @@ from mate.manager.cmdline import run_via_cmdline
 ### USER CONFIGURATION: Image analysis pipeline function [REQUIRED]
 
 # - Import the desired image analysis pipeline as `image_analysis_func`
-# - Pipeline functions included in mate are in `mate.pipelines.lateral_line`,
-#   but this could also be a custom function
-#
-# - Pipeline functions will be called by MATE with the following signature:
+# - Pipeline functions included in mate are found in `mate.pipelines`
+# - Alternatively, it could be a custom function with this call signature:
 #
 #     ```
 #     z_pos, y_pos, x_pos, img_msg, img_cache = image_analysis_func(
-#         target_path, **img_kwargs, **img_cache)
+#         target_path, **img_kwargs, **img_cache
+#     )
 #     ```
 #
-# - They must accept only one positional argument, which is the path to the
-#   image file to be analyzed
+# - Pipeline functions must accept only one positional argument, which is the 
+#   path to the image file to be analyzed
 # - They may accept any number of additional keyword arguments
+# - They *must* have a numpy-style doc string that documents *all* parameters
+#   and has both a Parameters and a Returns section
 
 from mate.pipelines.lateral_line import analyze_image as image_analysis_func
 
@@ -100,9 +101,12 @@ manager_kwargs = {
 # - Start MATE by running `python mate_lateral_line.py <target_dir> [args]`
 
 if __name__ == "__main__":
+    import sys
     run_via_cmdline(
+        sys.argv,
         image_analysis_func,
         analysis_kwargs,
+        analysis_cache,
         manager_kwargs
     )
 
