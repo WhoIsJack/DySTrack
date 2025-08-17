@@ -15,12 +15,14 @@ from mate.manager.manager import run_mate_manager
 
 def test_get_func_args():
 
+    # Test edge case without arguments
     def test_func_noargs():
         pass
 
     func_args_noargs = cmdline._get_func_args(test_func_noargs)
     assert func_args_noargs == tuple()
 
+    # Test case with arguments
     def test_func(a, b, c=None):
         pass
 
@@ -30,7 +32,7 @@ def test_get_func_args():
 
 def test_get_docstr_args_numpy():
 
-    # Test case without doc string
+    # Test edge case without doc string
     def test_func_nodocstr(a, b, c=None):
         pass
 
@@ -38,7 +40,7 @@ def test_get_docstr_args_numpy():
         cmdline._get_docstr_args_numpy(test_func_nodocstr)
     assert str(nodocstrerr.value) == "Provided `func` has no doc string."
 
-    # Test case with incomplete/non-numpy doc string
+    # Test edge case with incomplete/non-numpy doc string
     def test_func_wrongdocstr(a, b, c=None):
         """A test function that lacks numpy-style parameters."""
         pass
@@ -46,8 +48,8 @@ def test_get_docstr_args_numpy():
     with pytest.raises(ValueError) as wrongdocstrerr:
         cmdline._get_docstr_args_numpy(test_func_wrongdocstr)
     assert str(wrongdocstrerr.value) == (
-        "Provided `func` does not have a numpy-style doc string with both "
-        + "a Parameters section and a Returns section."
+        "Provided `func` does not seem to have a numpy-style doc string "
+        + "with both a Parameters section and a Returns section."
     )
 
     # Test case with proper doc string
@@ -154,7 +156,7 @@ def test_run_via_cmdline(capsys, mocker):
         img_cache={},
     )
 
-    # Extra test in case dummy image analysis function has incomplete doc str
+    # Extra test for edge case of function with incomplete doc string
     def dummy_img_ana_func(
         target_path,
         channel=1,

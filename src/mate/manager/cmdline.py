@@ -27,8 +27,36 @@ def _get_func_args(func):
 def _get_docstr_args_numpy(func):
     """Get the argument types and argument descriptions from a numpy-style doc
     string of function `func`. Requires the docstring to contain Parameters and
-    Returns sections and to document *all* its parameters."""
-    # TODO: This is simultaneously fun and cringe; look into numpydoc module?!
+    Returns sections and to document *all* its parameters.
+
+    For example, the following doc string:
+
+    ```
+    Parameters
+    ----------
+    param1 : type_of_param1
+        Description of param1.
+    param2 : type_of_param2 or None
+        Description of param2
+
+    Results
+    -------
+    foo : bar
+       foobar
+    ```
+
+    would return this `argtypes` dict:
+
+    `{"param1" : "type_of_param1", "param2" : "type_of_param2 or none"}`
+
+    and thos `argdescr` dict:
+
+    `{"param1" : "Description of param1", "param2" : "Description of param2"}
+
+    WARNING: This is a fun but very basic and probably quite fragile homebrew
+             approach; look into `numpydoc` or something like that?! Also, for
+             the types it would be better to use type annotations.  # TODO!
+    """
 
     # Get arguments and doc string
     args = _get_func_args(func)
@@ -39,8 +67,8 @@ def _get_docstr_args_numpy(func):
         raise ValueError("Provided `func` has no doc string.")
     if "Parameters" not in docstr or "Returns" not in docstr:
         raise ValueError(
-            "Provided `func` does not have a numpy-style doc string with both "
-            + "a Parameters section and a Returns section."
+            "Provided `func` does not seem to have a numpy-style doc string "
+            + "with both a Parameters section and a Returns section."
         )
 
     # Filter out Parameters section
@@ -89,16 +117,18 @@ def run_via_cmdline(
     first positional argument of the command line invocation.
 
     For all other arguments, the command line tool is dynamically generated to
-    expose any suitable kwargs of `run_mate_manager` (that are *not* already
-    specified in `manager_kwargs`), as well as any suitable kwargs of the
-    `image_analysis_func` (that are *not* already given in `analysis_kwargs` or
-    in `analysis_cache`). Any arguments that do not have one of "bool", "int",
-    "float", or "str" as their type (per their doc string) are ignored.
-    Note: This feature *strictly* depends on numpy-style doc strings for the
-    provided `image_analysis_func`!
+    expose any suitable kwargs of `run_mate_manager` that are *not* already
+    specified in `manager_kwargs`, as well as any suitable kwargs of the
+    `image_analysis_func` that are *not* already given in `analysis_kwargs` or
+    in `analysis_cache`. Any arguments that do not have type "bool", "int",
+    "float", or "str" as their main doc string type annotation are ignored.
 
-    For more information on the MATE event loop, see the function that this
-    ultimately calls: `mate.manager.manager.run_mate_manager()`.
+    Note: This feature *strictly* depends on numpy-style doc strings for the
+    provided `image_analysis_func`, which *must* include both a Parameters and
+    a Returns section and *must* document all parameters.
+
+    For more information on the MATE event loop itself, see the function that
+    this one ultimately calls: `mate.manager.manager.run_mate_manager()`.
 
     Parameters
     ----------
@@ -120,9 +150,10 @@ def run_via_cmdline(
         function's numpy-style doc string and exposed to the cmdline interface
         unless they are already set in `analysis_kwargs` and `analysis_cache`,
         respectively (see below).
-        Note that all keyword arguments of the image analysis function will be
-        treated as `img_kwargs`, not as `img_cache`, so caching arguments
-        *must* be provided in `analysis_cache` to work as intended.
+        Note that all keyword arguments provided via the command line will be
+        treated as `img_kwargs`, not as `img_cache`. This means `img_cache`
+        arguments cannot be provided via the command line and must instead be
+        given in `analysis_cache` (or left blank) to function properly.
     analysis_kwargs : dict, optional, default {}
         Additional keyword arguments to be passed to the image analysis func as
         `**img_kwargs`. These will not be exposed to the cmdline interface.
@@ -136,7 +167,7 @@ def run_via_cmdline(
 
     # Prep description
     description = "Start a MATE session.\n\n"
-    description += "already fixed arguments:"
+    description += "Already fixed arguments:"
     description += f"\n  image_analysis_func: {image_analysis_func.__name__}"
     if manager_kwargs:
         for k in manager_kwargs:
@@ -167,7 +198,7 @@ def run_via_cmdline(
     # Get run_mate_manager arguments
     mgr_args = _get_func_args(mate_manager.run_mate_manager)
 
-    # Get run_mate_manager argument descriptions from doc string
+    # Get run_mate_manager argument types and descriptions from doc string
     mgr_argtypes, mgr_argdescr = _get_docstr_args_numpy(
         mate_manager.run_mate_manager
     )
@@ -197,7 +228,7 @@ def run_via_cmdline(
     # Get image_analysis_func arguments
     ana_args = _get_func_args(image_analysis_func)
 
-    # Get image_analysis_func argument descriptions from doc string
+    # Get image_analysis_func argument types and descriptions from doc string
     try:
         ana_argtypes, ana_argdescr = _get_docstr_args_numpy(
             image_analysis_func
