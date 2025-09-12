@@ -110,10 +110,10 @@ def test_run_mate_manager(capsys):
 
     # Config
     datadir = "./tests/testdata"
-    prescan_fname = "test0_prescan_prim_cldnb.czi"
+    prescan_fname = "test-full_prescan_prim_cldnb.czi"
     prescan_fpath = os.path.join(datadir, prescan_fname)
-    stdout_fpath = os.path.join(datadir, "test0_stdout.txt")
-    MATE_file_start = "test0_prescan_"
+    stdout_fpath = os.path.join(datadir, "test-full_stdout.txt")
+    MATE_file_start = "test-full_prescan_"
     MATE_file_end = ".czi"
 
     # Create transient testing folder
@@ -179,7 +179,9 @@ def test_run_mate_manager(capsys):
     # Check resulting mate_coords.txt file
     with open(os.path.join(testdir, "mate_coords.txt"), "r") as infile:
         test_mate_coords = infile.read()
-    with open(os.path.join(datadir, "test0_mate_coords.txt"), "r") as infile:
+    with open(
+        os.path.join(datadir, "test-full_mate_coords.txt"), "r"
+    ) as infile:
         check_mate_coords = infile.read()
     assert test_mate_coords == check_mate_coords
 

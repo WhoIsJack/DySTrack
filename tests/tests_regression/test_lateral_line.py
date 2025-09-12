@@ -36,11 +36,11 @@ def test_analyze_image(capsys):
     prescan_fnames = [
         fn
         for fn in os.listdir(datadir)
-        if fn.startswith("test1_") and "_prescan" in fn
+        if fn.startswith("test-pllp_") and "_prescan" in fn
     ]
     warns_8bit = [False, False, True]  # Whether 8bit conversion is expected
-    coords_fpath = os.path.join(datadir, "test1_coords.pkl")
-    stdout_fpath = os.path.join(datadir, "test1_stdout.pkl")
+    coords_fpath = os.path.join(datadir, "test-pllp_coords.pkl")
+    stdout_fpath = os.path.join(datadir, "test-pllp_stdout.pkl")
 
     # Run function over test data
     outputs = {}

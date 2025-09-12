@@ -6,7 +6,7 @@ Will terminate after 1 pipeline trigger events.
 Press <Esc> to terminate.
 
 
-Target file detected: test0_prescan_prim_cldnb.czi
+Target file detected: test-full_prescan_prim_cldnb.czi
 Running image analysis...
       Loaded image of shape: (20, 100, 200)
       Detected treshold: 10
