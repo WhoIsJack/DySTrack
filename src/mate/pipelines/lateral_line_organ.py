@@ -68,7 +68,7 @@ def analyze_image(
     Returns
     -------
     z_pos, y_pos, x_pos : ints
-        New coordinates for the next acquisition. For 2D inputs, z_pos is None.
+        New coordinates for the next acquisition. For 2D inputs, z_pos is 0.0.
     img_msg : "_"
         A string output message; required by MATE but here unused; set to "_".
     img_cache : {}
@@ -259,7 +259,7 @@ def analyze_image(
 
     # Get positions for 2D
     else:
-        z_pos = None
+        z_pos = 0.0
         y_pos = cen[0]
         x_pos = cen[1]
 

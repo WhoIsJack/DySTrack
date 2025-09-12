@@ -15,12 +15,12 @@ from warnings import simplefilter, warn
 simplefilter("always", UserWarning)
 
 import numpy as np
-from aicsimageio import AICSImage
+from bioio import BioImage
 
 
 def robustly_load_image_after_write(target_path):
-    """Load an image from a specified target path using aicsimageio, ensuring
-    (as best as possible using simple means) that the image is no longer being
+    """Load an image from a specified target path using bioio, ensuring (as)
+    (best as possible using simple means) that the image is no longer being
     actively written out by the microscope.
 
     Works by repeatedly checking the target file size and initiating the load
@@ -62,7 +62,7 @@ def robustly_load_image_after_write(target_path):
         # If the file writing looks done, make a loading attempt
         try:
             if target_path.split(".")[-1] in ["tif", "tiff", "czi", "nd2"]:
-                raw = AICSImage(target_path)
+                raw = BioImage(target_path)
                 raw = raw.data
                 raw = np.squeeze(raw)
 

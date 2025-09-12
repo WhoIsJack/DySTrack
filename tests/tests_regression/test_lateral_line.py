@@ -64,7 +64,7 @@ def test_analyze_image(capsys):
                 warnings.filterwarnings(
                     "error",
                     category=UserWarning,
-                    message="Image had to be converted down to 8bit!",
+                    message="Image converted down to 8bit using min-max scaling!",
                 )
                 out = lateral_line.analyze_image(
                     os.path.join(datadir, prescan_fname),
