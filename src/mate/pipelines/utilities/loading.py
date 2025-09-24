@@ -74,10 +74,10 @@ def robustly_load_image_after_write(target_path):
                 )
                 raise ValueError(errmsg)
 
-            # Some basic checks to ensure a loader didn't fail silently...
-            if not isinstance(raw, np.ndarray):
+            # Basic checks to ensure the loader didn't fail silently...
+            if not np.issubdtype(raw.dtype, np.number):
                 errmsg = (
-                    "The loaded image object is not an instance of `np.array`,"
+                    "The loaded image array is not of a numerical type,"
                     + " indicating that the loader may have failed silently!"
                 )
                 raise IOError(errmsg)
