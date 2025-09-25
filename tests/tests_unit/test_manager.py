@@ -7,173 +7,175 @@ Created on Mon Jun 09 11:38:17 2025
 @descript:  Unit tests against `manager.py`.
 """
 
+import pytest
 
-if __name__ == "_DEV_TEMP_":  # (Protect from pytest)
-    # -------------------------------------------------------------------
-    # YAH! The below is just a copy of the old `test_run_mate.py`; ADAPT!
-    # -------------------------------------------------------------------
+import mate.manager.manager as mng
 
-    import os
-    import re
-    import shutil
-    import sys
-    import threading
-    import time
-    from contextlib import ExitStack
-    from datetime import datetime
 
-    import pytest
+def test_check_fname():
+    
+    example_fname = "prescan_somefilename.czi"
 
-    from mate.manager import run_mate
+    test_conditions = [
+        {"file_start" : "prescan", "file_end" : ".czi", "file_regex" : ".*"},
+        {"file_start" : "prescan"},
+        {"file_end"   : ".czi"},
+        {"file_regex" : ".*"},
+        {"file_start" : "prescan", "file_end" : ".czi"},
+        {"file_start" : "prescan", "file_regex" : ".*"},
+        {"file_end"   : ".czi", "file_regex" : ".*"},
+        {"file_start" : "", "file_end" : "", "file_regex" : ""},
 
-    def test_main(capsys, mocker):
-        """Regression test for main function (command line parsing)."""
+        {"file_start" : "bad", "file_end" : ".czi", "file_regex" : ".*"},
+        {"file_start" : "prescan", "file_end" : ".bad", "file_regex" : ".*"},
+        {"file_start" : "prescan", "file_end" : ".czi", "file_regex" :r"\d.*"},
+        {"file_start" : "bad", "file_end" : ".bad", "file_regex" : ".*"},
+        {"file_start" : "bad", "file_end" : ".bad", "file_regex" :r"\d.*"},
+    ]
+    test_expectations = 8 * [True] + 5 * [False]
 
-        # Run with --help flag and check that SystemExit is reached
-        sys.argv.append("--help")
-        with pytest.raises(SystemExit):
-            run_mate.main()
+    for c, e, in zip(test_conditions, test_expectations):
+        assert mng._check_fname(example_fname, **c) == e
 
-        # Check that the help message was printed
-        captured = capsys.readouterr()
-        s1 = "run_mate TARGET_DIR [-s START] [-e END] [-c CHANNEL] [-w] [-v] [-p]"
-        s2 = "Start up a MATE manager session."
-        assert s1 in captured.out
-        assert s2 in captured.out
 
-        # Run with mocked main_scheduler function
-        mocked_scheduler = mocker.patch("mate.manager.run_mate.main_scheduler")
-        mocked_scheduler.return_value = "mocked_scheduler_output_stats"
-        sys.argv = [
-            sys.argv[0],
-            "./tests",
-            "-s",
-            "prescan_",
-            "-e",
-            ".czi",
-            "-c",
-            "0",
-            "-v",
-        ]
-        assert run_mate.main() == "mocked_scheduler_output_stats"
+def test_trigger_image_analysis():
+    
+    # Prep
+    target_path = r"./tests/testdata/example_path.tiff"
 
-        # Check that mocked main_scheduler was called with appropriate values
-        mocked_scheduler.assert_called_with(
-            "./tests",
-            img_params={"channel": 0, "show": False},
-            fileStart="prescan_",
-            fileEnd=".czi",
-            write_winreg=False,
-            verbose=True,
+    # Mock target function with "correct" signature
+    def img_ana_func(target_path, sigma=10):
+        return target_path, sigma, 200, "OK", {}
+    
+    # Test successful call
+    outputs = mng._trigger_image_analysis(
+        target_path, img_ana_func,
+        img_kwargs={"sigma":5.5}, img_cache={}
+    )
+    assert outputs == ((target_path, 5.5, 200, "OK", {}), None)
+
+    # Test bad img_kwarg
+    outputs = mng._trigger_image_analysis(
+        r"./tests/testdata/example_path.tiff", img_ana_func,
+        img_kwargs={"density":5}, img_cache={}
+    )
+    assert outputs[0] == (None, None, None, "Image analysis failed!", {})
+    assert "got an unexpected keyword argument 'density'" in str(outputs[1])
+
+    # Test bad img_cache
+    outputs = mng._trigger_image_analysis(
+        r"./tests/testdata/example_path.tiff", img_ana_func,
+        img_kwargs={}, img_cache={"density":5}
+    )
+    assert outputs[0] == (None, None, None, "Image analysis failed!", {"density":5})
+    assert "got an unexpected keyword argument 'density'" in str(outputs[1])
+
+    # Mock target function with incorrect signature
+    def img_ana_func(target_path, sigma=10):
+        return None
+    
+    # Test correct call of incorrect function
+    outputs = mng._trigger_image_analysis(
+        target_path, img_ana_func,
+        img_kwargs={"sigma":5.5}, img_cache={}
+    )
+    assert outputs[0] == (None, None, None, "Image analysis failed!", {})
+    assert "cannot unpack non-iterable NoneType object" in str(outputs[1])
+
+
+def test_trigger_coords_transmission(mocker, capsys):
+    
+    # Test custom callable transmission method
+    def tra_mock(z_pos, y_pos, x_pos, img_msg, *args, **kwargs):
+        print(z_pos, y_pos, x_pos, img_msg, end="")
+        return
+    mng._trigger_coords_transmission(
+        tra_mock, None, 10, 15, "test_msg"
+    )
+    captured = capsys.readouterr()
+    assert captured.out == "None 10 15 test_msg"
+
+    # Test txt file transmission method
+    def tra_txt_mock(fpath, z_pos, y_pos, x_pos, msg):
+        print(fpath, z_pos, y_pos, x_pos, msg, end="")
+        return
+    mocker.patch(
+        "mate.manager.transmitters.send_coords_txt", wraps=tra_txt_mock
+    )
+    mng._trigger_coords_transmission(
+        "txt", None, 10, 15, "test_msg", target_dir="."
+    )
+    captured = capsys.readouterr()
+    assert captured.out == ".\\mate_coords.txt None 10 15 test_msg"
+
+    # Test winreg transmission method
+    def tra_winreg_mock(z_pos, y_pos, x_pos, codeM, errMsg):
+        print(z_pos, y_pos, x_pos, codeM, errMsg, end="")
+        return
+    mocker.patch(
+        "mate.manager.transmitters.send_coords_winreg", wraps=tra_winreg_mock
+    )
+    mng._trigger_coords_transmission(
+        "MyPiC", None, 10, 15, "test_msg", None
+    )
+    captured = capsys.readouterr()
+    assert captured.out == "None 10 15 focus test_msg"
+
+    # Test for correct error handling with custom callable transmission method
+    def tra_error(*args, **kwargs):
+        raise Exception("test error")
+    tra_e = mng._trigger_coords_transmission(
+        tra_error, None, 10, 15, "test_msg"
+    )
+    assert "test error" in str(tra_e)
+
+    # Test for correct error handling with txt file transmission method
+    mocker.patch(
+        "mate.manager.transmitters.send_coords_txt", wraps=tra_error
+    )
+    tra_e = mng._trigger_coords_transmission(
+        "txt", None, 10, 15, "test_msg", target_dir="."
+    )
+    assert "test error" in str(tra_e)
+
+    # Test for correct error handling with winreg transmission method
+    mocker.patch(
+        "mate.manager.transmitters.send_coords_winreg", wraps=tra_error
+    )
+    tra_e = mng._trigger_coords_transmission(
+        "MyPiC", None, 10, 15, "test_msg", None
+    )
+    assert "test error" in str(tra_e)
+
+    # Test invalid transmission method
+    with pytest.raises(ValueError) as err:
+        tra_e = mng._trigger_coords_transmission(
+            "unsupported_method", None, 10, 15, "test_msg"
         )
+    assert "invalid `transmission_method`" in str(err)
 
-    def test_main_scheduler(capsys):
-        """Regression test for scheduler (main event loop)."""
 
-        # DEV: Set this to True to see MATE outputs during the pytest run;
-        # this will make the test fail, but it's very useful for debugging!
-        print_MATE_outputs = False
+@pytest.mark.skip(reason="Test not implemented; covered by integration test.")
+def test_run_mate_manager_success():
+    # TODO: Fully unit-testing this function would require extensive mocking.
+    #       Since most functionality of `run_mate_manager` is already tested 
+    #       with a "live" integration test that does not rely on mocking, this
+    #       is only nice-to-have and remains a stretch goal for future work.
+    pass
 
-        # DEV: Set this to True to generate a new reference stdout file (which will
-        # overwrite the old) if the stdout behavior of the scheduler has changed.
-        # This will force the test to fail, since generating a new reference from
-        # the output and then checking them against each other would always pass.
-        create_MATE_stdout = False
 
-        # Config
-        datadir = "./tests/testdata"
-        prescan_fname = "test0_prescan_prim_cldnb.czi"
-        prescan_fpath = os.path.join(datadir, prescan_fname)
-        stdout_fpath = os.path.join(datadir, "test0_stdout.txt")
-        MATE_fileStart = "test0_prescan_"
-        MATE_fileEnd = ".czi"
-
-        # Create transient testing folder
-        now = datetime.now().strftime(r"%Y%m%d-%H%M%S")
-        testdir = os.path.join(datadir, "testrun_" + now)
-        os.mkdir(testdir)
-
-        # Prepare thread object to run MATE monitoring with main_scheduler
-        scheduler_args = (testdir,)
-        scheduler_kwargs = {
-            "img_params": {"channel": None, "show": False},
-            "fileStart": MATE_fileStart,
-            "fileEnd": MATE_fileEnd,
-            "write_winreg": False,
-            "verbose": True,
-        }
-        thread = threading.Thread(
-            target=run_mate.main_scheduler,
-            args=scheduler_args,
-            kwargs=scheduler_kwargs,
-            daemon=True,  # Ensures MATE thread will terminate at end of test
+def test_run_mate_manager_errors_noexit():
+    with pytest.raises(ValueError) as err:
+        mng.run_mate_manager(
+            "test_dir", lambda x : None, 
+            max_checks=None, max_triggers=None, end_on_esc=False
         )
+    assert "No ending condition for MATE event loop set" in str(err)
 
-        # For nicer output when printing
-        if print_MATE_outputs:
-            print(
-                "\n\n[test_run_mate.py:] Starting MATE monitoring in thread."
-            )
 
-        # Start the MATE monitoring thread
-        thread.start()
-
-        # Wait for startup
-        # TODO: Would there be a more adaptive way to wait?
-        time.sleep(6)
-
-        # Move example test scan into folder
-        shutil.copy(prescan_fpath, testdir)
-        assert os.path.isfile(os.path.join(testdir, prescan_fname))
-
-        # Wait for completion
-        # TODO: Would there be a more adaptive way to wait?
-        time.sleep(12)
-
-        # Print the outputs (for debugging)
-        if print_MATE_outputs:
-            print(
-                "\n[test_run_mate.py:] Finished waiting for MATE monitoring.\n"
-            )
-            captured = capsys.readouterr()
-            with capsys.disabled():
-                print(captured.out)
-
-        # Check command line output against expectations
-        if not print_MATE_outputs:
-            captured = capsys.readouterr()
-
-            # Generate reference file
-            if create_MATE_stdout:
-                with open(stdout_fpath, "w") as outfile:
-                    outfile.write(captured.out)
-
-            # Compare against reference file (with updated testdir time label)
-            with open(stdout_fpath, "r") as infile:
-                check_captured = infile.read()
-            ref_time = re.search(
-                r"testrun_\d{8}-\d{6}", check_captured
-            ).group()
-            check_captured = check_captured.replace(ref_time, "testrun_" + now)
-            assert captured.out == check_captured
-
-        # Check resulting mate_coords.txt file
-        with open(os.path.join(testdir, "mate_coords.txt"), "r") as infile:
-            test_mate_coords = infile.read()
-        with open(
-            os.path.join(datadir, "test0_mate_coords.txt"), "r"
-        ) as infile:
-            check_mate_coords = infile.read()
-        assert test_mate_coords == check_mate_coords
-
-        # Remove transient testing folder
-        shutil.rmtree(testdir)
-        assert not os.path.isdir(testdir)
-
-        # Ensure the test fails if any of the DEV mode flags were set to True
-        assert (
-            not print_MATE_outputs
-        ), "Cannot test MATE stdout when print_MATE_outputs is set to True; forcing test failure."
-        assert (
-            not create_MATE_stdout
-        ), "Generated new MATE stdout reference file; forcing test failure."
+@pytest.mark.skip(reason="Test not implemented. [low-priority]")
+def test_run_mate_manager_errors_OTHER():
+    # TODO: Test for other errors that `run_mate_manager` may raise. 
+    #       Requires extensive mocking (see `test_run_mate_manager_success`)
+    #       and is currently nice-to-have/low-priority.
+    pass
