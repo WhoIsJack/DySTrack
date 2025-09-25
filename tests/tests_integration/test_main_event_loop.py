@@ -48,7 +48,7 @@ def test_run_mate_manager(capsys):
 
     # Config
     datadir = "./tests/testdata"
-    prescan_fname = "test-full_prescan_prim_cldnb.czi"
+    prescan_fname = "test-full_prescan_pllp.czi"
     prescan_fpath = os.path.join(datadir, prescan_fname)
     stdout_fpath = os.path.join(datadir, "test-full_stdout.txt")
     MATE_file_start = "test-full_prescan_"
