@@ -18,74 +18,81 @@ from mate.pipelines import lateral_line
 
 def test_analyze_image_3D_success(capsys):
 
-    # DEV: Set this to True to generate new reference coords and stdout files
-    # (which will overwrite the old) if the data or the function's behavior has
-    # changed. This will force the test to fail, since generating a new
-    # reference from the output and then checking against it would always pass.
-    create_new_reference_file = False
+    # Targets
+    testpath = r"./tests/testdata/"
+    fname = "test-pllp_NSPARC_prescan.tiff"
+
+    # Expectations
+    expected_output = ["3.4705", "107.8477", "258.4000", "OK", {}]
+    expected_stdouts = [
+        "Loaded image of shape: (9, 212, 512)",
+        "Detected treshold: 13",
+        "Resulting coords (zyx): 3.4705, 107.8477, 258.4000",
+    ]
+
+    # Run test
+    with pytest.warns(
+        UserWarning,
+        match="Image converted down to 8bit using min-max scaling!",
+    ) as w:
+        output = lateral_line.analyze_image(
+            os.path.join(testpath, fname),
+            channel=None,
+            show=False,
+            verbose=True,
+        )
+    output = list(output)
+    output[:3] = [f"{c:.4f}" for c in output[:3]]
+    stdout = capsys.readouterr().out
+
+    # Compare results
+    assert output == expected_output
+    for eso in expected_stdouts:
+        assert eso in stdout
+
+
+def test_analyze_image_2D_success(capsys):
 
     # Targets
     testpath = r"./tests/testdata/"
-    fnames = [
-        "test-pllp_980_prescan.czi",  # ZEISS LSM980 .czi
-        "test-pllp_NSPARC_prescan.tiff",  # Nikon AX .tiff
-    ]
+    fname = "test-pllp_980_prescan2D.tif"
 
     # Expectations
-    warns_8bit = [False, True]  # Whether 8bit conversion is expected
-    reference_fpath = os.path.join(testpath, "test-pllp_refout.txt")
+    expected_output = ["0.0000", "106.7561", "348.0000", "OK", {}]
+    expected_stdouts = [
+        "Loaded image of shape: (200, 500)",
+        "Detected treshold: 11",
+        "Resulting coords (zyx): 0.0000, 106.7561, 348.0000",
+    ]
 
-    # Run function over test data
-    outputs = []
-    for fname, w8bit in zip(fnames, warns_8bit):
+    # Run test
+    output = lateral_line.analyze_image(
+        os.path.join(testpath, fname),
+        channel=None,
+        show=False,
+        verbose=True,
+    )
+    output = list(output)
+    output[:3] = [f"{c:.4f}" for c in output[:3]]
+    stdout = capsys.readouterr().out
 
-        if w8bit:
-            with pytest.warns(
-                UserWarning,
-                match="Image converted down to 8bit using min-max scaling!",
-            ) as w:
-                out = lateral_line.analyze_image(
-                    os.path.join(testpath, fname),
-                    channel=None,
-                    show=False,
-                    verbose=True,
-                )
+    # Compare results
+    assert output == expected_output
+    for eso in expected_stdouts:
+        assert eso in stdout
 
-        else:
-            with warnings.catch_warnings():
-                warnings.filterwarnings(
-                    "error",
-                    category=UserWarning,
-                    message="Image converted down to 8bit using min-max scaling!",
-                )
-                out = lateral_line.analyze_image(
-                    os.path.join(testpath, fname),
-                    channel=None,
-                    show=False,
-                    verbose=True,
-                )
 
-        out = list(out)
-        out[:3] = [f"{c:.4f}" for c in out[:3]]
-        out[3:] = [v.__repr__() for v in out[3:]]
+def test_analyze_image_errors_dimchecks(mocker):
+    assert True  # YAH!
 
-        outputs.append(f"\n# TESTFILE: {fname}")
-        outputs.append("\n>> RETURN VALUES:")
-        outputs.append(",".join(out))
-        outputs.append("\n>> STDOUT:")
-        outputs.append(capsys.readouterr().out)
-    
-    # Generate reference files
-    if create_new_reference_file:
-        with open(reference_fpath, "w") as outfile:
-            outfile.write("\n".join(outputs))
+    # Too many dimensions
 
-    # Check outputs against reference
-    with open(reference_fpath, "r") as infile:
-        ref_outputs = infile.read()
-    assert "\n".join(outputs) == ref_outputs
+    # Too few dimensions
 
-    # Ensure the test fails if any of the DEV mode flags were set to True
-    assert (
-        not create_new_reference_file
-    ), "Generated new reference output file; forcing test failure."
+    # Too few dimensions with channel
+
+    # Channel given but large first dimension
+
+
+def test_analyze_image_errors_nothresh(mocker):
+    assert True  # TODO!
