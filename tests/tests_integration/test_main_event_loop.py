@@ -23,7 +23,7 @@ from mate.pipelines import lateral_line
 
 def test_run_mate_manager(capsys):
     """Integration test for main event loop.
-    
+
     This runs through the following steps:
         1. Generate a temporary test dir in the /testdata/ folder
         2. Launch MATE in a thread to monitor the test dir
