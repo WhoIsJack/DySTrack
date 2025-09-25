@@ -5,107 +5,45 @@ Created on Thu Aug 15 13:21:42 2024
 @authors:   Jonas Hartmann @ Gilmour group (EMBL) & Mayor lab (UCL)
             Zimeng Wu @ Wong group (UCL)
 
-@descript:  Regression tests for run_mate.py; ensures correct basic behavior of
-            MATE against well-established test data / test cases.
+@descript:  Integration test for run_mate_manager; tests the core functionality
+            of MATE against a well-established test case.
 """
 
-
 import os
-import re
 import shutil
-import sys
 import threading
 import time
-from contextlib import ExitStack
 from datetime import datetime
 
 import pytest
 
-from mate.manager.cmdline import run_via_cmdline
 from mate.manager.manager import run_mate_manager
 from mate.pipelines import lateral_line
 
 
-def test_run_via_cmdline(capsys, mocker):
-    """Regression test for ~main function~* (command line parsing).
+def test_run_mate_manager(capsys):
+    """Integration test for main event loop.
+    
+    This runs through the following steps:
+        1. Generate a temporary test dir in the /testdata/ folder
+        2. Launch MATE in a thread to monitor the test dir
+        3. Move an example image to the test dir, triggering image analysis
+        4. Check the resulting stdout against a saved reference
+        5. Check the resulting mate_coords.txt against a saved reference
+        6. Remove the temporary test dir
 
-    *ULTRAREFACTORING: Now tests cmdline.run_via_cmdline!
+    Saved references can be automatically generated; see 2nd DEV tag below.
     """
 
-    # Prep dummy image analysis function
-    def dummy_img_ana_func(target_path, channel=1, verbose=False):
-        """Dummy image analysis function.
-
-        Parameters
-        ----------
-        target_path : path-like
-            Path to the image file that is to be analyzed.
-        channel : int, optional, default None
-            DUMMY TEST
-        verbose : bool, optional, default False
-            If True, more information is printed.
-
-        Returns
-        -------
-        None
-        """
-        return None
-
-    # Run with --help flag and check that SystemExit is reached
-    with pytest.raises(SystemExit):
-        run_via_cmdline(["dummy", "--help"], dummy_img_ana_func)
-
-    # Check that the help message was printed
-    captured = capsys.readouterr()
-    assert "usage: pytest [-h]" in captured.out
-    assert "Start a MATE session." in captured.out
-    assert "  image_analysis_func: dummy_img_ana_func" in captured.out
-    assert "[int, optional, default None] DUMMY TEST" in captured.out
-
-    # Run with mocked run_mate_manager function
-    mocked_manager = mocker.patch("mate.manager.manager.run_mate_manager")
-    mocked_manager.return_value = (None, None)
-    mocked_manager.__code__ = run_mate_manager.__code__
-    mocked_manager.__doc__ = run_mate_manager.__doc__
-    argv = [
-        "dummy",
-        "./tests",
-        "--file_start",
-        "prescan_",
-        "--file_end",
-        ".czi",
-        "--channel",
-        "0",
-        "--verbose",
-        "True",
-    ]
-    assert run_via_cmdline(argv, dummy_img_ana_func) == (None, None)
-
-    # Check that mocked run_mate_manager was called with appropriate values
-    mocked_manager.assert_called_with(
-        "./tests",
-        dummy_img_ana_func,
-        file_start="prescan_",
-        file_end=".czi",
-        img_kwargs={"channel": 0, "verbose": True},
-        img_cache={},
-    )
-
-
-def test_run_mate_manager(capsys):
-    """Regression test for ~scheduler (main event loop).~
-
-    ULTRAREFACTORING: now called manager (`run_mate_manager` func)"""
-
-    # DEV: Set this to True to see MATE outputs during the pytest run;
+    # DEV: Set this to True to see standard outputs during the pytest run;
     # this will make the test fail, but it's very useful for debugging!
     print_MATE_outputs = False
 
     # DEV: Set this to True to generate a new reference stdout file (which will
     # overwrite the old) if the stdout behavior of the manager has changed.
     # This will force the test to fail, since generating a new reference from
-    # the output and then checking them against each other would always pass.
-    # Also, note that this will not work if print_MATE_outputs is True.
+    # the output and then comparing them to each other would always pass.
+    # Also, note that this will not work if `print_MATE_outputs` is True.
     create_MATE_stdout = False
 
     # Config
@@ -133,7 +71,7 @@ def test_run_mate_manager(capsys):
         target=run_mate_manager,
         args=manager_args,
         kwargs=manager_kwargs,
-        daemon=True,  # Ensures MATE thread will terminate at end of test
+        daemon=True,  # Enforces thread termination at end of test
     )
 
     # For nicer output when printing
@@ -147,7 +85,7 @@ def test_run_mate_manager(capsys):
     # TODO: Would there be a more adaptive way to wait?
     time.sleep(6)
 
-    # Move example test scan into folder
+    # Move example prescan into folder
     shutil.copy(prescan_fpath, testdir)
     assert os.path.isfile(os.path.join(testdir, prescan_fname))
 
@@ -189,7 +127,7 @@ def test_run_mate_manager(capsys):
     shutil.rmtree(testdir)
     assert not os.path.isdir(testdir)
 
-    # Ensure the test fails if any of the DEV mode flags were set to True
+    # Enforce test failure if any of the DEV mode flags were set to True
     assert (
         not print_MATE_outputs
     ), "Cannot test MATE stdout when print_MATE_outputs is set to True; forcing test failure."
