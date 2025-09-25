@@ -22,9 +22,9 @@ def test_robust_load_success(mocker):
     # Targets
     testpath = r"./tests/testdata/"
     fnames = [
-        "test-pllp_980_prescan_1.tif",  # ImageJ .tif
-        "test-pllp_980_prescan_1.czi",  # ZEISS LSM980 .czi
-        "test-pllp_NSPARC_prescan_1.tiff",  # Nikon AX .tiff
+        "test-pllp_980_prescan.tif",  # ImageJ .tif
+        "test-pllp_980_prescan.czi",  # ZEISS LSM980 .czi
+        "test-pllp_NSPARC_prescan.tiff",  # Nikon AX .tiff
         # Nikon AX .nd2  # TODO!
     ]
 
@@ -56,7 +56,7 @@ def test_robust_load_slowrite(mocker):
 
     # Target
     testpath = r"./tests/testdata/"
-    fname = "test-pllp_980_prescan_1.tif"
+    fname = "test-pllp_980_prescan.tif"
 
     # Patch os.stat to change (apparent) file sizes...
     fake_size_generator = (i for i in [1000, 1001, 1002, 1003, 1003, 42])
@@ -101,7 +101,7 @@ def test_robust_load_errors_filext(mocker, capsys):
 
     # Target
     testpath = r"./tests/testdata/"
-    fname = "test-pllp_980_prescan_1.unsupported"
+    fname = "test-pllp_980_prescan.unsupported"
 
     # Patch os.stat to return filesize for nonexistent path
     real_stat = os.stat
@@ -150,7 +150,7 @@ def test_robust_load_errors_loadnonnumeric(capsys, mocker):
 
     # Target
     testpath = r"./tests/testdata/"
-    fname = "test-pllp_980_prescan_1.tif"
+    fname = "test-pllp_980_prescan.tif"
 
     # For performance, patch sleep...
     mocker.patch(
@@ -186,7 +186,7 @@ def test_robust_load_errors_loadempty(capsys, mocker):
 
     # Target
     testpath = r"./tests/testdata/"
-    fname = "test-pllp_980_prescan_1.tif"
+    fname = "test-pllp_980_prescan.tif"
 
     # For performance, patch sleep...
     mocker.patch(
@@ -221,7 +221,7 @@ def test_robust_load_errors_bioimagearbitrary(capsys, mocker):
 
     # Target
     testpath = r"./tests/testdata/"
-    fname = "test-pllp_980_prescan_1.tif"
+    fname = "test-pllp_980_prescan.tif"
 
     # For performance, patch sleep...
     mocker.patch(
