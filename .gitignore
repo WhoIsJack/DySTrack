@@ -1,11 +1,12 @@
 # Based on GitHub's .gitignore template for python projects: https://github.com/github/gitignore/blob/main/Python.gitignore (CC0-1.0 license)
 
 # Custom: additional directories
-notes/
-literature/
 data/
 playground/
+notes/
+literature/
 other/
+_legacy/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
