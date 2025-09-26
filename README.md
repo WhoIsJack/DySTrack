@@ -1,3 +1,7 @@
+**WARNING:** This is an unsupported and archived **beta** version that should not be used anymore going forward!
+
+----
+
 # MATE - Microscope Automation for Tracking Experiments
 
 A simple automated feedback microscopy tool for tracking of moving tissues. WIP.
