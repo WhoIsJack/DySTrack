@@ -160,12 +160,14 @@ def test_trigger_coords_transmission(mocker, capsys):
     assert "invalid `transmission_method`" in str(err)
 
 
-@pytest.mark.skip(reason="Test not implemented; covered by integration test.")
-def test_run_mate_manager_success():
+def NOtest_run_mate_manager_success():
+    """NOtest: Test not implemented; covered by integration test."""
+
     # TODO: Fully unit-testing this function would require extensive mocking.
     #       Since most functionality of `run_mate_manager` is already tested
     #       with a "live" integration test that does not rely on mocking, this
     #       is only nice-to-have and remains a stretch goal for future work.
+
     pass
 
 
@@ -181,9 +183,11 @@ def test_run_mate_manager_errors_noexit():
     assert "No ending condition for MATE event loop set" in str(err)
 
 
-@pytest.mark.skip(reason="Test not implemented. [low-priority]")
-def test_run_mate_manager_errors_OTHER():
+def NOtest_run_mate_manager_errors_OTHER():
+    """NOtest: Test not implemented. [low-priority]"""
+
     # TODO: Test for other errors that `run_mate_manager` may raise.
     #       Requires extensive mocking (see `test_run_mate_manager_success`)
     #       and is currently nice-to-have/low-priority.
+
     pass

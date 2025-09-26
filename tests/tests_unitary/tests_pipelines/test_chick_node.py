@@ -10,6 +10,7 @@ Created on Sun Oct 27 23:23:41 2024
 import os
 import warnings
 
+from time import sleep
 import numpy as np
 import pytest
 
@@ -18,8 +19,13 @@ from mate.pipelines import chick_node
 
 # Helper function
 def analyze_image_success(
-    capsys, testpath, fname, expected_output, expected_stdouts
+    mocker, capsys, testpath, fname, expected_output, expected_stdouts
 ):
+
+    # For performance, patch loading's sleep
+    mocker.patch(
+        "mate.pipelines.utilities.loading.sleep", lambda t: sleep(0.1)
+    )
 
     # Run test
     output = chick_node.analyze_image(
@@ -35,7 +41,7 @@ def analyze_image_success(
         assert eso in stdout
 
 
-def test_analyze_image_3D_success_early(capsys):
+def test_analyze_image_3D_success_early(mocker, capsys):
 
     # Targets
     testpath = r"./tests/testdata/"
@@ -50,11 +56,11 @@ def test_analyze_image_3D_success_early(capsys):
 
     # Run test and compare results
     analyze_image_success(
-        capsys, testpath, fname, expected_output, expected_stdouts
+        mocker, capsys, testpath, fname, expected_output, expected_stdouts
     )
 
 
-def test_analyze_image_3D_success_late(capsys):
+def test_analyze_image_3D_success_late(mocker, capsys):
 
     # Targets
     testpath = r"./tests/testdata/"
@@ -69,11 +75,11 @@ def test_analyze_image_3D_success_late(capsys):
 
     # Run test and compare results
     analyze_image_success(
-        capsys, testpath, fname, expected_output, expected_stdouts
+        mocker, capsys, testpath, fname, expected_output, expected_stdouts
     )
 
 
-def test_analyze_image_3D_success_DEVTEMP(capsys):
+def test_analyze_image_3D_success_DEVTEMP(mocker, capsys):
     # DEV-TEMP: To be defactored after MATE2DySTrack rename!
 
     # Targets
@@ -119,10 +125,10 @@ def test_analyze_image_3D_success_DEVTEMP(capsys):
 
     # Run tests and compare results
     for fname, eop, eos in zip(fnames, expected_outputs, expected_stdouts):
-        analyze_image_success(capsys, testpath, fname, eop, eos)
+        analyze_image_success(mocker, capsys, testpath, fname, eop, eos)
 
 
-def test_analyze_image_2D_success_early(capsys):
+def test_analyze_image_2D_success_early(mocker, capsys):
 
     # Targets
     testpath = r"./tests/testdata/"
@@ -137,11 +143,11 @@ def test_analyze_image_2D_success_early(capsys):
 
     # Run test and compare results
     analyze_image_success(
-        capsys, testpath, fname, expected_output, expected_stdouts
+        mocker, capsys, testpath, fname, expected_output, expected_stdouts
     )
 
 
-def test_analyze_image_2D_success_late(capsys):
+def test_analyze_image_2D_success_late(mocker, capsys):
 
     # Targets
     testpath = r"./tests/testdata/"
@@ -156,7 +162,7 @@ def test_analyze_image_2D_success_late(capsys):
 
     # Run test and compare results
     analyze_image_success(
-        capsys, testpath, fname, expected_output, expected_stdouts
+        mocker, capsys, testpath, fname, expected_output, expected_stdouts
     )
 
 
