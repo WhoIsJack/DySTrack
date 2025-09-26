@@ -17,7 +17,7 @@ from mate.manager.cmdline import run_via_cmdline
 
 
 # -----------------------------------------------------------------------------
-# ------------------------ USER CONFIGURATION SECTION: ------------------------
+# USER CONFIGURATION SECTION
 # -----------------------------------------------------------------------------
 
 
@@ -44,9 +44,6 @@ from mate.manager.cmdline import run_via_cmdline
 from mate.pipelines.chick_node import analyze_image as image_analysis_func
 
 
-# -----------------------------------------------------------------------------
-
-
 ### USER CONFIGURATION: Image analysis keyword arguments [optional]
 
 # - This dictionary will be forwarded as `**img_kwargs` to `img_analysis_func`
@@ -59,9 +56,6 @@ analysis_kwargs = {
     "verbose"     : True,
     "show"        : False,
 }
-
-
-# -----------------------------------------------------------------------------
 
 
 ### USER CONFIGURATION: *Cached* image analysis keyword arguments [optional]
@@ -78,9 +72,6 @@ analysis_kwargs = {
 analysis_cache = {}
 
 
-# -----------------------------------------------------------------------------
-
-
 ### USER CONFIGURATION: Mate manager keyword arguments [optional]
 
 # - Arguments not specified here can be provided as command line input
@@ -94,7 +85,7 @@ manager_kwargs = {
 
 
 # -----------------------------------------------------------------------------
-# --------------------- END OF USER CONFIGURATION SECTION ---------------------
+# END OF USER CONFIGURATION SECTION
 # -----------------------------------------------------------------------------
 
 
