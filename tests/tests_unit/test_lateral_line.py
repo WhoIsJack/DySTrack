@@ -13,6 +13,8 @@ import warnings
 
 import pytest
 
+import numpy as np
+
 from mate.pipelines import lateral_line
 
 
@@ -83,16 +85,58 @@ def test_analyze_image_2D_success(capsys):
 
 
 def test_analyze_image_errors_dimchecks(mocker):
-    assert True  # YAH!
 
     # Too many dimensions
+    mocker.patch(
+        "mate.pipelines.lateral_line.robustly_load_image_after_write",
+        wraps=lambda fp : np.zeros((1, 1, 1, 1, 1)))
+    with pytest.raises(IOError) as err:
+        lateral_line.analyze_image(
+            "test_path.tiff", channel=None, show=False, verbose=True
+        )
+    assert "Image dimensionality >4" in str(err)
 
     # Too few dimensions
+    mocker.patch(
+        "mate.pipelines.lateral_line.robustly_load_image_after_write",
+        wraps=lambda fp : np.zeros((1,)))
+    with pytest.raises(IOError) as err:
+        lateral_line.analyze_image(
+            "test_path.tiff", channel=None, show=False, verbose=True
+        )
+    assert "Image dimensionality <2" in str(err)
 
     # Too few dimensions with channel
+    mocker.patch(
+        "mate.pipelines.lateral_line.robustly_load_image_after_write",
+        wraps=lambda fp : np.zeros((1, 1)))
+    with pytest.raises(IOError) as err:
+        lateral_line.analyze_image(
+            "test_path.tiff", channel=0, show=False, verbose=True
+        )
+    assert "CHANNEL given but image dimensionality is <3!" in str(err)
 
     # Channel given but large first dimension
+    mocker.patch(
+        "mate.pipelines.lateral_line.robustly_load_image_after_write",
+        wraps=lambda fp : np.zeros((10, 1, 1, 1)))
+    with pytest.raises(Exception) as err:
+        with warnings.catch_warnings():
+            warnings.simplefilter(action="error")
+            lateral_line.analyze_image(
+                "test_path.tiff", channel=0, show=False, verbose=True
+            )
+    assert "CHANNEL given but image dim 0 is of size 10!" in str(err)
 
 
 def test_analyze_image_errors_nothresh(mocker):
-    assert True  # TODO!
+
+    mocker.patch(
+        "mate.pipelines.lateral_line.robustly_load_image_after_write",
+        wraps=lambda fp : np.zeros((100, 100), dtype=np.uint8))
+    with pytest.raises(Exception) as err:
+        lateral_line.analyze_image(
+            "test_path.tiff", channel=None, show=False, verbose=True
+        )
+    assert "THRESHOLD DETECTION FAILED" in str(err)
+
