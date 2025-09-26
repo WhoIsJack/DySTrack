@@ -14,7 +14,7 @@ Created on Sun Jan 15 00:34:07 2017
 import argparse
 import re
 
-import mate.manager.manager as mate_manager
+import dystrack.manager.manager as mate_manager
 
 
 def _get_func_args(func):

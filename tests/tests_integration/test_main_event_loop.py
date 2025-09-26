@@ -17,8 +17,8 @@ from datetime import datetime
 
 import pytest
 
-from mate.manager.manager import run_mate_manager
-from mate.pipelines import lateral_line
+from dystrack.manager.manager import run_mate_manager
+from dystrack.pipelines import lateral_line
 
 
 def test_run_mate_manager(capsys):

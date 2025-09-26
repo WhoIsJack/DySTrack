@@ -18,7 +18,7 @@ import re
 from msvcrt import getch, kbhit
 from time import sleep
 
-import mate.manager.transmitters as trs
+import dystrack.manager.transmitters as trs
 
 
 def _check_fname(fname, file_start="", file_end="", file_regex=""):

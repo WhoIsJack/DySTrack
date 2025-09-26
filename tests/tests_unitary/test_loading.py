@@ -13,7 +13,7 @@ from time import sleep
 import numpy as np
 import pytest
 
-from mate.pipelines.utilities import loading
+from dystrack.pipelines.utilities import loading
 
 
 def test_robust_load_success(mocker):
@@ -40,7 +40,7 @@ def test_robust_load_success(mocker):
 
     # For performance, patch sleep...
     mocker.patch(
-        "mate.pipelines.utilities.loading.sleep", lambda t: sleep(0.1)
+        "dystrack.pipelines.utilities.loading.sleep", lambda t: sleep(0.1)
     )
 
     # Run tests
@@ -79,12 +79,12 @@ def test_robust_load_slowrite(mocker):
             return real_stat(*args, **kwargs)
 
     mock_stat = mocker.patch(
-        "mate.pipelines.utilities.loading.os.stat", wraps=mock_stat
+        "dystrack.pipelines.utilities.loading.os.stat", wraps=mock_stat
     )
 
     # For performance, patch sleep...
     mocker.patch(
-        "mate.pipelines.utilities.loading.sleep", lambda t: sleep(0.1)
+        "dystrack.pipelines.utilities.loading.sleep", lambda t: sleep(0.1)
     )
 
     # Run the test
@@ -121,12 +121,12 @@ def test_robust_load_errors_filext(mocker, capsys):
             return real_stat(*args, **kwargs)
 
     mock_stat = mocker.patch(
-        "mate.pipelines.utilities.loading.os.stat", wraps=mock_stat
+        "dystrack.pipelines.utilities.loading.os.stat", wraps=mock_stat
     )
 
     # For performance, patch sleep...
     mocker.patch(
-        "mate.pipelines.utilities.loading.sleep", lambda t: sleep(0.1)
+        "dystrack.pipelines.utilities.loading.sleep", lambda t: sleep(0.1)
     )
 
     # Test unsupported file ending
@@ -156,12 +156,12 @@ def test_robust_load_errors_loadnonnumeric(capsys, mocker):
 
     # For performance, patch sleep...
     mocker.patch(
-        "mate.pipelines.utilities.loading.sleep", lambda t: sleep(0.1)
+        "dystrack.pipelines.utilities.loading.sleep", lambda t: sleep(0.1)
     )
 
     # Patch Bioimage to return string array
     mock_bioimage = mocker.patch(
-        "mate.pipelines.utilities.loading.BioImage",
+        "dystrack.pipelines.utilities.loading.BioImage",
         wraps=lambda fp: np.array(["a", "b", "c"]),
     )
 
@@ -192,12 +192,12 @@ def test_robust_load_errors_loadempty(capsys, mocker):
 
     # For performance, patch sleep...
     mocker.patch(
-        "mate.pipelines.utilities.loading.sleep", lambda t: sleep(0.1)
+        "dystrack.pipelines.utilities.loading.sleep", lambda t: sleep(0.1)
     )
 
     # Patch Bioimage to return empty array
     mock_bioimage = mocker.patch(
-        "mate.pipelines.utilities.loading.BioImage",
+        "dystrack.pipelines.utilities.loading.BioImage",
         wraps=lambda fp: np.zeros((0,)),
     )
 
@@ -227,7 +227,7 @@ def test_robust_load_errors_bioimagearbitrary(capsys, mocker):
 
     # For performance, patch sleep...
     mocker.patch(
-        "mate.pipelines.utilities.loading.sleep", lambda t: sleep(0.1)
+        "dystrack.pipelines.utilities.loading.sleep", lambda t: sleep(0.1)
     )
 
     # Patch Bioimage to raise some arbitrary error
@@ -235,7 +235,7 @@ def test_robust_load_errors_bioimagearbitrary(capsys, mocker):
         raise Exception("Some arbitrary error.")
 
     mock_bioimage = mocker.patch(
-        "mate.pipelines.utilities.loading.BioImage", wraps=arbitary_error
+        "dystrack.pipelines.utilities.loading.BioImage", wraps=arbitary_error
     )
 
     # Test arbitrary error case

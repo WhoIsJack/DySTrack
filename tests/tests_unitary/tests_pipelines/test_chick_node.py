@@ -14,7 +14,7 @@ from time import sleep
 import numpy as np
 import pytest
 
-from mate.pipelines import chick_node
+from dystrack.pipelines import chick_node
 
 
 # Helper function
@@ -24,7 +24,7 @@ def analyze_image_success(
 
     # For performance, patch loading's sleep
     mocker.patch(
-        "mate.pipelines.utilities.loading.sleep", lambda t: sleep(0.1)
+        "dystrack.pipelines.utilities.loading.sleep", lambda t: sleep(0.1)
     )
 
     # Run test
@@ -170,7 +170,7 @@ def test_analyze_image_errors_dimchecks(mocker):
 
     # Too many dimensions
     mocker.patch(
-        "mate.pipelines.chick_node.robustly_load_image_after_write",
+        "dystrack.pipelines.chick_node.robustly_load_image_after_write",
         wraps=lambda fp: np.zeros((1, 1, 1, 1, 1)),
     )
     with pytest.raises(IOError) as err:
@@ -179,7 +179,7 @@ def test_analyze_image_errors_dimchecks(mocker):
 
     # Too few dimensions
     mocker.patch(
-        "mate.pipelines.chick_node.robustly_load_image_after_write",
+        "dystrack.pipelines.chick_node.robustly_load_image_after_write",
         wraps=lambda fp: np.zeros((1,)),
     )
     with pytest.raises(IOError) as err:
@@ -188,7 +188,7 @@ def test_analyze_image_errors_dimchecks(mocker):
 
     # Too few dimensions with channel
     mocker.patch(
-        "mate.pipelines.chick_node.robustly_load_image_after_write",
+        "dystrack.pipelines.chick_node.robustly_load_image_after_write",
         wraps=lambda fp: np.zeros((1, 1)),
     )
     with pytest.raises(IOError) as err:
@@ -197,7 +197,7 @@ def test_analyze_image_errors_dimchecks(mocker):
 
     # Channel given but large first dimension
     mocker.patch(
-        "mate.pipelines.chick_node.robustly_load_image_after_write",
+        "dystrack.pipelines.chick_node.robustly_load_image_after_write",
         wraps=lambda fp: np.zeros((10, 1, 1, 1)),
     )
     with pytest.raises(Exception) as err:

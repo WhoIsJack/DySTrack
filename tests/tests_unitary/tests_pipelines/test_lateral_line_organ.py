@@ -15,7 +15,7 @@ from time import sleep
 import numpy as np
 import pytest
 
-from mate.pipelines import lateral_line_organ
+from dystrack.pipelines import lateral_line_organ
 
 
 def test_analyze_image_3D_success(mocker, capsys):
@@ -34,7 +34,7 @@ def test_analyze_image_3D_success(mocker, capsys):
 
     # For performance, patch loading's sleep
     mocker.patch(
-        "mate.pipelines.utilities.loading.sleep", lambda t: sleep(0.1)
+        "dystrack.pipelines.utilities.loading.sleep", lambda t: sleep(0.1)
     )
 
     # Run test
@@ -71,7 +71,7 @@ def test_analyze_image_2D_success(mocker, capsys):
 
     # For performance, patch loading's sleep
     mocker.patch(
-        "mate.pipelines.utilities.loading.sleep", lambda t: sleep(0.1)
+        "dystrack.pipelines.utilities.loading.sleep", lambda t: sleep(0.1)
     )
 
     # Run test
@@ -92,7 +92,7 @@ def test_analyze_image_errors_dimchecks(mocker):
 
     # Too many dimensions
     mocker.patch(
-        "mate.pipelines.lateral_line_organ.robustly_load_image_after_write",
+        "dystrack.pipelines.lateral_line_organ.robustly_load_image_after_write",
         wraps=lambda fp: np.zeros((1, 1, 1, 1, 1)),
     )
     with pytest.raises(IOError) as err:
@@ -101,7 +101,7 @@ def test_analyze_image_errors_dimchecks(mocker):
 
     # Too few dimensions
     mocker.patch(
-        "mate.pipelines.lateral_line_organ.robustly_load_image_after_write",
+        "dystrack.pipelines.lateral_line_organ.robustly_load_image_after_write",
         wraps=lambda fp: np.zeros((1,)),
     )
     with pytest.raises(IOError) as err:
@@ -110,7 +110,7 @@ def test_analyze_image_errors_dimchecks(mocker):
 
     # Too few dimensions with channel
     mocker.patch(
-        "mate.pipelines.lateral_line_organ.robustly_load_image_after_write",
+        "dystrack.pipelines.lateral_line_organ.robustly_load_image_after_write",
         wraps=lambda fp: np.zeros((1, 1)),
     )
     with pytest.raises(IOError) as err:
@@ -119,7 +119,7 @@ def test_analyze_image_errors_dimchecks(mocker):
 
     # Channel given but large first dimension
     mocker.patch(
-        "mate.pipelines.lateral_line_organ.robustly_load_image_after_write",
+        "dystrack.pipelines.lateral_line_organ.robustly_load_image_after_write",
         wraps=lambda fp: np.zeros((10, 1, 1, 1)),
     )
     with pytest.raises(Exception) as err:
@@ -132,7 +132,7 @@ def test_analyze_image_errors_dimchecks(mocker):
 def test_analyze_image_errors_nothresh(mocker):
 
     mocker.patch(
-        "mate.pipelines.lateral_line_organ.robustly_load_image_after_write",
+        "dystrack.pipelines.lateral_line_organ.robustly_load_image_after_write",
         wraps=lambda fp: np.zeros((100, 100), dtype=np.uint8),
     )
     with pytest.raises(Exception) as err:

@@ -17,7 +17,9 @@ import matplotlib.pyplot as plt
 import numpy as np
 from scipy.optimize import curve_fit
 
-from mate.pipelines.utilities.loading import robustly_load_image_after_write
+from dystrack.pipelines.utilities.loading import (
+    robustly_load_image_after_write,
+)
 
 
 def analyze_image(target_path, channel=None, show=False, verbose=False):

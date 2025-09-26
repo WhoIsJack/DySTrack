@@ -14,7 +14,7 @@ Created on Fri Jun 20 19:30:55 2025
 
 ### Prep
 
-from mate.manager.cmdline import run_via_cmdline
+from dystrack.manager.cmdline import run_via_cmdline
 
 
 # -----------------------------------------------------------------------------
@@ -42,7 +42,7 @@ from mate.manager.cmdline import run_via_cmdline
 #   style doc string that documents *all* parameters and has both a Parameters 
 #   and a Returns section
 
-from mate.pipelines.lateral_line import analyze_image as image_analysis_func
+from dystrack.pipelines.lateral_line import analyze_image as image_analysis_func
 
 
 ### USER CONFIGURATION: Image analysis keyword arguments [optional]

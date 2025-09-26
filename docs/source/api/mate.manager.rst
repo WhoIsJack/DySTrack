@@ -1,18 +1,18 @@
-mate.manager package
-====================
+dystrack.manager package
+========================
 
 
-mate.manager.run\_mate module
------------------------------
+dystrack.manager.run\_mate module
+---------------------------------
 
-.. automodule:: mate.manager.run_mate
+.. automodule:: dystrack.manager.run_mate
    :members: main, main_scheduler
    :undoc-members:
 
 
-mate.manager.feedback module
-----------------------------
+dystrack.manager.feedback module
+--------------------------------
 
-.. automodule:: mate.manager.feedback
+.. automodule:: dystrack.manager.feedback
    :members: send_coords_txt, send_coords_winreg
    :undoc-members:

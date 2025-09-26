@@ -9,8 +9,8 @@ Created on Fri Jun 20 19:21:51 2025
 
 import pytest
 
-from mate.manager import cmdline
-from mate.manager.manager import run_mate_manager
+from dystrack.manager import cmdline
+from dystrack.manager.manager import run_mate_manager
 
 
 def test_get_func_args():
@@ -128,7 +128,7 @@ def test_run_via_cmdline(capsys, mocker):
     assert "[int, optional, default None] DUMMY TEST" in captured.out
 
     # Run with mocked run_mate_manager function
-    mocked_manager = mocker.patch("mate.manager.manager.run_mate_manager")
+    mocked_manager = mocker.patch("dystrack.manager.manager.run_mate_manager")
     mocked_manager.return_value = (None, None)
     mocked_manager.__code__ = run_mate_manager.__code__
     mocked_manager.__doc__ = run_mate_manager.__doc__

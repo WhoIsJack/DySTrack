@@ -9,7 +9,7 @@ Created on Mon Jun 09 11:48:26 2025
 
 import fake_winreg as fwinreg
 
-from mate.manager import transmitters
+from dystrack.manager import transmitters
 
 
 def test_write_reg(monkeypatch, mocker):
@@ -19,15 +19,17 @@ def test_write_reg(monkeypatch, mocker):
     fwinreg.load_fake_registry(fake_registry)
 
     # Monkeypatch fake registry
-    monkeypatch.setattr("mate.manager.transmitters.winr", fwinreg)
+    monkeypatch.setattr("dystrack.manager.transmitters.winr", fwinreg)
     mock_create = mocker.patch(
-        "mate.manager.transmitters.winr.CreateKeyEx", wraps=fwinreg.CreateKeyEx
+        "dystrack.manager.transmitters.winr.CreateKeyEx",
+        wraps=fwinreg.CreateKeyEx,
     )
     mock_setval = mocker.patch(
-        "mate.manager.transmitters.winr.SetValueEx", wraps=fwinreg.SetValueEx
+        "dystrack.manager.transmitters.winr.SetValueEx",
+        wraps=fwinreg.SetValueEx,
     )
     mock_closek = mocker.patch(
-        "mate.manager.transmitters.winr.CloseKey", wraps=fwinreg.CloseKey
+        "dystrack.manager.transmitters.winr.CloseKey", wraps=fwinreg.CloseKey
     )
 
     # Call the function
@@ -79,7 +81,7 @@ def test_send_coords_txt(mocker):
 def test_send_coords_winreg(mocker):
 
     # Mock registry writing
-    mock_send = mocker.patch("mate.manager.transmitters._write_reg")
+    mock_send = mocker.patch("dystrack.manager.transmitters._write_reg")
 
     # Call the function with different sets of arguments
     transmitters.send_coords_winreg(

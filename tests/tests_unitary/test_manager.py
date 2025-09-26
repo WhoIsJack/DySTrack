@@ -9,7 +9,7 @@ Created on Mon Jun 09 11:38:17 2025
 
 import pytest
 
-import mate.manager.manager as mng
+import dystrack.manager.manager as mng
 
 
 def test_check_fname():
@@ -107,7 +107,7 @@ def test_trigger_coords_transmission(mocker, capsys):
         return
 
     mocker.patch(
-        "mate.manager.transmitters.send_coords_txt", wraps=tra_txt_mock
+        "dystrack.manager.transmitters.send_coords_txt", wraps=tra_txt_mock
     )
     mng._trigger_coords_transmission(
         "txt", None, 10, 15, "test_msg", target_dir="."
@@ -121,7 +121,8 @@ def test_trigger_coords_transmission(mocker, capsys):
         return
 
     mocker.patch(
-        "mate.manager.transmitters.send_coords_winreg", wraps=tra_winreg_mock
+        "dystrack.manager.transmitters.send_coords_winreg",
+        wraps=tra_winreg_mock,
     )
     mng._trigger_coords_transmission("MyPiC", None, 10, 15, "test_msg", None)
     captured = capsys.readouterr()
@@ -137,7 +138,9 @@ def test_trigger_coords_transmission(mocker, capsys):
     assert "test error" in str(tra_e)
 
     # Test for correct error handling with txt file transmission method
-    mocker.patch("mate.manager.transmitters.send_coords_txt", wraps=tra_error)
+    mocker.patch(
+        "dystrack.manager.transmitters.send_coords_txt", wraps=tra_error
+    )
     tra_e = mng._trigger_coords_transmission(
         "txt", None, 10, 15, "test_msg", target_dir="."
     )
@@ -145,7 +148,7 @@ def test_trigger_coords_transmission(mocker, capsys):
 
     # Test for correct error handling with winreg transmission method
     mocker.patch(
-        "mate.manager.transmitters.send_coords_winreg", wraps=tra_error
+        "dystrack.manager.transmitters.send_coords_winreg", wraps=tra_error
     )
     tra_e = mng._trigger_coords_transmission(
         "MyPiC", None, 10, 15, "test_msg", None
