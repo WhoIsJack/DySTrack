@@ -11,9 +11,8 @@ Created on Mon Jul 07 19:48:19 2025
 import os
 import warnings
 
-import pytest
-
 import numpy as np
+import pytest
 
 from mate.pipelines import lateral_line
 
@@ -38,10 +37,7 @@ def test_analyze_image_3D_success(capsys):
         match="Image converted down to 8bit using min-max scaling!",
     ) as w:
         output = lateral_line.analyze_image(
-            os.path.join(testpath, fname),
-            channel=None,
-            show=False,
-            verbose=True,
+            os.path.join(testpath, fname), verbose=True
         )
     output = list(output)
     output[:3] = [f"{c:.4f}" for c in output[:3]]
@@ -69,10 +65,7 @@ def test_analyze_image_2D_success(capsys):
 
     # Run test
     output = lateral_line.analyze_image(
-        os.path.join(testpath, fname),
-        channel=None,
-        show=False,
-        verbose=True,
+        os.path.join(testpath, fname), verbose=True
     )
     output = list(output)
     output[:3] = [f"{c:.4f}" for c in output[:3]]
@@ -89,43 +82,39 @@ def test_analyze_image_errors_dimchecks(mocker):
     # Too many dimensions
     mocker.patch(
         "mate.pipelines.lateral_line.robustly_load_image_after_write",
-        wraps=lambda fp : np.zeros((1, 1, 1, 1, 1)))
+        wraps=lambda fp: np.zeros((1, 1, 1, 1, 1)),
+    )
     with pytest.raises(IOError) as err:
-        lateral_line.analyze_image(
-            "test_path.tiff", channel=None, show=False, verbose=True
-        )
+        lateral_line.analyze_image("test_path.tiff")
     assert "Image dimensionality >4" in str(err)
 
     # Too few dimensions
     mocker.patch(
         "mate.pipelines.lateral_line.robustly_load_image_after_write",
-        wraps=lambda fp : np.zeros((1,)))
+        wraps=lambda fp: np.zeros((1,)),
+    )
     with pytest.raises(IOError) as err:
-        lateral_line.analyze_image(
-            "test_path.tiff", channel=None, show=False, verbose=True
-        )
+        lateral_line.analyze_image("test_path.tiff")
     assert "Image dimensionality <2" in str(err)
 
     # Too few dimensions with channel
     mocker.patch(
         "mate.pipelines.lateral_line.robustly_load_image_after_write",
-        wraps=lambda fp : np.zeros((1, 1)))
+        wraps=lambda fp: np.zeros((1, 1)),
+    )
     with pytest.raises(IOError) as err:
-        lateral_line.analyze_image(
-            "test_path.tiff", channel=0, show=False, verbose=True
-        )
+        lateral_line.analyze_image("test_path.tiff", channel=0)
     assert "CHANNEL given but image dimensionality is <3!" in str(err)
 
     # Channel given but large first dimension
     mocker.patch(
         "mate.pipelines.lateral_line.robustly_load_image_after_write",
-        wraps=lambda fp : np.zeros((10, 1, 1, 1)))
+        wraps=lambda fp: np.zeros((10, 1, 1, 1)),
+    )
     with pytest.raises(Exception) as err:
         with warnings.catch_warnings():
             warnings.simplefilter(action="error")
-            lateral_line.analyze_image(
-                "test_path.tiff", channel=0, show=False, verbose=True
-            )
+            lateral_line.analyze_image("test_path.tiff", channel=0)
     assert "CHANNEL given but image dim 0 is of size 10!" in str(err)
 
 
@@ -133,10 +122,8 @@ def test_analyze_image_errors_nothresh(mocker):
 
     mocker.patch(
         "mate.pipelines.lateral_line.robustly_load_image_after_write",
-        wraps=lambda fp : np.zeros((100, 100), dtype=np.uint8))
+        wraps=lambda fp: np.zeros((100, 100), dtype=np.uint8),
+    )
     with pytest.raises(Exception) as err:
-        lateral_line.analyze_image(
-            "test_path.tiff", channel=None, show=False, verbose=True
-        )
+        lateral_line.analyze_image("test_path.tiff")
     assert "THRESHOLD DETECTION FAILED" in str(err)
-

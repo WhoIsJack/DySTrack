@@ -462,7 +462,7 @@ def run_mate_manager(
 
                         # Fall back to previous position
                         print(
-                            "[!!] Image analysis failed; reusing previous"
+                            "[!!] Image analysis failed; reusing previous "
                             + "position! Skipped error was:"
                         )
                         print("[!!] >>", repr(img_err))

@@ -91,7 +91,7 @@ def analyze_image(
     elif raw.ndim < 2:
         raise IOError("Image dimensionality <2; this cannot be right!")
     elif raw.ndim < 3 and channel is not None:
-        raise IOError("CHANNEL given but image dimensionality is only 2!")
+        raise IOError("CHANNEL given but image dimensionality is <3!")
     elif raw.shape[0] > 5 and channel is not None:
         warn(f"CHANNEL given but image dim 0 is of size {raw.shape[0]}!")
 
