@@ -1,9 +1,9 @@
-# Continuous Integration workflow for MATE
+# Continuous Integration workflow for DySTrack
 # On a push or on creation of a pull request to branches main or ci_dev, this 
-# workflow will install python and MATE (along with dependencies) and run black
-# isort, and pytest.
+# workflow will install python and DySTrack (along with dependencies) and run 
+# black, isort, and pytest.
 
-name: MATE CI
+name: DYSTRACK CI
 
 on:
   push:
@@ -39,9 +39,11 @@ jobs:
     # DEV-TEMP: Instead of specifying src and test explicitly here, we could
     # add an extend-exclude kwarg to pyproject.toml that stops black from
     # looking at folders we don't want checked. But for now, I want folders 
-    # like prototype and macros excluded here, but not in pyproject.toml...
-    # Update: Seems like use_pyproject is only supported for python 3.11 or
+    # like prototype and macros excluded here, but not in pyproject.toml!
+    # UPDATE: Seems like use_pyproject is only supported for python 3.11 or
     # higher, so for now I guess this should stay as it is anyways.
+    # UPDATE: Exclusion of prototype/notebooks and macros is actually desirable
+    # in all cases, so from 3.11 onward it makes sense to swap!  # TODO!
     - name: Code formatting with black
       if: success() || failure()
       uses: psf/black@stable

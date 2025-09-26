@@ -1,6 +1,6 @@
-# MATE - Microscope Automation for Tracking Experiments
+# DySTrack - Dynamic Sample Tracker
 
-A simple automated feedback microscopy tool for tracking of moving tissues. WIP.
+A simple automated feedback microscopy tool for live tracking of moving samples. 
 
 
 ## Structure
