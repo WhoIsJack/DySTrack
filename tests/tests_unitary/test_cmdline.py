@@ -128,7 +128,9 @@ def test_run_via_cmdline(capsys, mocker):
     assert "[int, optional, default None] DUMMY TEST" in captured.out
 
     # Run with mocked run_dystrack_manager function
-    mocked_manager = mocker.patch("dystrack.manager.manager.run_dystrack_manager")
+    mocked_manager = mocker.patch(
+        "dystrack.manager.manager.run_dystrack_manager"
+    )
     mocked_manager.return_value = (None, None)
     mocked_manager.__code__ = run_dystrack_manager.__code__
     mocked_manager.__doc__ = run_dystrack_manager.__doc__

@@ -1,8 +1,9 @@
-Microscopy Automation for Tracking Experiments (MATE) - Documentation
-=====================================================================
+DySTrack - Dynamic Sample Tracking
+==================================
 
-MATE is a simple automated feedback microscopy tool for tracking of moving 
-cells and tissues. **WIP.**
+DySTrack ("diss track") is a simple automated feedback microscopy tool for live
+tracking of moving samples like migrating cells or tissues.
+
 
 .. toctree::
     :maxdepth: 2

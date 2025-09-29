@@ -5,7 +5,7 @@ Created on Thu Aug 15 13:21:42 2024
 @authors:   Jonas Hartmann @ Gilmour group (EMBL) & Mayor lab (UCL)
             Zimeng Wu @ Wong group (UCL)
 
-@descript:  Integration test for run_dystrack_manager; tests the core 
+@descript:  Integration test for run_dystrack_manager; tests the core
             functionality of DySTrack against a well-established test case.
 """
 
@@ -76,7 +76,9 @@ def test_run_dystrack_manager(capsys):
 
     # For nicer output when printing
     if print_dystrack_outputs:
-        print("\n\n[test_run_dystrack.py:] Starting DySTrack monitoring in thread.")
+        print(
+            "\n\n[test_run_dystrack.py:] Starting DySTrack monitoring in thread."
+        )
 
     # Start the DySTrack monitoring thread
     thread.start()
@@ -95,7 +97,9 @@ def test_run_dystrack_manager(capsys):
 
     # Print the outputs (for debugging)
     if print_dystrack_outputs:
-        print("\n[test_run_dystrack.py:] Finished waiting for DySTrack monitoring.\n")
+        print(
+            "\n[test_run_dystrack.py:] Finished waiting for DySTrack monitoring.\n"
+        )
         captured = capsys.readouterr()
         with capsys.disabled():
             print(captured.out)

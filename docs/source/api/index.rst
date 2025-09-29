@@ -6,5 +6,6 @@ API Reference
 
     dystrack.manager
     dystrack.pipelines
+    dystrack.pipelines.utilities
 
     

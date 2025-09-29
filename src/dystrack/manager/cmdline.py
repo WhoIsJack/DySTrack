@@ -5,8 +5,8 @@ Created on Sun Jan 15 00:34:07 2017
 @authors:   Jonas Hartmann @ Gilmour group (EMBL) & Mayor lab (UCL)
             Zimeng Wu @ Wong group (UCL)
 
-@descript:  Provides a command line interface to run DySTrack. This is intended 
-            for import in DySTrack config files (see `run` dir) to handle cmd 
+@descript:  Provides a command line interface to run DySTrack. This is intended
+            for import in DySTrack config files (see `run` dir) to handle cmd
             line inputs and launch the DySTrack manager event loop.
 """
 
@@ -45,13 +45,19 @@ def _get_docstr_args_numpy(func):
        foobar
     ```
 
-    would return this `argtypes` dict:
+    would return this `argtypes` dict::
 
-    `{"param1" : "type_of_param1", "param2" : "type_of_param2 or none"}`
+        {
+            "param1" : "type_of_param1",
+            "param2" : "type_of_param2 or none"
+        }
 
-    and thos `argdescr` dict:
+    and this `argdescr` dict::
 
-    `{"param1" : "Description of param1", "param2" : "Description of param2"}
+        {
+            "param1" : "Description of param1",
+            "param2" : "Description of param2"
+        }
 
     WARNING: This is a fun but very basic and probably quite fragile homebrew
              approach; look into `numpydoc` or something like that?! Also, for
@@ -109,11 +115,11 @@ def run_via_cmdline(
 ):
     """Parses command-line arguments and launches DySTrack manager event loop.
 
-    This is intended to be called through a DySTrack config file (see `run` dir 
+    This is intended to be called through a DySTrack config file (see `run` dir
     for examples), which specifies the image analysis pipeline function to use
     (`image_analysis_func`) and optionally fixes any other parameters.
 
-    The DySTrack event loop target directory (`target_dir`) must be provided as 
+    The DySTrack event loop target directory (`target_dir`) must be provided as
     the first positional argument of the command line invocation.
 
     For all other arguments, the command line tool is dynamically generated to
@@ -127,9 +133,10 @@ def run_via_cmdline(
     provided `image_analysis_func`, which *must* include both a Parameters and
     a Returns section and *must* document all parameters.
 
-    For more information on the DySTrack event loop itself, see the function 
-    that this one ultimately calls: 
-    `dystrack.manager.manager.run_dystrack_manager()`
+    For more information on the DySTrack event loop itself, see the function
+    that this one ultimately calls::
+
+        dystrack.manager.manager.run_dystrack_manager()
 
     Parameters
     ----------
@@ -140,11 +147,11 @@ def run_via_cmdline(
         coordinates for transmission to the microscope.
         This function *must* have a numpy-style doc string that documents *all*
         parameters and has both a Parameters and a Returns section.
-        Call signature:
-        ```
-        z_pos, y_pos, x_pos, img_msg, img_cache = image_analysis_func(
-            target_path, **img_kwargs, **img_cache)
-        ```
+        Call signature::
+
+            z_pos, y_pos, x_pos, img_msg, img_cache = image_analysis_func(
+                target_path, **img_kwargs, **img_cache)
+
         The `target_path` argument corresponds to the first and only required
         argument in the cmdline call signature generated here. The keyword
         arguments (both `img_kwargs` and `img_cache`) will be parsed from the
@@ -162,7 +169,7 @@ def run_via_cmdline(
         Additional keyword arguments to be passed to the image analysis func as
         `**img_cache`. These will not be exposed to the cmdline interface.
     manager_kwargs : dict, optional, default {}
-        Additional keyword arguments to be passed to `run_dystrack_manager`. 
+        Additional keyword arguments to be passed to `run_dystrack_manager`.
         These will not be exposed to the cmdline interface.
     """
 

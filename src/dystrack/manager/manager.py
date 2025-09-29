@@ -5,10 +5,10 @@ Created on Sun Jan 15 00:34:07 2017
 @authors:   Jonas Hartmann @ Gilmour group (EMBL) & Mayor lab (UCL)
             Zimeng Wu @ Wong group (UCL)
 
-@descript:  Manages the main event loop of DySTrack. This loop monitors the 
+@descript:  Manages the main event loop of DySTrack. This loop monitors the
             target directory for images produced by the scope that fit user-
-            specified criteria, then triggers a specified image analysis 
-            pipeline that determines new coordinates to be sent to the 
+            specified criteria, then triggers a specified image analysis
+            pipeline that determines new coordinates to be sent to the
             microscope through a specified channel.
 """
 
@@ -68,7 +68,7 @@ def _trigger_image_analysis(
     target_path : path-like
         Path to the target file used in the image analysis function.
     image_analysis_func : callable
-        Image analysis pipeline function. See doc string of 
+        Image analysis pipeline function. See doc string of
         `run_dystrack_manager` for more information.
     img_kwargs : dict, optional, default {}
         Additional keyword arguments forwarded to the image analysis function
@@ -140,7 +140,7 @@ def _trigger_coords_transmission(
         Error captured during image analysis. Forwarded to custom `tra_method`
         callables.
     target_dir : path-like or None, optional, default None
-        Directory path that is being monitored by DySTrack. Specifies location 
+        Directory path that is being monitored by DySTrack. Specifies location
         of text file if `tra_method="txt"`, in which case it is required. Also
         forwarded to custom `tra_method` callables.
     tra_kwargs : dict, optional, default {}
@@ -247,11 +247,11 @@ def run_dystrack_manager(
         Path to the directory that is to be monitored.
     image_analysis_func : callable
         Function that performs image analysis on detected files and returns new
-        coordinates for transmission to the microscope. Call signature:
-        ```
-        z_pos, y_pos, x_pos, img_msg, img_cache = image_analysis_func(
-            target_path, **img_kwargs, **img_cache)
-        ```
+        coordinates for transmission to the microscope. Call signature::
+
+            z_pos, y_pos, x_pos, img_msg, img_cache = image_analysis_func(
+                target_path, **img_kwargs, **img_cache)
+
     max_checks : int or None, optional, default None
         Maximum number of checks for new files performed before exiting.
     max_triggers : int or None, optional, default None
@@ -285,15 +285,17 @@ def run_dystrack_manager(
     tra_method : str or callable, optional, default "txt"
         String indicating the method to use for transmitting coordinates to the
         microscope, or alternatively a custom callable. String options:
-            - "txt" : Write to txt file in `target_dir` ("dystrack_coords.txt")
-            - "MyPiC" : Write to the Windows registry for ZEN Black MyPiC macro
-        Call signature for custom transmission function:
-        ```
-        tra_method(
-            z_pos, y_pos, x_pos,
-            img_msg, img_cache, img_error,
-            target_dir, **tra_kwargs)
-        ```
+
+            * "txt" : Write to txt file in `target_dir` ("dystrack_coords.txt")
+            * "MyPiC" : Write to the Windows registry for ZEN Black MyPiC macro
+
+        Call signature for custom transmission function::
+
+            tra_method(
+                z_pos, y_pos, x_pos,
+                img_msg, img_cache, img_error,
+                target_dir, **tra_kwargs)
+
     tra_kwargs : dict, optional, default {}
         Additional parameters passed to the coordiante transmission function.
     tra_err_resume : bool, optional, default False
@@ -301,7 +303,7 @@ def run_dystrack_manager(
         to the microscope has terminally failed.
     write_txt : bool, optional, default True
         If True, coordinates are recorded in a txt file ("dystrack_coords.txt")
-        in `target_dir` *regardless* of the specified `tra_method`. If said 
+        in `target_dir` *regardless* of the specified `tra_method`. If said
         method is "txt", this has no effect as the file is generated anyway.
 
     Returns
@@ -311,11 +313,12 @@ def run_dystrack_manager(
         (or as a fallback). Coordinates are given as `[z_pos, y_pos, x_pos]`.
     stats_dict : dict
         A dictionary containing the following stats about the run:
-            - No. of checks made (check_counter)
-            - No. of new files found (found_counter)
-            - No. of target files found (target_counter)
-            - No. of successful image analysis calls (img_success_counter)
-            - No. of successful coordiate transmissions (tra_success_counter)
+
+            * No. of checks made (check_counter)
+            * No. of new files found (found_counter)
+            * No. of target files found (target_counter)
+            * No. of successful image analysis calls (img_success_counter)
+            * No. of successful coordiate transmissions (tra_success_counter)
     """
 
     ### Preparation

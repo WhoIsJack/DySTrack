@@ -8,14 +8,14 @@
 
 import os
 import sys
-sys.path.insert(0, os.path.abspath('../../src/mate'))
+sys.path.insert(0, os.path.abspath('../../src/dystrack'))
 
 
 # -- Remove module docstrings ------------------------------------------------
 # These are a holdover from the spyder days. They do not look good in the docs.
 
 def remove_module_docstring(app, what, name, obj, options, lines):
-    if what == "module":# and name == "mate":
+    if what == "module":# and name == "dystrack":
         del lines[:]
 
 def setup(app):
@@ -25,8 +25,8 @@ def setup(app):
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
 
-project = 'MATE'
-copyright = '2024, Jonas Hartmann, Zimeng Wu'
+project = 'DySTrack'
+copyright = '2025, Jonas Hartmann, Zimeng Wu'
 author = 'Jonas Hartmann, Zimeng Wu'
 
 
