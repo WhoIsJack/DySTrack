@@ -2,6 +2,7 @@
 
 # Custom: additional directories
 data/
+testrun_*/
 playground/
 notes/
 literature/
