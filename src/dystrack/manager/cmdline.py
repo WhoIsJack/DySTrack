@@ -5,16 +5,16 @@ Created on Sun Jan 15 00:34:07 2017
 @authors:   Jonas Hartmann @ Gilmour group (EMBL) & Mayor lab (UCL)
             Zimeng Wu @ Wong group (UCL)
 
-@descript:  Provides a command line interface to run MATE. This is intended for
-            import in MATE config files (see `run` dir) to handle command line
-            inputs and launch the MATE manager event loop.
+@descript:  Provides a command line interface to run DySTrack. This is intended 
+            for import in DySTrack config files (see `run` dir) to handle cmd 
+            line inputs and launch the DySTrack manager event loop.
 """
 
 
 import argparse
 import re
 
-import dystrack.manager.manager as mate_manager
+import dystrack.manager.manager as dst_manager
 
 
 def _get_func_args(func):
@@ -107,17 +107,17 @@ def run_via_cmdline(
     analysis_cache={},
     manager_kwargs={},
 ):
-    """Parses command-line arguments and launches the MATE manager event loop.
+    """Parses command-line arguments and launches DySTrack manager event loop.
 
-    This is intended to be called through a MATE config file (see `run` dir for
-    examples), which specifies the image analysis pipeline function to use
+    This is intended to be called through a DySTrack config file (see `run` dir 
+    for examples), which specifies the image analysis pipeline function to use
     (`image_analysis_func`) and optionally fixes any other parameters.
 
-    The MATE event loop target directory (`target_dir`) must be provided as the
-    first positional argument of the command line invocation.
+    The DySTrack event loop target directory (`target_dir`) must be provided as 
+    the first positional argument of the command line invocation.
 
     For all other arguments, the command line tool is dynamically generated to
-    expose any suitable kwargs of `run_mate_manager` that are *not* already
+    expose any suitable kwargs of `run_dystrack_manager` that are *not* already
     specified in `manager_kwargs`, as well as any suitable kwargs of the
     `image_analysis_func` that are *not* already given in `analysis_kwargs` or
     in `analysis_cache`. Any arguments that do not have type "bool", "int",
@@ -127,8 +127,9 @@ def run_via_cmdline(
     provided `image_analysis_func`, which *must* include both a Parameters and
     a Returns section and *must* document all parameters.
 
-    For more information on the MATE event loop itself, see the function that
-    this one ultimately calls: `mate.manager.manager.run_mate_manager()`.
+    For more information on the DySTrack event loop itself, see the function 
+    that this one ultimately calls: 
+    `dystrack.manager.manager.run_dystrack_manager()`
 
     Parameters
     ----------
@@ -161,12 +162,12 @@ def run_via_cmdline(
         Additional keyword arguments to be passed to the image analysis func as
         `**img_cache`. These will not be exposed to the cmdline interface.
     manager_kwargs : dict, optional, default {}
-        Additional keyword arguments to be passed to `run_mate_manager`. These
-        will not be exposed to the cmdline interface.
+        Additional keyword arguments to be passed to `run_dystrack_manager`. 
+        These will not be exposed to the cmdline interface.
     """
 
     # Prep description
-    description = "Start a MATE session.\n\n"
+    description = "Start a DySTrack session.\n\n"
     description += "Already fixed arguments:"
     description += f"\n  image_analysis_func: {image_analysis_func.__name__}"
     if manager_kwargs:
@@ -195,15 +196,15 @@ def run_via_cmdline(
     # Configure supported types for keyword arguments
     type_dict = {"bool": bool, "int": int, "float": float, "str": str}
 
-    # Get run_mate_manager arguments
-    mgr_args = _get_func_args(mate_manager.run_mate_manager)
+    # Get run_dystrack_manager arguments
+    mgr_args = _get_func_args(dst_manager.run_dystrack_manager)
 
-    # Get run_mate_manager argument types and descriptions from doc string
+    # Get run_dystrack_manager argument types and descriptions from doc string
     mgr_argtypes, mgr_argdescr = _get_docstr_args_numpy(
-        mate_manager.run_mate_manager
+        dst_manager.run_dystrack_manager
     )
 
-    # Add run_mate_manager arguments to parser
+    # Add run_dystrack_manager arguments to parser
     for arg in mgr_args:
 
         # Skip fixed arguments
@@ -307,8 +308,8 @@ def run_via_cmdline(
     manager_kwargs["img_kwargs"] = analysis_kwargs
     manager_kwargs["img_cache"] = analysis_cache
 
-    # Start MATE event loop
-    coordinates, stats_dict = mate_manager.run_mate_manager(
+    # Start DySTrack event loop
+    coordinates, stats_dict = dst_manager.run_dystrack_manager(
         target_dir, image_analysis_func, **manager_kwargs
     )
 

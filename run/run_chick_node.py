@@ -2,13 +2,13 @@
 """
 Created on Fri Jun 20 19:30:55 2025
 
-@authors:   Jonas Hartmann @ Mayor lab (UCL)
-            Zimeng Wu @ Wong group (UCL)
+@authors:  Jonas Hartmann @ Mayor lab (UCL)
+           Zimeng Wu @ Wong group (UCL)
 
-@descript:  MATE config file for chick node tracking during axis elongation.
+@descript: DySTrack config file for chick node tracking during axis elongation.
 
-@usage:     From the command line (with python and the MATE package installed)
-            run `python run_chick_node.py <target_dir> [args]`.
+@usage:    From the command line (with the dystrack python environment active)
+           run `python run_chick_node.py <target_dir> [args]`.
 """
 
 ### Prep
@@ -24,7 +24,7 @@ from dystrack.manager.cmdline import run_via_cmdline
 ### USER CONFIGURATION: Image analysis pipeline function [REQUIRED]
 
 # - Import the desired image analysis pipeline as `image_analysis_func`
-# - Pipeline functions included in MATE are found in `mate.pipelines`
+# - Pipeline functions included in DySTrack are found in `dystrack.pipelines`
 #
 # - Alternatively, it could be a custom function with this call signature:
 #
@@ -37,7 +37,7 @@ from dystrack.manager.cmdline import run_via_cmdline
 # - Such functions must accept only one positional argument, which is the path
 #   to the image file to be analyzed
 # - They may accept any number of additional keyword arguments (see below)
-# - To run MATE from the command line, these functions *must* have a numpy-
+# - To run DySTrack from the command line, these functions *must* have a numpy-
 #   style doc string that documents *all* parameters and has both a Parameters 
 #   and a Returns section
 
@@ -72,7 +72,7 @@ analysis_kwargs = {
 analysis_cache = {}
 
 
-### USER CONFIGURATION: Mate manager keyword arguments [optional]
+### USER CONFIGURATION: DySTrack manager keyword arguments [optional]
 
 # - Arguments not specified here can be provided as command line input
 # - For any arguments not specified either here or in the command line, the
@@ -91,9 +91,9 @@ manager_kwargs = {
 
 ### Run from command line
 
-# - Ensure MATE is installed and the right python environment is active
-# - Ensure you are in the `MATE\run` folder, where this file is located
-# - Start MATE by running `python run_lateral_line.py <target_dir> [args]`
+# - Ensure DySTrack is installed and the right python environment is active
+# - Ensure you are in the `DySTrack\run` folder, where this file is located
+# - Start DySTrack by running `python run_chick_node.py <target_dir> [args]`
 
 if __name__ == "__main__":
     import sys
@@ -106,10 +106,10 @@ if __name__ == "__main__":
     )
 
 
-### ALTERNATIVELY, you can run MATE from other python code (e.g. a jupyter nb)
+### ALTERNATIVELY, DySTrack can be run from other python code (e.g. jupyter nb)
 
-# - Ensure this file is available in your PAtH, as these config files are user-
-#   facing and therefore *not* installed along with the MATE package
-# - You can then load the configs here using `import run_lateral_line.py as *`
-# - To run MATE, import `mate.manager.manager.run_mate_manager` and call it 
-#   with the appropriate arguments (see its doc string)
+# - Ensure this file is available in your PATH, as these config files are user-
+#   facing and therefore *not* installed along with the DySTrack package
+# - You can then load the configs here using `import run_chick_node.py as *`
+# - To run DySTrack, import `dystrack.manager.manager.run_dystrack_manager` and
+#   call it with the appropriate arguments (see its doc string)

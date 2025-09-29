@@ -5,7 +5,7 @@ Created on Tue Feb 6 17:59:38 2024
 @authors:   Zimeng Wu @ Wong group (UCL)
             Jonas Hartmann @ Mayor lab (UCL)
 
-@descript:  ZEN Blue IronPython macro to interface Zeiss LSM980 with MATE.
+@descript:  ZEN Blue IronPython macro to interface Zeiss LSM980 with DySTrack.
 
 @usage:     TODO!
 """
@@ -25,7 +25,7 @@ from System.IO import Path
 prescan_name = "PRESCAN_488"  # .czexp from menu
 
 # Job path
-job_name = "MATE_JOB_cldnb"  # .czexp from menu
+job_name = "DySTrack_JOB_cldnb"  # .czexp from menu
 
 # Output path
 output_folder = r"D:\Zimeng\20250918_test"
@@ -46,7 +46,7 @@ Zen.Application.Documents.RemoveAll()
 
 # Prep
 interval = interval_min * 60000
-coords_fpath = os.path.join(output_folder, "mate_coords.txt")
+coords_fpath = os.path.join(output_folder, "dystrack_coords.txt")
 with open(coords_fpath, "r") as infile:
     lines_read = len(infile.readlines())
 
@@ -104,9 +104,9 @@ for i in range(max_iterations):
         scaling_y = output_experiment2.Scaling.Y
         scaling_z = output_experiment2.Scaling.Z
 
-        ## Read coords provided by MATE
+        ## Read coords provided by DySTrack
 
-        # Wait for mate_coords.txt to be updated with a new line
+        # Wait for dystrack_coords.txt to be updated with a new line
         while True:
             with open(coords_fpath, "r") as infile:
                 lines = infile.readlines()

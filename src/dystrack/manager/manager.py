@@ -5,11 +5,11 @@ Created on Sun Jan 15 00:34:07 2017
 @authors:   Jonas Hartmann @ Gilmour group (EMBL) & Mayor lab (UCL)
             Zimeng Wu @ Wong group (UCL)
 
-@descript:  Manages the main event loop of MATE. This loop monitors the target
-            directory for images produced by the scope that fit user-specified
-            criteria, then triggers a specified image analysis pipeline that
-            determines new coordinates to be sent to the microscope through a
-            specified channel.
+@descript:  Manages the main event loop of DySTrack. This loop monitors the 
+            target directory for images produced by the scope that fit user-
+            specified criteria, then triggers a specified image analysis 
+            pipeline that determines new coordinates to be sent to the 
+            microscope through a specified channel.
 """
 
 
@@ -68,8 +68,8 @@ def _trigger_image_analysis(
     target_path : path-like
         Path to the target file used in the image analysis function.
     image_analysis_func : callable
-        Image analysis pipeline function. See doc string of `run_mate_manager`
-        for more information.
+        Image analysis pipeline function. See doc string of 
+        `run_dystrack_manager` for more information.
     img_kwargs : dict, optional, default {}
         Additional keyword arguments forwarded to the image analysis function
         using `**img_kwargs`.
@@ -127,21 +127,21 @@ def _trigger_coords_transmission(
     ----------
     tra_method : str or callable, optional, default "txt"
         String indicating the method to use for transmitting coordinates to the
-        microscope, or alternatively a custom callable. See doc string of
-        `run_mate_manager` and the `transmitters` module for more information.
+        microscope, or alternatively a custom callable. See doc strings of
+        `run_dystrack_manager` and `transmitters` module for more information.
     z_pos, y_pos, x_pos : numeric (or None, or other)
         Coordinate values forwarded to the transmission method.
     img_msg : str or None
         String forwarded to transmission methods that support messaging.
     img_cache : dict, optional, default {}
-        Image analysis cache dictionary (see doc string of `run_mate_manager`
+        Image analysis cache dictionary (see doc str of `run_dystrack_manager`
         for more info). Forwarded to custom `tra_method` callables.
     img_error : None or Exception
         Error captured during image analysis. Forwarded to custom `tra_method`
         callables.
     target_dir : path-like or None, optional, default None
-        Directory path that is being monitored by MATE. Specifies location of
-        text file if `tra_method="txt"`, in which case it is required. Also
+        Directory path that is being monitored by DySTrack. Specifies location 
+        of text file if `tra_method="txt"`, in which case it is required. Also
         forwarded to custom `tra_method` callables.
     tra_kwargs : dict, optional, default {}
         Additional keyword arguments forwrded to transmission methods.
@@ -176,7 +176,7 @@ def _trigger_coords_transmission(
     elif tra_method == "txt":
         try:
 
-            coords_path = os.path.join(target_dir, "mate_coords.txt")
+            coords_path = os.path.join(target_dir, "dystrack_coords.txt")
             trs.send_coords_txt(
                 coords_path, z_pos, y_pos, x_pos, msg=img_msg, **tra_kwargs
             )
@@ -212,7 +212,7 @@ def _trigger_coords_transmission(
     return tra_error
 
 
-def run_mate_manager(
+def run_dystrack_manager(
     target_dir,
     image_analysis_func,
     max_checks=None,
@@ -285,7 +285,7 @@ def run_mate_manager(
     tra_method : str or callable, optional, default "txt"
         String indicating the method to use for transmitting coordinates to the
         microscope, or alternatively a custom callable. String options:
-            - "txt" : Write to text a file in `target_dir` ("mate_coords.txt")
+            - "txt" : Write to txt file in `target_dir` ("dystrack_coords.txt")
             - "MyPiC" : Write to the Windows registry for ZEN Black MyPiC macro
         Call signature for custom transmission function:
         ```
@@ -300,9 +300,9 @@ def run_mate_manager(
         Whether to resume monitoring after transmission of detected coordinates
         to the microscope has terminally failed.
     write_txt : bool, optional, default True
-        If True, coordinates are recorded in a text file ("mate_coords.txt") in
-        `target_dir` *regardless* of the specified `tra_method`. If said method
-        is "txt", this has no effect as the text file is generated anyway.
+        If True, coordinates are recorded in a txt file ("dystrack_coords.txt")
+        in `target_dir` *regardless* of the specified `tra_method`. If said 
+        method is "txt", this has no effect as the file is generated anyway.
 
     Returns
     -------
@@ -323,13 +323,13 @@ def run_mate_manager(
     # Check that at least one of the termination conditions is set
     if all([max_checks is None, max_triggers is None, not end_on_esc]):
         raise ValueError(
-            "No ending condition for MATE event loop set, so it would run "
+            "No ending condition for DySTrack event loop set, so it would run "
             + "indefinitely. At least one of `max_checks` or `max_triggers` "
             + "must not be `None`, or `end_on_esc` must be True."
         )
 
     # Report
-    print("\n\nMATE MANAGER SESSION STARTED!")
+    print("\n\nDYSTRACK MANAGER SESSION STARTED!")
     print("Monitoring target dir(s) for new files...")
     if max_checks is not None:
         print(f"Will terminate after {max_checks} checks.")
@@ -340,7 +340,7 @@ def run_mate_manager(
 
     # Generate txt file to record coordinates (if necessary)
     if (tra_method == "txt") or write_txt:
-        txt_path = os.path.join(target_dir, "mate_coords.txt")
+        txt_path = os.path.join(target_dir, "dystrack_coords.txt")
         if not os.path.isfile(txt_path):
             with open(txt_path, "w") as coordsfile:
                 coordsfile.write("Z\tY\tX\tmsg\n")
@@ -549,7 +549,7 @@ def run_mate_manager(
     ### Report and return
 
     # Report
-    print("\n\nMATE MONITORING SESSION TERMINATED!")
+    print("\n\nDYSTRACK MONITORING SESSION TERMINATED!")
     print("\nStats:")
     print("  Total checks made:       ", check_counter)
     print("  Total new files found:   ", found_counter)

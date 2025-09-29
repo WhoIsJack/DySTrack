@@ -10,7 +10,7 @@ Created on Fri Jun 20 19:21:51 2025
 import pytest
 
 from dystrack.manager import cmdline
-from dystrack.manager.manager import run_mate_manager
+from dystrack.manager.manager import run_dystrack_manager
 
 
 def test_get_func_args():
@@ -123,15 +123,15 @@ def test_run_via_cmdline(capsys, mocker):
     # Check that the help message was printed
     captured = capsys.readouterr()
     assert "usage: pytest [-h]" in captured.out
-    assert "Start a MATE session." in captured.out
+    assert "Start a DySTrack session." in captured.out
     assert "  image_analysis_func: dummy_img_ana_func" in captured.out
     assert "[int, optional, default None] DUMMY TEST" in captured.out
 
-    # Run with mocked run_mate_manager function
-    mocked_manager = mocker.patch("dystrack.manager.manager.run_mate_manager")
+    # Run with mocked run_dystrack_manager function
+    mocked_manager = mocker.patch("dystrack.manager.manager.run_dystrack_manager")
     mocked_manager.return_value = (None, None)
-    mocked_manager.__code__ = run_mate_manager.__code__
-    mocked_manager.__doc__ = run_mate_manager.__doc__
+    mocked_manager.__code__ = run_dystrack_manager.__code__
+    mocked_manager.__doc__ = run_dystrack_manager.__doc__
     argv = [
         "dummy",
         "./tests",
@@ -146,7 +146,7 @@ def test_run_via_cmdline(capsys, mocker):
     ]
     assert cmdline.run_via_cmdline(argv, dummy_img_ana_func) == (None, None)
 
-    # Check that mocked run_mate_manager was called with appropriate values
+    # Check that mocked run_dystrack_manager was called with appropriate values
     mocked_manager.assert_called_with(
         "./tests",
         dummy_img_ana_func,

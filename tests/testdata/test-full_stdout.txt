@@ -1,6 +1,6 @@
 
 
-MATE MANAGER SESSION STARTED!
+DYSTRACK MANAGER SESSION STARTED!
 Monitoring target dir(s) for new files...
 Will terminate after 1 pipeline trigger events.
 Press <Esc> to terminate.
@@ -17,7 +17,7 @@ Coords pushed.
 Resuming monitoring...
 
 
-MATE MONITORING SESSION TERMINATED!
+DYSTRACK MONITORING SESSION TERMINATED!
 
 Stats:
   Total checks made:        7

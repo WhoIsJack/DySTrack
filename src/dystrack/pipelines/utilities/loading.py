@@ -69,7 +69,7 @@ def robustly_load_image_after_write(target_path):
             # Handle unknown file endings
             else:
                 errmsg = (
-                    "File ending not recognized! Use MATE's `file_end` argument"
+                    "File ending not recognized! Use DySTrack's `file_end` arg"
                     + " to control which file endings trigger image analysis."
                 )
                 raise ValueError(errmsg)

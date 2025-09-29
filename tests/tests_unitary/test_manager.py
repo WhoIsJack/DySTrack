@@ -113,7 +113,7 @@ def test_trigger_coords_transmission(mocker, capsys):
         "txt", None, 10, 15, "test_msg", target_dir="."
     )
     captured = capsys.readouterr()
-    assert captured.out == ".\\mate_coords.txt None 10 15 test_msg"
+    assert captured.out == ".\\dystrack_coords.txt None 10 15 test_msg"
 
     # Test winreg transmission method
     def tra_winreg_mock(z_pos, y_pos, x_pos, codeM, errMsg):
@@ -163,34 +163,34 @@ def test_trigger_coords_transmission(mocker, capsys):
     assert "invalid `transmission_method`" in str(err)
 
 
-def NOtest_run_mate_manager_success():
+def NOtest_run_dystrack_manager_success():
     """NOtest: Test not implemented; covered by integration test."""
 
     # TODO: Fully unit-testing this function would require extensive mocking.
-    #       Since most functionality of `run_mate_manager` is already tested
+    #       Since key functionality of `run_dystrack_manager` is already tested
     #       with a "live" integration test that does not rely on mocking, this
     #       is only nice-to-have and remains a stretch goal for future work.
 
     pass
 
 
-def test_run_mate_manager_errors_noexit():
+def test_run_dystrack_manager_errors_noexit():
     with pytest.raises(ValueError) as err:
-        mng.run_mate_manager(
+        mng.run_dystrack_manager(
             "test_dir",
             lambda x: None,
             max_checks=None,
             max_triggers=None,
             end_on_esc=False,
         )
-    assert "No ending condition for MATE event loop set" in str(err)
+    assert "No ending condition for DySTrack event loop set" in str(err)
 
 
-def NOtest_run_mate_manager_errors_OTHER():
+def NOtest_run_dystrack_manager_errors_OTHER():
     """NOtest: Test not implemented. [low-priority]"""
 
-    # TODO: Test for other errors that `run_mate_manager` may raise.
-    #       Requires extensive mocking (see `test_run_mate_manager_success`)
+    # TODO: Test for other errors that `run_dystrack_manager` may raise.
+    #       Requires extensive mocking (cf `test_run_dystrack_manager_success`)
     #       and is currently nice-to-have/low-priority.
 
     pass

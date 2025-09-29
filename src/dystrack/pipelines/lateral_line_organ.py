@@ -6,7 +6,7 @@ Created on Sun Jan 15 00:34:07 2017
             Zimeng Wu @ Wong group (UCL)
 
 @descript:  Image analysis pipeline for live tracking/stabilizing of deposited
-            posterior lateral line primordium organs (neuromasts) using MATE.
+            lateral line primordium organs (neuromasts) using DySTrack.
             This is a very simple adaptation of lateral_line.py, with the only
             difference being that x is computed as the centroid of the mask
             (just like y and z), not as the leading edge.
@@ -72,10 +72,11 @@ def analyze_image(
     z_pos, y_pos, x_pos : ints
         New coordinates for the next acquisition. For 2D inputs, z_pos is 0.0.
     img_msg : "_"
-        A string output message; required by MATE but here unused; set to "_".
+        A string output message; required by DySTrack but here unused and just
+        set to "_".
     img_cache : {}
         A dictionary to be passed as keyword arguments to future calls to the
-        pipeline; required by MATE but here unused; set to {}.
+        pipeline; required by DySTrack but here unused and just set to {}.
     """
 
     ### Load data
@@ -248,7 +249,7 @@ def analyze_image(
         y_pos = cen[1]
         x_pos = cen[2]
 
-        # Z limit: An absolute limitation on how much MATE may move in z
+        # Z limit: An absolute limitation on how much DySTrack may move in z
         z_limit = 0.1  # Fraction of image size
         z_limit_top = (raw.shape[0] - 1) / 2.0 + z_limit * (raw.shape[0] - 1)
         z_limit_bot = (raw.shape[0] - 1) / 2.0 - z_limit * (raw.shape[0] - 1)

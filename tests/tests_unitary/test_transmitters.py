@@ -61,7 +61,7 @@ def test_send_coords_txt(mocker):
     mock_send = mocker.patch("builtins.open", mocker.mock_open())
 
     # Call the function
-    test_fpath = r"C:\this\is\just\a\test\path\mate_coords.txt"
+    test_fpath = r"C:\this\is\just\a\test\path\dystrack_coords.txt"
     transmitters.send_coords_txt(
         test_fpath,
         z_pos=None,
