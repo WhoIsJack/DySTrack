@@ -79,55 +79,6 @@ def test_analyze_image_3D_success_late(mocker, capsys):
     )
 
 
-def test_analyze_image_3D_success_DEVTEMP(mocker, capsys):
-    # DEV-TEMP: To be defactored after MATE2DySTrack rename!
-
-    # Targets
-    testpath = r"./tests/testdata/"
-    fnames = [
-        "test-chicknode1_node_HH4_ch3_ds_8bit.tif",
-        "test-chicknode2_testrun1_000.tiff",
-        "test-chicknode3_testrun1_031.tiff",
-        "test-chicknode4_run20250130_042.tiff",
-        "test-chicknode5_run20250130_043.tiff",
-    ]
-
-    # Expectations
-    expected_outputs = [
-        ["8.1780", "532.3575", "603.7036", "OK", {}],
-        ["21.4710", "247.8483", "399.8783", "OK", {}],
-        ["26.8514", "260.8954", "398.1514", "OK", {}],
-        ["9.1176", "286.5968", "328.9029", "OK", {}],
-        ["10.4417", "269.4593", "373.6161", "OK", {}],
-    ]
-    expected_stdouts = [
-        [
-            "Loaded image of shape: (20, 1024, 1024)",
-            "Resulting coords (zyx): 8.1780, 532.3575, 603.7036",
-        ],
-        [
-            "Loaded image of shape: (45, 512, 512)",
-            "Resulting coords (zyx): 21.4710, 247.8483, 399.8783",
-        ],
-        [
-            "Loaded image of shape: (45, 512, 512)",
-            "Resulting coords (zyx): 26.8514, 260.8954, 398.1514",
-        ],
-        [
-            "Loaded image of shape: (21, 512, 512)",
-            "Resulting coords (zyx): 9.1176, 286.5968, 328.9029",
-        ],
-        [
-            "Loaded image of shape: (21, 512, 512)",
-            "Resulting coords (zyx): 10.4417, 269.4593, 373.6161",
-        ],
-    ]
-
-    # Run tests and compare results
-    for fname, eop, eos in zip(fnames, expected_outputs, expected_stdouts):
-        analyze_image_success(mocker, capsys, testpath, fname, eop, eos)
-
-
 def test_analyze_image_2D_success_early(mocker, capsys):
 
     # Targets

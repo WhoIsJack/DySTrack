@@ -28,11 +28,6 @@ def analyze_image(target_path, channel=None, show=False, verbose=False):
     are inferred by fitting Gaussians to the intensity profiles in z and y, and
     by fitting a sigmoid function to the intensity profile in x.
 
-    zAdj: If the file name contains the tag "zAdj", only new z-coordinates are
-    computed (if sufficient signal is present). This is used to independently
-    adjust z-coordinates of anterior FOVs during grid acquisition and is
-    currently still an experimental feature!  # DEV-TEMP!
-
     Parameters
     ----------
     target_path : path-like
@@ -61,9 +56,6 @@ def analyze_image(target_path, channel=None, show=False, verbose=False):
     """
 
     ### Load data
-
-    # Get target file name to check for zAdj
-    target_file = os.path.split(target_path)[-1]
 
     # Wait for image to be written and then load it
     raw = robustly_load_image_after_write(target_path)
@@ -138,57 +130,35 @@ def analyze_image(target_path, channel=None, show=False, verbose=False):
         z_prof = np.mean(raw, axis=(1, 2))
         z_prof = (z_prof - z_prof.min()) / (z_prof.max() - z_prof.min())
 
-        # zAdj: Handle special case of near-empty stacks early on...
-        # DEV-TEMP: This has not been tested on real data yet and seems like it
-        #           might not be particularly robust!
-        if ("zAdj" in target_file) and (z_prof.max() < (4.0 * z_prof.mean())):
-            print("      Low-contrast image in z-adjustment mode; skipping z!")
-            z_pos = (raw.shape[0] - 1) / 2.0
+        # Fit Gaussian function to intensity profile
+        z_locs = np.arange(z_prof.size)
+        p0 = [z_prof.sum(), z_locs[-1] / 2, z_locs[-1] / 8]  # Initial guess
+        p_fit = curve_fit(f_gaussian, z_locs, z_prof, p0=p0)[0]
 
-            # Plot the result
-            if show:
-                ax[axi].plot(z_locs, z_prof, lw=1, alpha=0.8, label="data")
-                ax[axi].legend(fontsize=8, frameon=False)
-                ax[axi].set_xlabel("z position [pxl]")
-                ax[axi].set_ylabel("mean intensity [au]")
-                axi = 1
+        # Get z_pos as mu of Gaussian
+        z_pos = p_fit[1]
 
-        # All other cases
-        else:
-
-            # Fit Gaussian function to intensity profile
-            z_locs = np.arange(z_prof.size)
-            p0 = [
-                z_prof.sum(),
-                z_locs[-1] / 2,
-                z_locs[-1] / 8,
-            ]  # Initial guess
-            p_fit = curve_fit(f_gaussian, z_locs, z_prof, p0=p0)[0]
-
-            # Get z_pos as mu of Gaussian
-            z_pos = p_fit[1]
-
-            # Plot the result
-            if show:
-                ax[axi].plot(z_locs, z_prof, lw=1, alpha=0.8, label="data")
-                ax[axi].plot(
-                    z_locs,
-                    f_gaussian(z_locs, *p0),
-                    ":",
-                    c="k",
-                    alpha=0.8,
-                    label="p0",
-                )
-                ax[axi].plot(
-                    z_locs,
-                    f_gaussian(z_locs, *p_fit),
-                    alpha=0.8,
-                    label="p_fit",
-                )
-                ax[axi].legend(fontsize=8, frameon=False)
-                ax[axi].set_xlabel("z position [pxl]")
-                ax[axi].set_ylabel("mean intensity [au]")
-                axi = 1
+        # Plot the result
+        if show:
+            ax[axi].plot(z_locs, z_prof, lw=1, alpha=0.8, label="data")
+            ax[axi].plot(
+                z_locs,
+                f_gaussian(z_locs, *p0),
+                ":",
+                c="k",
+                alpha=0.8,
+                label="p0",
+            )
+            ax[axi].plot(
+                z_locs,
+                f_gaussian(z_locs, *p_fit),
+                alpha=0.8,
+                label="p_fit",
+            )
+            ax[axi].legend(fontsize=8, frameon=False)
+            ax[axi].set_xlabel("z position [pxl]")
+            ax[axi].set_ylabel("mean intensity [au]")
+            axi = 1
 
     # Skip z-axis fit for 2D data
     else:
@@ -201,113 +171,83 @@ def analyze_image(target_path, channel=None, show=False, verbose=False):
 
     ## Fit Y-axis profile with Gaussian model
 
-    # Proceed if the data is not zAdj
-    if "zAdj" not in target_file:
-
-        # Get normalized y-axis mean profile
-        if raw.ndim == 2:
-            y_prof = np.mean(raw, axis=1)
-        else:
-            y_prof = np.mean(raw, axis=(0, 2))
-        y_prof = (y_prof - y_prof.min()) / (y_prof.max() - y_prof.min())
-
-        # Fit function to profile
-        y_locs = np.arange(y_prof.size)
-        p0 = [y_prof.sum(), y_locs[-1] / 2, y_locs[-1] / 6]  # Initial guess
-        p_fit = curve_fit(f_gaussian, y_locs, y_prof, p0=p0)[0]
-
-        # Get y_pos as mu of Gaussian
-        y_pos = p_fit[1]
-
-        # Show the results
-        if show:
-            ax[axi].plot(y_locs, y_prof, lw=1, alpha=0.8, label="data")
-            ax[axi].plot(
-                y_locs,
-                f_gaussian(y_locs, *p0),
-                ":",
-                c="k",
-                alpha=0.8,
-                label="p0",
-            )
-            ax[axi].plot(
-                y_locs, f_gaussian(y_locs, *p_fit), alpha=0.8, label="p_fit"
-            )
-            ax[axi].legend(fontsize=8, frameon=False)
-            ax[axi].set_xlabel("y position [pxl]")
-            ax[axi].set_ylabel("mean intensity [au]")
-            axi += 1
-
-    # Skip y-axis fit for zAdj data
+    # Get normalized y-axis mean profile
+    if raw.ndim == 2:
+        y_prof = np.mean(raw, axis=1)
     else:
-        y_pos = (raw.shape[-2] - 1) / 2.0
-        if verbose:
-            print("      Detected z-adjustment mode; skipping y tracking!")
+        y_prof = np.mean(raw, axis=(0, 2))
+    y_prof = (y_prof - y_prof.min()) / (y_prof.max() - y_prof.min())
+
+    # Fit function to profile
+    y_locs = np.arange(y_prof.size)
+    p0 = [y_prof.sum(), y_locs[-1] / 2, y_locs[-1] / 6]  # Initial guess
+    p_fit = curve_fit(f_gaussian, y_locs, y_prof, p0=p0)[0]
+
+    # Get y_pos as mu of Gaussian
+    y_pos = p_fit[1]
+
+    # Show the results
+    if show:
+        ax[axi].plot(y_locs, y_prof, lw=1, alpha=0.8, label="data")
+        ax[axi].plot(
+            y_locs,
+            f_gaussian(y_locs, *p0),
+            ":",
+            c="k",
+            alpha=0.8,
+            label="p0",
+        )
+        ax[axi].plot(
+            y_locs, f_gaussian(y_locs, *p_fit), alpha=0.8, label="p_fit"
+        )
+        ax[axi].legend(fontsize=8, frameon=False)
+        ax[axi].set_xlabel("y position [pxl]")
+        ax[axi].set_ylabel("mean intensity [au]")
+        axi += 1
 
     ## Fit X-axis profile with sigmoid model (kind of an edge tracker really)
 
-    # Proceed if the data is not zAdj
-    if "zAdj" not in target_file:
-
-        # Get normalized x-axis profile around y position
-        if raw.ndim == 2:
-            x_prof = np.mean(
-                raw[int(y_pos - p_fit[2]) : int(y_pos + p_fit[2]), :], axis=0
-            )
-        else:
-            x_prof = np.mean(
-                raw[:, int(y_pos - p_fit[2]) : int(y_pos + p_fit[2]), :],
-                axis=(0, 1),
-            )
-        x_prof = (x_prof - x_prof.min()) / (x_prof.max() - x_prof.min())
-
-        # # The anterior is to the left but the model increases to the right;
-        # # flip the profile to account for this
-        # x_prof = x_prof[::-1]
-
-        # Fit function to profile
-        x_locs = np.arange(x_prof.size)
-        p0 = [
-            x_prof.mean(),
-            10.0 / x_locs[-1],
-            x_locs[-1] / 3 * 2,
-        ]  # Init. guess
-        bounds = (
-            [x_prof.min(), 1 / x_locs[-1], x_locs[-1] / 6.0],
-            [1.2 * x_prof.max(), 100 / x_locs[-1], x_locs[-1] / 1.2],
+    # Get normalized x-axis profile around y position
+    if raw.ndim == 2:
+        x_prof = np.mean(
+            raw[int(y_pos - p_fit[2]) : int(y_pos + p_fit[2]), :], axis=0
         )
-        p_fit = curve_fit(f_sigmoid, x_locs, x_prof, p0=p0, bounds=bounds)[0]
-
-        # Get x_pos as x0 of sigmoid function
-        x_pos = p_fit[2]
-
-        # # The anterior is to the left but the model increases to the right;
-        # # flip the x-position to account for this
-        # x_pos = x_locs[-1] - x_pos
-
-        # Show the results
-        if show:
-            ax[axi].plot(x_locs, x_prof, lw=1, alpha=0.8, label="data")
-            ax[axi].plot(
-                x_locs,
-                f_sigmoid(x_locs, *p0),
-                ":",
-                c="k",
-                alpha=0.8,
-                label="p0",
-            )
-            ax[axi].plot(
-                x_locs, f_sigmoid(x_locs, *p_fit), alpha=0.8, label="p_fit"
-            )
-            ax[axi].legend(fontsize=7, frameon=False)
-            ax[axi].set_xlabel("x position [pxl]")
-            ax[axi].set_ylabel("mean intensity [au]")
-
-    # Skip x-axis fit for zAdj data
     else:
-        x_pos = (raw.shape[-1] - 1) / 2.0
-        if verbose:
-            print("      Detected z-adjustment mode; skipping x tracking!")
+        x_prof = np.mean(
+            raw[:, int(y_pos - p_fit[2]) : int(y_pos + p_fit[2]), :],
+            axis=(0, 1),
+        )
+    x_prof = (x_prof - x_prof.min()) / (x_prof.max() - x_prof.min())
+
+    # Fit function to profile
+    x_locs = np.arange(x_prof.size)
+    p0 = [x_prof.mean(), 10.0 / x_locs[-1], x_locs[-1] / 3 * 2]  # Init. guess
+    bounds = (
+        [x_prof.min(), 1 / x_locs[-1], x_locs[-1] / 6.0],
+        [1.2 * x_prof.max(), 100 / x_locs[-1], x_locs[-1] / 1.2],
+    )
+    p_fit = curve_fit(f_sigmoid, x_locs, x_prof, p0=p0, bounds=bounds)[0]
+
+    # Get x_pos as x0 of sigmoid function
+    x_pos = p_fit[2]
+
+    # Show the results
+    if show:
+        ax[axi].plot(x_locs, x_prof, lw=1, alpha=0.8, label="data")
+        ax[axi].plot(
+            x_locs,
+            f_sigmoid(x_locs, *p0),
+            ":",
+            c="k",
+            alpha=0.8,
+            label="p0",
+        )
+        ax[axi].plot(
+            x_locs, f_sigmoid(x_locs, *p_fit), alpha=0.8, label="p_fit"
+        )
+        ax[axi].legend(fontsize=7, frameon=False)
+        ax[axi].set_xlabel("x position [pxl]")
+        ax[axi].set_ylabel("mean intensity [au]")
 
     # Finalize the open figure
     if show:
