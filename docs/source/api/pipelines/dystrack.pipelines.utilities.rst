@@ -1,9 +1,8 @@
 Pipeline utilities
 ==================
 
+Refactored utilities for use in multiple pipelines.
 
-dystrack.pipelines.utilities.loading.py
----------------------------------------
 
 .. automodule:: dystrack.pipelines.utilities.loading
    :members:

@@ -4,8 +4,7 @@ API Reference
 .. toctree::
     :maxdepth: 2
 
-    dystrack.manager
-    dystrack.pipelines
-    dystrack.pipelines.utilities
+    DySTrack core module (dystrack.manager)<manager/index>
+    Image analysis pipelines (dystrack.pipelines)<pipelines/index>
 
     
