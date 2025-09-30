@@ -108,8 +108,11 @@ if __name__ == "__main__":
 
 ### ALTERNATIVELY, DySTrack can be run from other python code (e.g. jupyter nb)
 
-# - Ensure this file is available in your PATH, as these config files are user-
-#   facing and therefore *not* installed along with the DySTrack package
-# - You can then load the configs here using `import run_chick_node.py as *`
+# - An example can be found in `notebooks/Run DySTrack from Jupyter.ipynb`
+# - Ensure this file is available in your python path, as these config files 
+#   are user-facing and *not* installed along with the DySTrack package;
+#   e.g. `sys.path.insert(0, r"<<path_to_run_dir>>")`
+# - You can then load the configurations specified here using e.g.
+#   `import run.run_chick_node as run_cn`
 # - To run DySTrack, import `dystrack.manager.manager.run_dystrack_manager` and
 #   call it with the appropriate arguments (see its doc string)
