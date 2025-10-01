@@ -35,7 +35,7 @@ Using DySTrack on the Zeiss LSM880 (ZEN Black)
 5. Open MyPiC in ZenBlack
 --------------------------------
 
-.. image:: ../images/open_mypic.png
+.. image:: ../images/zeiss_880/open_mypic.png
    :alt: MyPiC in ZenBlack
    :width: 800px
    :align: center
@@ -43,7 +43,7 @@ Using DySTrack on the Zeiss LSM880 (ZEN Black)
 6. Import prescan and job files into JobSetter
 --------------------------------
 
-.. image:: ../images/import_settings.png
+.. image:: ../images/zeiss_880/import_settings.png
    :alt: Import prescan and job files
    :width: 800px
    :align: center
@@ -51,7 +51,7 @@ Using DySTrack on the Zeiss LSM880 (ZEN Black)
 7. Add prescan and job settings to pipeline in the right order (prescan first)
 --------------------------------
 
-.. image:: ../images/add_pipeline.png
+.. image:: ../images/zeiss_880/add_pipeline.png
    :alt: Add prescan and job files to pipeline
    :width: 600px
    :align: center
@@ -59,23 +59,25 @@ Using DySTrack on the Zeiss LSM880 (ZEN Black)
 8. Set timings and image analysis on prescan file
 --------------------------------
 
-.. image:: ../images/analysis_settings.png
+.. image:: ../images/zeiss_880/analysis_settings.png
    :alt: Set timings and image analysis on prescan file
    :width: 600px
    :align: center
 
 
-- Method: select Online img. analysis
-- Tick **Track Z** and **Track XY**
-- Tick **Interval** not delay and set how long you want the interval and how many repititions
+- Method: select ``Online img. analysis``
+- Tick ``Track Z`` and ``Track XY``
+- Tick ``Interval (not delay)`` and set how long you want the interval and how many repititions
 
 Example:
    Every 10 mins for 12 hours → 10 min interval, 72 repetitions.
 
 9. If using multi-positions, set your positions
 --------------------------------
-- Select multiple
-- Mark positions (double-check it's centred in live)
+
+- Go to ``Default Positions``
+- Select ``Multiple``
+- ``Mark`` positions (double-check it's centred in live)
 
 .. note:: 
    **Tip:**
@@ -86,7 +88,7 @@ Example:
 --------------------------------
 
 - Use the same folder you’re monitoring in the command line.
-- Tick **.czi** as format.
+- Tick ``.czi`` as format.
 
 Once everything is set up, press **Play**
 
