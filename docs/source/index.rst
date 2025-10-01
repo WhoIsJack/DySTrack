@@ -1,42 +1,78 @@
 DySTrack - Dynamic Sample Tracking
 ==================================
 
+
 **DySTrack ("diss track")** is a simple, modular, python-based, open-source 
 **automated feedback microscopy tool** for live tracking of moving samples like 
 migratory cells or tissues.
 
-TODO: [ADD GIF HERE!]
 
-The example above shows the zebrafish *posterior lateral line primordium*, a 
-highly migratory tissue, as it crawls along the flank of a developing embryo. 
-DySTrack was used to enable autonomous tracking and 3D confocal imaging of the 
-primordium over several hours on a Zeiss LSM980 microscope.
+.. figure:: images/index/DySTrack.gif
+    :alt: DySTrack lateral line animation
+    :align: center
+    :width: 95%
+
+    This example shows the zebrafish *posterior lateral line primordium*, a 
+    highly migratory tissue, as it crawls along the flank of a developing 
+    embryo. DySTrack was used to enable autonomous tracking and 3D confocal 
+    imaging of the primordium over several hours on a Zeiss LSM980 microscope.
+
 
 DySTrack works on common commercial microscopes, with current out-of-the-box
 support covering ``ZEN Black``, ``ZEN Blue``, and ``NIS Elements``. Adaptation 
 to any other microscope control software that supports basic macros/automation
 is relatively straightforward.
 
+The source code for DySTrack is `on GitHub`_, where you may also contribute to
+DySTrack's continued development and maintenance. Please raise a GitHub Issue 
+if you encounter a problem with DySTrack or would like to suggest a feature.
+Note that the authors cannot guarantee support.
 
-.. admonition:: **Why use DySTrack?**
+.. admonition:: **Citing DySTrack**
     :class: note
+
+    DySTrack was developed by Jonas Hartmann and Zimeng Wu, in collaboration with 
+    many others (acknowledged on GitHub). If you are using DySTrack in your 
+    research, please cite the `preprint`_:
+
+    ``Wu, Zimeng, ..., and Hartmann, Jonas; [citation forthcoming]``
+
+.. TODO: ADD LINKS!
+.. _on GitHub: https://domain.invalid/
+.. _preprint: https://domain.invalid/
+
+
+
+Why use DySTrack?
+-----------------
+
+DySTrack is useful when imaging moving, growing, or drifting samples where the
+microscope's limited field of view becomes an issue. Instead of sitting at the
+microscope all day and all night, or accepting lower quality (reducing 
+magnification to increase the field of view) or lower time-resolution (using 
+tiled/stitched acquisition to cover a larger field of view), DySTrack can be
+deployed to have the microscope autonomously follow cells or tissues of 
+interest.
+
+Some advantages of DySTrack over other tools include:
    
-    **Minimal interface with the microscope**
-        * Can interface with any microscope control software that has basic
-          macro/automation support
-        * No specialized custom microscope setup or custom control software
-          required
-        * Allows easy switching/reuse of the same image analysis pipeline; no 
-          lock-in to vendor ecosystems
+1. **Minimal interface with the microscope**
+    * Can interface with any microscope control software that has basic
+      macro/automation support
+    * No specialized custom microscope setup or custom control software 
+      required
+    * Allows easy switching/reuse of the same image analysis pipeline; no 
+      lock-in to vendor ecosystems
 
-    **Simple and modular python tool**
-        * Usable, understandable, and extendable for a large and growing 
-          fraction of life scientists
+2. **Simple and modular python tool**
+    * Usable, understandable, and extendable for a large and growing fraction 
+      of life scientists
 
-    **Custom python image analysis pipelines**
-        * Python is the *de facto* standard for both basic and advanced 
-          bioimage analysis
-        * DySTrack lets you use it to automate your microscopes!
+3. **Custom python image analysis pipelines**
+    * Python is the *de facto* standard for both basic and advanced bioimage 
+      analysis
+    * DySTrack lets you use it to automate your microscopes!
+
 
 
 .. admonition:: **DANGER: USE AT YOUR OWN RISK**
@@ -66,6 +102,7 @@ is relatively straightforward.
         LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
         OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
         SOFTWARE.
+
 
 
 Table of contents
