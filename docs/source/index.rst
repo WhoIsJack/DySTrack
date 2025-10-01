@@ -19,27 +19,32 @@ migratory cells or tissues.
 
 
 DySTrack works on common commercial microscopes, with current out-of-the-box
-support covering ``ZEN Black``, ``ZEN Blue``, and ``NIS Elements``. Adaptation 
-to any other microscope control software that supports basic macros/automation
-is relatively straightforward.
+support covering ``ZEN Black`` (via `MyPiC`_), ``ZEN Blue`` (via `Macros`_), 
+and ``NIS Elements`` (via `JOBS`_). Adaptation to any other microscope control 
+software that supports basic macros/automation is relatively straightforward.
 
-The source code for DySTrack is `on GitHub`_, where you may also contribute to
-DySTrack's continued development and maintenance. Please raise a GitHub Issue 
-if you encounter a problem with DySTrack or would like to suggest a feature.
-Note that the authors cannot guarantee support.
+The **source code** for DySTrack is `on GitHub`_, where you may also contribute 
+to DySTrack's continued development and maintenance. Please raise a GitHub 
+Issue  if you encounter a problem with DySTrack or would like to suggest a 
+feature. *Note that the authors cannot guarantee support.*
+
 
 .. admonition:: **Citing DySTrack**
     :class: note
 
-    DySTrack was developed by Jonas Hartmann and Zimeng Wu, in collaboration with 
-    many others (acknowledged on GitHub). If you are using DySTrack in your 
-    research, please cite the `preprint`_:
+    DySTrack was developed by Jonas Hartmann and Zimeng Wu, in collaboration 
+    with many others (acknowledged on GitHub). If you are using DySTrack in 
+    your research, please cite `the preprint`_:
 
     ``Wu, Zimeng, ..., and Hartmann, Jonas; [citation forthcoming]``
 
-.. TODO: ADD LINKS!
+
+.. TODO: ADD MISSING LINKS AND FULL CITATION ABOVE!
+.. _MyPiC: https://github.com/manerotoni/mypic/
+.. _Macros: https://github.com/zeiss-microscopy/OAD
+.. _JOBS: https://www.microscope.healthcare.nikon.com/en_EU/products/software/nis-elements/nis-elements-jobs
 .. _on GitHub: https://domain.invalid/
-.. _preprint: https://domain.invalid/
+.. _the preprint: https://domain.invalid/
 
 
 
@@ -75,7 +80,10 @@ Some advantages of DySTrack over other tools include:
 
 
 
-.. admonition:: **DANGER: USE AT YOUR OWN RISK**
+A word of warning...
+--------------------
+
+.. admonition:: **DANGER: USE AT YOUR OWN RISK!**
     :class: danger
 
     Modern microscopes are expensive machines, and automating them comes with
