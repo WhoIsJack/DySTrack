@@ -22,14 +22,14 @@ def test_analyze_image_3D_success(mocker, capsys):
 
     # Targets
     testpath = r"./tests/testdata/"
-    fname = "test-pllp_NSPARC_prescan.tiff"  # FIXME!
+    fname = "test-pllo_880_prescan.czi"
 
     # Expectations
-    expected_output = ["3.4705", "107.8477", "203.2707", "OK", {}]
+    expected_output = ["12.6445", "96.9214", "91.4378", "OK", {}]
     expected_stdouts = [
-        "Loaded image of shape: (9, 212, 512)",
-        "Detected treshold: 13",
-        "Resulting coords (zyx): 3.4705, 107.8477, 203.2707",
+        "Loaded image of shape: (25, 200, 200)",
+        "Detected treshold: 111",
+        "Resulting coords (zyx): 12.6445, 96.9214, 91.4378",
     ]
 
     # For performance, patch loading's sleep
@@ -38,13 +38,9 @@ def test_analyze_image_3D_success(mocker, capsys):
     )
 
     # Run test
-    with pytest.warns(
-        UserWarning,
-        match="Image converted down to 8bit using min-max scaling!",
-    ) as w:
-        output = lateral_line_organ.analyze_image(
-            os.path.join(testpath, fname), verbose=True
-        )
+    output = lateral_line_organ.analyze_image(
+        os.path.join(testpath, fname), verbose=True
+    )
     output = list(output)
     output[:3] = [f"{c:.4f}" for c in output[:3]]
     stdout = capsys.readouterr().out
@@ -59,14 +55,14 @@ def test_analyze_image_2D_success(mocker, capsys):
 
     # Targets
     testpath = r"./tests/testdata/"
-    fname = "test-pllp_980_prescan2D.tif"  # FIXME!
+    fname = "test-pllo_880_prescan2D.tif"
 
     # Expectations
-    expected_output = ["0.0000", "106.7561", "233.5550", "OK", {}]
+    expected_output = ["0.0000", "96.1637", "91.7534", "OK", {}]
     expected_stdouts = [
-        "Loaded image of shape: (200, 500)",
-        "Detected treshold: 11",
-        "Resulting coords (zyx): 0.0000, 106.7561, 233.5550",
+        "Loaded image of shape: (200, 200)",
+        "Detected treshold: 103",
+        "Resulting coords (zyx): 0.0000, 96.1637, 91.7534",
     ]
 
     # For performance, patch loading's sleep
