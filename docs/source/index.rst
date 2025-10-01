@@ -1,14 +1,75 @@
 DySTrack - Dynamic Sample Tracking
 ==================================
 
-TODO: Add a nice gif here?!
+**DySTrack ("diss track")** is a simple, modular, python-based, open-source 
+**automated feedback microscopy tool** for live tracking of moving samples like 
+migratory cells or tissues.
 
-DySTrack ("diss track") is a simple automated feedback microscopy tool for live
-tracking of moving samples like migrating cells or tissues.
+TODO: [ADD GIF HERE!]
 
-TODO: Add a severe warning/disclaimer here
+The example above shows the zebrafish *posterior lateral line primordium*, a 
+highly migratory tissue, as it crawls along the flank of a developing embryo. 
+DySTrack was used to enable autonomous tracking and 3D confocal imaging of the 
+primordium over several hours on a Zeiss LSM980 microscope.
 
-TODO: Add a short explanatation/introduction here (with figure?)
+DySTrack works on common commercial microscopes, with current out-of-the-box
+support covering ``ZEN Black``, ``ZEN Blue``, and ``NIS Elements``. Adaptation 
+to any other microscope control software that supports basic macros/automation
+is relatively straightforward.
+
+
+.. admonition:: **Why use DySTrack?**
+    :class: note
+   
+    **Minimal interface with the microscope**
+        * Can interface with any microscope control software that has basic
+          macro/automation support
+        * No specialized custom microscope setup or custom control software
+          required
+        * Allows easy switching/reuse of the same image analysis pipeline; no 
+          lock-in to vendor ecosystems
+
+    **Simple and modular python tool**
+        * Usable, understandable, and extendable for a large and growing 
+          fraction of life scientists
+
+    **Custom python image analysis pipelines**
+        * Python is the *de facto* standard for both basic and advanced 
+          bioimage analysis
+        * DySTrack lets you use it to automate your microscopes!
+
+
+.. admonition:: **DANGER: USE AT YOUR OWN RISK**
+    :class: danger
+
+    Modern microscopes are expensive machines, and automating them comes with
+    an inherent risk of damage.
+    
+    Although DySTrack includes some basic precautions and has been extensively 
+    tested, and although several labs have been using (prototypes of) DySTrack 
+    successfully for years, **DySTrack is ultimately a minimal tool that does
+    not offer comprehensive built-in safety features.**
+
+    We recommend that installation and initial tests be conducted by expert 
+    users with experience in microscopy and coding, and that the microscope be 
+    supervised during initial tests of your DySTrack setup and of any newly 
+    customized pipelines.
+
+    **Users are advised that the authors provide no warranty of any kind for 
+    DySTrack and are not liable for damages of any kind resulting from its 
+    use.** Note the relevant part of DySTrack's MIT license:
+
+        THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+        IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+        FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+        AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+        LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+        OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+        SOFTWARE.
+
+
+Table of contents
+-----------------
 
 .. toctree::
     :maxdepth: 2
