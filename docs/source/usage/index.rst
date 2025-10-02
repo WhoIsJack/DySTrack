@@ -2,7 +2,7 @@ Using DySTrack
 ==============
 
 .. toctree::
-    :maxdepth: 2
+    :maxdepth: 1
 
     DySTrack on the Zeiss LSM880 (ZEN Black)<zeiss_880>
     DySTrack on the Zeiss LSM980 (ZEN Blue)<zeiss_980>

@@ -7,8 +7,8 @@ DySTrack - Dynamic Sample Tracking
 migratory cells or tissues.
 
 
-.. figure:: images/index/DySTrack.gif
-    :alt: DySTrack lateral line animation
+.. figure:: images/landing_page/pllp_movie.gif
+    :alt: DySTrack lateral line primordium animation
     :align: center
     :width: 95%
 
@@ -39,11 +39,11 @@ feature. *Note that the authors cannot guarantee support.*
     ``Wu, Zimeng, ..., and Hartmann, Jonas; [citation forthcoming]``
 
 
-.. TODO: ADD MISSING LINKS AND FULL CITATION ABOVE!
+.. TODO: ADD MISSING LINK TO PREPRINT AND INCLUDE CITATION ABOVE!
 .. _MyPiC: https://github.com/manerotoni/mypic/
 .. _Macros: https://github.com/zeiss-microscopy/OAD
 .. _JOBS: https://www.microscope.healthcare.nikon.com/en_EU/products/software/nis-elements/nis-elements-jobs
-.. _on GitHub: https://domain.invalid/
+.. _on GitHub: https://github.com/WhoIsJack/DySTrack
 .. _the preprint: https://domain.invalid/
 
 
@@ -62,21 +62,23 @@ interest.
 Some advantages of DySTrack over other tools include:
    
 1. **Minimal interface with the microscope**
-    * Can interface with any microscope control software that has basic
-      macro/automation support
-    * No specialized custom microscope setup or custom control software 
-      required
-    * Allows easy switching/reuse of the same image analysis pipeline; no 
-      lock-in to vendor ecosystems
+
+   * Can interface with any microscope control software that has basic
+     macro/automation support
+   * No specialized custom microscope setup or custom control software required
+   * Allows easy switching/reuse of the same image analysis pipeline; no 
+     lock-in to vendor ecosystems
 
 2. **Simple and modular python tool**
-    * Usable, understandable, and extendable for a large and growing fraction 
-      of life scientists
+
+   * Usable, understandable, and extendable for a large & growing fraction of
+     life scientists
 
 3. **Custom python image analysis pipelines**
-    * Python is the *de facto* standard for both basic and advanced bioimage 
-      analysis
-    * DySTrack lets you use it to automate your microscopes!
+
+   * Python is the *de facto* standard for both basic and advanced bioimage 
+     analysis
+   * DySTrack lets you use it to automate your microscopes!
 
 
 
@@ -96,8 +98,8 @@ A word of warning...
 
     We recommend that installation and initial tests be conducted by expert 
     users with experience in microscopy and coding, and that the microscope be 
-    supervised during initial tests of your DySTrack setup and of any newly 
-    customized pipelines.
+    monitored during initial tests of your DySTrack setup and when running any 
+    newly customized pipelines.
 
     **Users are advised that the authors provide no warranty of any kind for 
     DySTrack and are not liable for damages of any kind resulting from its 
