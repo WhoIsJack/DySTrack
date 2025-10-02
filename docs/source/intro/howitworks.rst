@@ -7,12 +7,12 @@ DySTrack's architecture
 
 Broadly speaking, DyStrack consists of the following components:
 
-1. **The DySTrack manager** (:doc:`API<../api/manager/index>`):
+1. **The DySTrack manager** (:doc:`API</api/manager/index>`):
    A python command line application that checks for new images produced by the
    microscope, triggers an image analysis pipeline in response, and feeds the
    resulting coordinates back to the microscope.
-   
-2. **Image analysis pipelines** (:doc:`API<../api/pipelines/index>`):
+
+2. **Image analysis pipelines** (:doc:`API</api/pipelines/index>`):
    Python image analysis pipelines that receive a target path from the manager,
    load and analyze the image, and return new coordinates for the next 
    acquisition.
@@ -29,13 +29,13 @@ The basic way these components interact can be summarized as follows:
 
 .. TODO: Create figure variant where manager and pipelines are separated!
 
-.. image:: ../images/getting_started/dystrack_architecture_lite.png
+.. image:: /images/getting_started/dystrack_architecture_lite.png
    :alt: DySTrack flow schematic (light mode)
    :width: 70%
    :align: center
    :class: only-light
 
-.. image:: ../images/getting_started/dystrack_architecture_dark.png
+.. image:: /images/getting_started/dystrack_architecture_dark.png
    :alt: DySTrack flow schematic (dark mode)
    :width: 70%
    :align: center
@@ -67,8 +67,9 @@ two different acquisition settings:
 
 2. **The main scan**:
    This is usually a high-resolution, hiqh-quality, slower acquisition that
-   constitutes the actual data of interest for the experiment. It is acquired at
-   the coordinates determined by the prescan and is itself not fed to DySTrack.
+   constitutes the actual data of interest for the experiment. It is acquired 
+   at the coordinates determined by the prescan, and is itself not fed to 
+   DySTrack.
 
 DySTrack readily supports multi-positioning to capture several samples in one 
 experiment. To this end, the microscope macro is configured to trigger the next
@@ -87,14 +88,16 @@ Running a DySTrack experiment
 The following is a brief overview of the steps that are typically involved in
 running a DySTrack experiment. For more details on how to execute each step on
 different microscopes, see the relevant pages in the 
-:doc:`Usage<../usage/index>` section.
+:doc:`Usage</usage/index>` section.
 
-0. Ensure DySTrack is installed and has been tested (see 
-   :doc:`Installation<../intro/installation>`)
 
-1. Make a new target directory where the data for the experiment will be saved
+0. **Confirm that DySTrack has been installed and tested** (see 
+   :doc:`Installation</intro/installation>`)
 
-2. Start the DySTrack manager in the command line
+1. **Make a new target directory** where the data for the experiment will be
+   saved
+
+2. **Start the DySTrack manager in the command line**
 
    1. Activate the environment in which DySTrack is installed
    2. Locate the config file (in the ``run`` folder) for your experiment
@@ -104,7 +107,7 @@ different microscopes, see the relevant pages in the
 
          python <path-to-config-file.py> <path-to-target-dir> [optional arguments]
 
-3. Configure the microscope software and macro
+3. **Configure the microscope software and macro**
 
    1. Configure and save suitable acquisition settings for prescan and main 
       scan
@@ -112,19 +115,20 @@ different microscopes, see the relevant pages in the
    3. Start the relevant macro editor / automation tool suite
    4. Select your acquisition settings and target directory
 
-4. Double-check that everything is ready to growing
+4. **Double-check that everything is ready to growing**
 
-5. Start the macro/workflow in the microscope software
+5. **Start the macro/workflow in the microscope software**
 
-6. Monitor the microscope for the first few time points to ensure everything is
-   running as intended
+6. **Monitor the microscope for the first few time points to ensure everything 
+   is running as intended**
+   
+   * *Tip:* It can be useful to configure remote access to the microscope PC to 
+     check back at later points if necessary.
 
-   * It can be useful to configure remote access to the microscope PC to check 
-     back at later points if necessary
+7. **After the experiment**
 
-7. After the experiment
-
-   * The DySTrack manager can be stopped by pressing ``ESC`` in the command line
+   * The DySTrack manager can be stopped by pressing ``ESC`` in the command 
+     line
    * The microscope software and hardware should be shut down as usual
    * The main scan images/stacks for each position and time point are saved as 
      separate files

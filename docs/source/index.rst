@@ -89,7 +89,7 @@ A word of warning...
     :class: danger
 
     Modern microscopes are expensive machines, and automating them comes with
-    an inherent risk of damage.
+    an inherent **risk of damage**.
     
     Although DySTrack includes some basic precautions and has been extensively 
     tested, and although several labs have been using (prototypes of) DySTrack 
@@ -98,8 +98,7 @@ A word of warning...
 
     We recommend that installation and initial tests be conducted by expert 
     users with experience in microscopy and coding, and that the microscope be 
-    monitored during initial tests of your DySTrack setup and when running any 
-    newly customized pipelines.
+    monitored during initial tests and when running newly customized pipelines.
 
     **Users are advised that the authors provide no warranty of any kind for 
     DySTrack and are not liable for damages of any kind resulting from its 
