@@ -20,14 +20,14 @@
 1. **Open a Windows command console**
 
    Depending on how python was installed, you may need to specifically open a 
-   "Miniforge Prompt" or "Anaconda Prompt".
+   "Miniforge Prompt" or "Anaconda Prompt", or run ``conda init``.
 
 
 2. **Activate the environment in which DySTrack has been installed**
 
    For example:
 
-   .. code-block:: python
+   .. code-block:: batch
       
       conda activate dystrack
 
@@ -54,9 +54,9 @@
    .. admonition:: Tip
       :class: tip
 
-      Instead of typing the entire paths file path into the console, you can
-      drag and drop the config file and the target directory into the console
-      and the Windows console will automatically write out their paths.
+      Instead of typing the entire file paths into the console, you can drag
+      and drop the config file and the target directory into the console, which
+      will automatically write out the full path.
 
    If everything is configured correctly, you should see the following message:
 

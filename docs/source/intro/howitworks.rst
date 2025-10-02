@@ -115,7 +115,7 @@ different microscopes, see the relevant pages in the
    3. Start the relevant macro editor / automation tool suite
    4. Select your acquisition settings and target directory
 
-4. **Double-check that everything is ready to growing**
+4. **Double-check that everything is ready to go**
 
 5. **Start the macro/workflow in the microscope software**
 
