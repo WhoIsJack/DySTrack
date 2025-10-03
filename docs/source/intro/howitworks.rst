@@ -28,13 +28,13 @@ Broadly speaking, DyStrack consists of the following components:
 The basic way these components interact can be summarized as follows:
 
 .. image:: /images/getting_started/dystrack_architecture_lite.svg
-   :alt: DySTrack flow schematic (light mode)
+   :alt: DySTrack architecture schematic (light mode)
    :width: 90%
    :align: center
    :class: only-light
 
 .. image:: /images/getting_started/dystrack_architecture_dark.svg
-   :alt: DySTrack flow schematic (dark mode)
+   :alt: DySTrack architecture schematic (dark mode)
    :width: 90%
    :align: center
    :class: only-dark
@@ -54,18 +54,6 @@ and triggers stage movement and subsequent acquisitions.
 
 Standard acquisition process
 ----------------------------
-
-.. image:: /images/getting_started/dystrack_schematic_lite.svg
-   :alt: DySTrack pipeline schematic (light mode)
-   :width: 80%
-   :align: center
-   :class: only-light
-
-.. image:: /images/getting_started/dystrack_schematic_dark.svg
-   :alt: DySTrack pipeline schematic (dark mode)
-   :width: 80%
-   :align: center
-   :class: only-dark
 
 Although this is not strictly required, current applications of DySTrack use
 two different acquisition settings:
@@ -88,7 +76,17 @@ prescan at the next position, and so on.
 
 A standard DyStrack experiment thus proceeds as follows:
 
-.. TODO: Create lite/dark vector figure adapted from old experiment process fig
+.. image:: /images/getting_started/dystrack_process_lite.svg
+   :alt: DySTrack process schematic (light mode)
+   :width: 80%
+   :align: center
+   :class: only-light
+
+.. image:: /images/getting_started/dystrack_process_dark.svg
+   :alt: DySTrack process schematic (dark mode)
+   :width: 80%
+   :align: center
+   :class: only-dark
 
 
 
