@@ -1,100 +1,206 @@
-Using DySTrack on the Zeiss LSM880 (ZEN Black)
-==============================================
+DySTrack on the Zeiss LSM880 (ZEN Black)
+========================================
 
-1. Start Anaconda Prompt
---------------------------------
+.. admonition:: tl;dr
+    :class: note
 
-2. Start DySTrack environment and change direction to run folder
---------------------------------
+    If you've done this many times before and just need a quick reminder:
 
-.. code-block:: python
+    #. Create target dir
 
-   conda activate DySTrack
-   D:
-   cd "D:\\Users\\Your Name\\DySTrack/run"
+    #. Start DySTrack manager
 
+       .. code-block:: batch
+        
+           conda activate dystrack
+           python <path-to-config-file.py> <path-to-target-dir> [optional arguments]
 
-3. Start monitoring the experiment folder
---------------------------------
+    #. Configure prescan and main scan settings and save job files
 
-.. code-block:: python
+    #. In MyPiC: import job files, configure image analysis and time course,
+       set positions, set target dir
 
-   python run_lateral_line.py "D:\\Users\\Your Name\\...."
+    #. Double-check that everything is ready, then launch
 
-4. Make prescan and job file settings
---------------------------------
-
-.. note::
-   **Tips:**
-
-   - Stacks must be a range around centre
-   - Keep prescan low resolution and big slice size
-   - To prevent bleaching, keep laser power low and use high gain
-   - Save in a settings folder and not experiment folder
-
-5. Open MyPiC in ZenBlack
---------------------------------
-
-.. image:: ../images/zeiss_880/open_mypic.png
-   :alt: MyPiC in ZenBlack
-   :width: 800px
-   :align: center
-
-6. Import prescan and job files into JobSetter
---------------------------------
-
-.. image:: ../images/zeiss_880/import_settings.png
-   :alt: Import prescan and job files
-   :width: 800px
-   :align: center
-
-7. Add prescan and job settings to pipeline in the right order (prescan first)
---------------------------------
-
-.. image:: ../images/zeiss_880/add_pipeline.png
-   :alt: Add prescan and job files to pipeline
-   :width: 600px
-   :align: center
-
-8. Set timings and image analysis on prescan file
---------------------------------
-
-.. image:: ../images/zeiss_880/analysis_settings.png
-   :alt: Set timings and image analysis on prescan file
-   :width: 600px
-   :align: center
+    #. Ensure everything is running correctly
 
 
-- Method: select ``Online img. analysis``
-- Tick ``Track Z`` and ``Track XY``
-- Tick ``Interval (not delay)`` and set how long you want the interval and how many repititions
+Before you start
+----------------
 
-Example:
-   Every 10 mins for 12 hours → 10 min interval, 72 repetitions.
+.. include:: _includes/generic_before_you_start_info.rst
 
-9. If using multi-positions, set your positions
---------------------------------
 
-- Go to ``Default Positions``
-- Select ``Multiple``
-- ``Mark`` positions (double-check it's centred in live)
 
-.. note:: 
-   **Tip:**
+Part 1: Start the DySTrack manager
+----------------------------------
 
-   - Mark all positions with eyepiece and adjust in live.
+.. include:: _includes/start_dystrack_manager_instructions.rst
 
-10. Select destination folder
---------------------------------
 
-- Use the same folder you’re monitoring in the command line.
-- Tick ``.czi`` as format.
 
-Once everything is set up, press **Play**
+Part 2: Configure acquisition settings
+--------------------------------------
 
-11. Troubleshooting
---------------------------------
+The microscope and sample must be ready for this part.
 
-- If MyPiC fails at any point, try making new prescan and job settings.
-- Then try a MyPiC restart.
-- Then try a full system restart.
+
+1. **Configure the main scan settings and save an example stack (job file)**
+   
+   The main scan produces the actual data of interest for the experiment.
+   
+   It is usually a high-resolution, high-quality configuration using high pixel
+   densities, multiple channels, and either AiryScan (usually in FAST/4y mode)
+   or confocal with averaging optimized for SNR. Z-stacks **must** be a range 
+   around the center. Use high/optimal z-resolution for the main scan.
+
+   Save an example stack in a separate folder for job settings, not in the
+   experiment folder.
+
+   .. admonition:: Tip
+       :class: tip
+       
+       You do not need to acquire an entire stack as an example; if you start
+       the acquisition and immediately stop it, the resulting empty image still
+       contains all the information needed for loading as a job file.
+
+       .. TODO: This may be old/fake news; confirm it!
+
+
+2. **Configure the prescan settings and save as an example stack (job file)**
+
+   .. admonition:: Important
+       :class: important
+       
+       Unlike for the main scan, do **not** use AiryScan for the prescan.
+
+   The prescan is used for DySTrack to find coordinates.
+   
+   To create a suitable prescan configuration, start with the main scan (unless
+   it is AiryScan) and trade off resolution and SNR for speed to the greatest 
+   extent allowed by the image analysis pipeline. Remove any averaging, 
+   substantially reduce pixel density, use only a single channel, and trade off 
+   laser power for gain.
+   
+   Z-stacks **must** again be a range around the center. Use a (very) low 
+   z-resolution for the prescan and include 15-30% spare space outside your
+   sample at the top and bottom (how much is needed depends on the sample and
+   analysis pipeline).
+
+   Save an example stack in a separate folder for job settings, not in the
+   experiment folder.
+
+
+Part 3: Configure MyPiC
+-----------------------
+
+1. **Open the MyPiC pipeline constructor macro**
+
+   .. image:: ../images/zeiss_880/open_mypic.png
+       :alt: Opening MyPiC in ZEN Black
+       :width: 80%
+
+   If this option is not available, MyPiC must first be installed. Speak to an
+   expert user and/or see :doc:`Installation</intro/installation>`.
+
+
+2. **Import the prescan and main scan job files into JobSetter**
+
+   .. image:: ../images/zeiss_880/import_settings.png
+       :alt: Import job files in MyPIC
+       :width: 100%
+
+   (In this example, the main scan is named ``JOB_cldnb``.)
+
+
+3. **Add prescan and main scan jobs to the pipeline**
+
+   .. image:: ../images/zeiss_880/add_pipeline.png
+       :alt: Add prescan and main scan jobs to pipeline
+       :width: 50%
+
+   Ensure they are in the correct order (prescan first).
+
+
+4. **Configure the time course and image analysis parameters**
+
+   .. admonition:: Important
+       :class: important
+       
+       Ensure the prescan job is selected when configuring these settings.
+
+   .. image:: ../images/zeiss_880/analysis_settings.png
+       :alt: Set timings and image analysis on prescan job
+       :width: 50%
+
+   * Method: Select ``Online img. analysis``
+   * Tick ``Track XY`` and ``Track Z`` (if needed)
+   * Tick ``Interval (not delay)`` and set how long you want the interval
+     duration and number of repetitions
+
+     Example: ``Every 10 mins for 12 hours → 10 min interval, 72 repetitions``
+
+
+5. **If using multi-positioning, set your positions**
+
+   * Go to ``Default Positions``
+   * Select ``Multiple``
+   * ``Mark`` positions (double-check in live mode that it is centered in z)
+
+   .. admonition:: Tip
+       :class: tip
+
+       Mark all positions with the eyepiece and adjust in live mode.
+
+
+6. **Select destination folder**
+
+   In ``Saving``, select the target directory. This is the same folder that is
+   being monitored by the DySTrack manager.
+
+   Tick ``.czi`` as format.
+
+
+7. **Pause for a moment to mentally review whether everything is ready**
+
+
+8. **Start the experiment**
+
+
+.. admonition:: **Troubleshooting**
+    :class: note
+
+    If MyPiC fails at any point during setup:
+       
+    * Try making new job files (reloading old ones can sometimes cause issues)
+    * Then try a MyPiC restart
+    * Then try a full system restart
+
+
+
+Part 4: Look after your experiment
+----------------------------------
+
+Monitor the microscope for the first few time points to ensure everything is 
+working as intended.
+
+A prescan should be rapidly acquired and saved in the target directory. The
+DySTrack command line should then report detection of the prescan, execution of
+the image analysis pipeline, and then pushing of new coordinates, which in turn
+should trigger the main scan and then the next position / time point.
+
+.. admonition:: Tip
+    :class: tip
+
+    It's useful to configure remote access to the microscope PC to periodically
+    check in on the experiment.
+
+**After the experiment:**
+
+* The DySTrack manager can be stopped by pressing ``Esc`` in the command line
+
+* The microscope software and hardware should be shut down as usual
+
+* The main scan images/stacks for each position and time point are saved as 
+  separate files
+

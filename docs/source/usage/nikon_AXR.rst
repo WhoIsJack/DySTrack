@@ -145,19 +145,27 @@ The microscope and sample must be ready for this part.
 
 1. **Configure or reload the main scan Experiment Setup**
    
-   The main scan produces the actual data of interest for the experiment. It is
-   usually a high-resolution, high-quality configuration with (as required)
-   averaging optimized for SNR, high pixel density (Nyquist if needed), and
-   multiple channels.
+   The main scan produces the actual data of interest for the experiment.
+   
+   It is usually a high-resolution, high-quality configuration with averaging 
+   optimized for SNR, high pixel density (Nyquist if needed), and multiple 
+   channels.
 
 
 2. **Configure or reload the prescan Experiment Setup**
 
-   The prescan is used for DySTrack to find coordinates. To create a suitable
-   prescan configuration, start with the main scan and trade off resolution and 
-   SNR for speed to the greatest extent allowed by the image analysis pipeline. 
-   Remove any averaging, substantially reduce pixel density, use only a single
-   channel, and trade off laser power for gain. 
+   The prescan is used for DySTrack to find coordinates.
+   
+   To create a suitable prescan configuration, start with the main scan and 
+   trade off resolution and SNR for speed to the greatest extent allowed by the
+   image analysis pipeline. Remove any averaging, substantially reduce pixel 
+   density, use only a single channel, and trade off laser power for gain. 
+
+   .. admonition:: Tip
+       :class: tip
+       
+       Rename your Experiment Setups to reflect whether they are main scan or
+       prescan settings.
  
 
 
@@ -243,9 +251,9 @@ Part 4: Start the JOBS workflow
    We recommend the following process to find good z-stack settings:
 
    1. Go to range mode
-   2. Find and set the top of your stack; include 30-40% spare space past your 
-      sample
-   3. Find and set the bottom of your stack; include 30-40% spare space past
+   2. Find and set the top of your stack; include 15-30% spare space past your 
+      sample (how much is needed depends on the sample and analysis pipeline)
+   3. Find and set the bottom of your stack; include 15-30% spare space past
       your sample
    4. Double-click the central coordinates to move the focus to the center
    5. Swap to centered mode
