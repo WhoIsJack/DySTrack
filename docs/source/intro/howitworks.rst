@@ -27,17 +27,15 @@ Broadly speaking, DyStrack consists of the following components:
 
 The basic way these components interact can be summarized as follows:
 
-.. TODO: Create figure variant where manager and pipelines are separated!
-
-.. image:: /images/getting_started/dystrack_architecture_lite.png
+.. image:: /images/getting_started/dystrack_architecture_lite.svg
    :alt: DySTrack flow schematic (light mode)
-   :width: 70%
+   :width: 90%
    :align: center
    :class: only-light
 
-.. image:: /images/getting_started/dystrack_architecture_dark.png
+.. image:: /images/getting_started/dystrack_architecture_dark.svg
    :alt: DySTrack flow schematic (dark mode)
-   :width: 70%
+   :width: 90%
    :align: center
    :class: only-dark
 
@@ -56,6 +54,18 @@ and triggers stage movement and subsequent acquisitions.
 
 Standard acquisition process
 ----------------------------
+
+.. image:: /images/getting_started/dystrack_schematic_lite.svg
+   :alt: DySTrack pipeline schematic (light mode)
+   :width: 80%
+   :align: center
+   :class: only-light
+
+.. image:: /images/getting_started/dystrack_schematic_dark.svg
+   :alt: DySTrack pipeline schematic (dark mode)
+   :width: 80%
+   :align: center
+   :class: only-dark
 
 Although this is not strictly required, current applications of DySTrack use
 two different acquisition settings:
