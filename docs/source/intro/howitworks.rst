@@ -94,8 +94,10 @@ different microscopes, see the relevant pages in the
 0. **Confirm that DySTrack has been installed and tested** (see 
    :doc:`Installation</intro/installation>`)
 
+
 1. **Make a new target directory** where the data for the experiment will be
    saved
+
 
 2. **Start the DySTrack manager in the command line**
 
@@ -107,6 +109,7 @@ different microscopes, see the relevant pages in the
 
          python <path-to-config-file.py> <path-to-target-dir> [optional arguments]
 
+
 3. **Configure the microscope software and macro**
 
    1. Configure and save suitable acquisition settings for prescan and main 
@@ -115,9 +118,12 @@ different microscopes, see the relevant pages in the
    3. Start the relevant macro editor / automation tool suite
    4. Select your acquisition settings and target directory
 
+
 4. **Double-check that everything is ready to go**
 
+
 5. **Start the macro/workflow in the microscope software**
+
 
 6. **Monitor the microscope for the first few time points to ensure everything 
    is running as intended**
@@ -125,9 +131,10 @@ different microscopes, see the relevant pages in the
    * *Tip:* It can be useful to configure remote access to the microscope PC to 
      check back at later points if necessary.
 
+
 7. **After the experiment**
 
-   * The DySTrack manager can be stopped by pressing ``ESC`` in the command 
+   * The DySTrack manager can be stopped by pressing ``Esc`` in the command 
      line
    * The microscope software and hardware should be shut down as usual
    * The main scan images/stacks for each position and time point are saved as 

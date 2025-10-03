@@ -66,3 +66,6 @@
        Monitoring target dir(s) for new files...
        Press <Esc> to terminate.
 
+   In addition, you should see a file called ``dystrack_coords.txt`` appear in
+   your target directory. The DySTrack manager will write detected coordinates
+   to this file.

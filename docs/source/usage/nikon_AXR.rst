@@ -78,7 +78,7 @@ The DySTrack repo comes with two JOBS Definitions in the ``Macros`` folder:
 .. admonition:: GA3 is also needed...
     :class: warning
 
-    Regrettably, one particular step of the DySTrack JOBS pipeline requires a
+    Unfortunately, one particular step of the DySTrack JOBS pipeline requires a
     GA3 Script. This should be imported before JOBS Definitions are imported.
 
 
@@ -133,6 +133,10 @@ double-clicking on it. We recommend making a copy of an existing JOBS
 definition before trying out any modifications on it.
 
 
+.. include:: /_includes/generic_unstable_software_warning.rst
+
+
+
 Part 3: Configure acquisition settings
 --------------------------------------
 
@@ -160,6 +164,8 @@ The microscope and sample must be ready for this part.
 Part 4: Start the JOBS workflow
 -------------------------------
 
+.. TODO: Double-check that this is all still correct in the latest version!
+
 1. **Enter the** ``JOBS/GA3`` **tab (at the top):**
 
    .. image:: /images/nikon_AXR/JOBS-GA3_tab.png
@@ -181,13 +187,138 @@ Part 4: Start the JOBS workflow
    button** to open the JOBS wizard.
 
 
-3. **In the JOBS wizard...** 
+3. **Select your target directory as** ``Alternative Storage Location`` 
 
-   WIP!
+   .. image:: /images/nikon_AXR/JOBS_wizard_storage_location.png
+       :alt: JOBS wizard target directory screenshot
+       :width: 90%
+
+   For the two radio buttons, keep the top option selected (all runs into 
+   specified folder). If you instead need to use automatically generated
+   subfolders in your experiment, you must provide the ``--recurse True`` 
+   option when starting the DySTrack manager, otherwise it will not detect 
+   prescans placed in subfolders.
+
+
+4. **Set the duration and acquisition period for your time course**
+
+   .. image:: /images/nikon_AXR/JOBS_wizard_time_course_settings.png
+       :alt: JOBS wizard time course settings screenshot
+       :width: 90%
+
+   Calculate sufficient time for prescan, image analysis (usually quick), and 
+   main scan (usually the bottleneck). Multiply by the number of positions when
+   using multi-positioning and add a bit of buffer time.
+
+   .. admonition:: Important
+       :class: important
+       
+       Ensure ``Split Storage per Time point`` is ticked!
+
+
+5. **If using multiple positions, set the positions**
+   
+   .. TODO!
+
+   TODO: [Add screenshot and any further info as needed.]
+
+
+6. **Configure the settings for the prescan**
+
+   In the first ND Acqusition block, select your prescan Experiment Setup in
+   the Lambda tab, then configure the z-stack in the Z tab.
+
+   .. image:: /images/nikon_AXR/JOBS_wizard_prescan_selection.png
+       :alt: JOBS wizard prescan lambda settings
+       :width: 70%
+   
+   The prescan should have a low z-resolution and wide z-range.
+
+   .. admonition:: Important
+       :class: important
+
+       The z-stack must be defined around the center; see buttons marked 5 and 
+       6 in the step-by-step guide below!
+   
+   We recommend the following process to find good z-stack settings:
+
+   1. Go to range mode
+   2. Find and set the top of your stack; include 30-40% spare space past your 
+      sample
+   3. Find and set the bottom of your stack; include 30-40% spare space past
+      your sample
+   4. Double-click the central coordinates to move the focus to the center
+   5. Swap to centered mode
+
+   .. image:: /images/nikon_AXR/JOBS_wizard_prescan_zstack_1to5.png
+       :alt: JOBS wizard prescan zstack settings steps 1 to 5
+       :width: 70%
+
+   6. Click the ``relative`` button.
+   7. Set an appropriate step size (large for prescan) / step number (button 8;
+      small for prescan)
+
+   .. image:: /images/nikon_AXR/JOBS_wizard_prescan_zstack_6to8.png
+       :alt: JOBS wizard prescan zstack settings steps 6 to 8
+       :width: 70%
+
+   .. admonition:: Tip
+       :class: tip
+
+       If using a Piezo stage, reset the Piezo (button marked ``+``) to ensure 
+       it is centered near your samples. For multi-positioning, issues with the 
+       piezo range may occur if samples are mounted at very different distances 
+       from the cover slip.
+
+
+7. **Configure the settings for the main scan**
+
+   In the second ND Acqusition block, select your main scan Experiment Setup in
+   the Lambda tab, then configure the z-stack in the Z tab.
+
+   Proceed exactly as with the prescan, but now use a higher z-resolution (use
+   Nyquist if desired) and with less spare space around the sample.
+
+   .. admonition:: Important
+       :class: important
+
+       Again, the z-stack must be defined around the center; see above.
+
+
+8. **Pause for a moment to mentally review whether everything is ready**
+
+
+9. **Start the experiment**
+
 
 
 Part 5: Look after your experiment
 ----------------------------------
 
-TODO!
+Monitor the microscope for the first few time points to ensure everything is 
+working as intended.
+
+A prescan should be rapidly acquired and saved in the target directory. The
+DySTrack command line should then report detection of the prescan, execution of
+the image analysis pipeline, and then pushing of new coordinates.
+
+NIS Elements will appear "frozen" while awaiting new coordinates from the
+DySTrack manager. As soon as the coordinates are written, it should "unfreeze"
+and trigger main scan acquisition, then move on to the next position / time 
+point.
+
+.. admonition:: Tip
+    :class: tip
+
+    It's useful to configure remote access to the microscope PC to periodically
+    check in on the experiment.
+
+**After the experiment:**
+
+* The DySTrack manager can be stopped by pressing ``Esc`` in the command line
+
+* The microscope software and hardware should be shut down as usual
+
+* The main scan images/stacks for each position and time point are saved as 
+  separate files
 
