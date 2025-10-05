@@ -1,6 +1,7 @@
 DySTrack on the Zeiss LSM880 (ZEN Black)
 ========================================
 
+
 .. admonition:: tl;dr
     :class: note
 
@@ -23,6 +24,7 @@ DySTrack on the Zeiss LSM880 (ZEN Black)
     #. Double-check that everything is ready, then launch
 
     #. Ensure everything is running correctly
+
 
 
 Before you start
@@ -195,6 +197,7 @@ should trigger the main scan and then the next position / time point.
     It's useful to configure remote access to the microscope PC to periodically
     check in on the experiment.
 
+
 **After the experiment:**
 
 * The DySTrack manager can be stopped by pressing ``Esc`` in the command line
@@ -203,4 +206,7 @@ should trigger the main scan and then the next position / time point.
 
 * The main scan images/stacks for each position and time point are saved as 
   separate files
+
+* Some advice on how to postprocess DySTrack data can be found 
+  :doc:`here<postprocessing>`.
 

@@ -23,7 +23,7 @@
 * **Confirm that a suitable image analysis pipeline for your experiment is 
   available**
 
-  See :doc:`available DySTrack pipelines</pipelines/available>` for an overview
+  See :doc:`Available DySTrack pipelines</pipelines/available>` for an overview
   of existing pipelines that come with the DySTrack repo. For information on
   how to develop your own custom pipeline (advanced), we recommend reviewing
   the :doc:`Anatomy of DySTrack pipelines</pipelines/anatomy>` and 

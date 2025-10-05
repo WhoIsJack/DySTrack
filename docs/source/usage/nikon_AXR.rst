@@ -1,6 +1,7 @@
 DySTrack on the Nikon AX R (NIS Elements)
 =========================================
 
+
 .. admonition:: tl;dr
     :class: note
 
@@ -22,6 +23,7 @@ DySTrack on the Nikon AX R (NIS Elements)
     #. Double-check that everything is ready, then launch
 
     #. Ensure everything is running correctly
+
 
 
 Before you start
@@ -321,6 +323,7 @@ point.
     It's useful to configure remote access to the microscope PC to periodically
     check in on the experiment.
 
+
 **After the experiment:**
 
 * The DySTrack manager can be stopped by pressing ``Esc`` in the command line
@@ -329,4 +332,7 @@ point.
 
 * The main scan images/stacks for each position and time point are saved as 
   separate files
+
+* Some advice on how to postprocess DySTrack data can be found 
+  :doc:`here<postprocessing>`.
 
