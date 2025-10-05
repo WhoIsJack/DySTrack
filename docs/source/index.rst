@@ -126,13 +126,13 @@ Table of contents
 .. toctree::
     :maxdepth: 2
 
-    Using DySTrack<usage/index>
+    Running DySTrack<usage/index>
 
 
 .. toctree::
     :maxdepth: 2
 
-    Developing DySTrack pipelines<develop/index>
+    Image analysis pipelines<pipelines/index>
 
 
 .. toctree::
