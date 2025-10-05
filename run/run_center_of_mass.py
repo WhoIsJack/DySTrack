@@ -5,11 +5,11 @@ Created on Fri Jun 20 19:30:55 2025
 @authors:   Jonas Hartmann @ Mayor lab (UCL)
             Zimeng Wu @ Wong group (UCL)
 
-@descript:  DySTrack config file for tracking/stabilization of neuromast organs
-            deposited by the zebrafish posterior lateral line primordium.
+@descript:  DySTrack config file for tracking/stabilization of tissues using
+            generic center-of-mass tracking.
 
 @usage:     From the command line (with the dystrack python environment active)
-            run `python run_lateral_line_organ.py <target_dir> [args]`.
+            run `python run_center_of_mass.py <target_dir> [args]`.
 """
 
 ### Prep
@@ -54,7 +54,7 @@ from dystrack.pipelines.center_of_mass import analyze_image as image_analysis_fu
 #   function's default values will be used
 
 analysis_kwargs = {
-    "method"      : "objct",  # Use "objct" for cldnB:EGFP, "otsu" otherwise
+    "method"      : "intensity",  # "intensity", "otsu", or "objct"
     "gauss_sigma" : 3,
     "verbose"     : True,
     "show"        : False,
@@ -96,7 +96,7 @@ manager_kwargs = {
 
 # - Ensure DySTrack is installed and the right python environment is active
 # - Ensure you are in the `DySTrack\run` folder, where this file is located
-# - Start DySTrack by running `python run_lateral_line_organ.py <target_dir> [args]`
+# - Start DySTrack by running `python run_center_of_mass.py <target_dir> [args]`
 
 if __name__ == "__main__":
     import sys
@@ -116,6 +116,6 @@ if __name__ == "__main__":
 #   are user-facing and *not* installed along with the DySTrack package;
 #   e.g. `sys.path.insert(0, r"<<path_to_run_dir>>")`
 # - You can then load the configurations specified here using e.g.
-#   `import run.run_lateral_line_organ as run_llo`
+#   `import run.run_center_of_mass as run_com`
 # - To run DySTrack, import `dystrack.manager.manager.run_dystrack_manager` and
 #   call it with the appropriate arguments (see its doc string)
