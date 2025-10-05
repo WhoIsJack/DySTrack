@@ -38,10 +38,10 @@ def analyze_image(
 
     The following masking methods are currently implemented:
         - "intensity": get center of mass directly from intensity values;
-          best for tracking mosaically labeled tissues
+          best for tracking sparsely labeled tissues
         - "otsu": use Otsu's method to threshold, then retain only the largest
           object and get the center of mass of its mask; best for tracking
-          compact tissues/objects
+          compact objects / densely labeled tissues.
         - "objct": use object-count method to threshold, then retain only the
           largest object and get the center of mass of its mask; best for
           tracking membrane-labeled tissues
