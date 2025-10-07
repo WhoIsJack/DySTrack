@@ -62,6 +62,7 @@ html_theme_options = {
   "secondary_sidebar_items": [],
   "logo": {
     "alt_text": "DySTrack - Home",
+    "text": "DySTrack Docs",
     "image_light": "images/logos/DySTrack_logo_lite.svg",
     "image_dark": "images/logos/DySTrack_logo_dark.svg"
     }

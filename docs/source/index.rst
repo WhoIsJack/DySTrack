@@ -1,6 +1,23 @@
-DySTrack - Dynamic Sample Tracking
-==================================
+.. image:: images/logos/DySTrack_logo_lite.svg
+   :alt: DySTrack Logo Light
+   :width: 150px
+   :align: right
+   :class: only-light
 
+.. image:: images/logos/DySTrack_logo_dark.svg
+   :alt: DySTrack Logo Dark
+   :width: 150px
+   :align: right
+   :class: only-dark
+
+********
+DySTrack 
+********
+********
+Dynamic Sample Tracking
+********
+
+|
 
 **DySTrack ("diss track")** is a simple, modular, python-based, open-source 
 **automated feedback microscopy tool** for live tracking of moving samples like 
