@@ -1,23 +1,19 @@
-.. image:: images/logos/DySTrack_logo_lite.svg
-   :alt: DySTrack Logo Light
-   :width: 150px
-   :align: right
-   :class: only-light
+.. DySTrack - Dynamic Sample Tracking
+.. ==================================
 
-.. image:: images/logos/DySTrack_logo_dark.svg
-   :alt: DySTrack Logo Dark
-   :width: 150px
-   :align: right
-   :class: only-dark
+.. raw:: html
 
-********
-DySTrack 
-********
-********
-Dynamic Sample Tracking
-********
+    <section id="DySTrack - Dynamic Sample Tracking">  # DOESN'T WORK YET TO SET THE NAME OF THE WEBPAGE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+    <div style="display: flex; align-items: end; justify-content: space-between; margin-bottom: 20px">
+        <h1 style="line-height: 1">
+        DySTrack - Dynamic Sample Tracking
+        <a class="headerlink" href="#dystrack-dynamic-sample-tracking" title="Link to this heading">#</a>
+        </h1>
+        <img src="_static/DySTrack_logo_lite.svg" class="only-light" alt="DySTrack Logo Light" style="height: 120px; transform: translateY(-4px)">
+        <img src="_static/DySTrack_logo_dark.svg" class="only-dark" alt="DySTrack Logo Dark" style="height: 120px; transform: translateY(-4px)">
+    </div>
 
-|
+
 
 **DySTrack ("diss track")** is a simple, modular, python-based, open-source 
 **automated feedback microscopy tool** for live tracking of moving samples like 
