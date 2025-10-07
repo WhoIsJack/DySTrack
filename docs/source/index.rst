@@ -1,16 +1,28 @@
-.. DySTrack - Dynamic Sample Tracking
-.. ==================================
-
 .. raw:: html
 
-    <section id="DySTrack - Dynamic Sample Tracking">  # DOESN'T WORK YET TO SET THE NAME OF THE WEBPAGE!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    <div style="display: flex; align-items: end; justify-content: space-between; margin-bottom: 20px">
-        <h1 style="line-height: 1">
-        DySTrack - Dynamic Sample Tracking
-        <a class="headerlink" href="#dystrack-dynamic-sample-tracking" title="Link to this heading">#</a>
-        </h1>
-        <img src="_static/DySTrack_logo_lite.svg" class="only-light" alt="DySTrack Logo Light" style="height: 120px; transform: translateY(-4px)">
-        <img src="_static/DySTrack_logo_dark.svg" class="only-dark" alt="DySTrack Logo Dark" style="height: 120px; transform: translateY(-4px)">
+    <!-- Extra empty space above title -->
+    <p></p>  
+
+DySTrack - Dynamic Sample Tracking
+==================================
+
+.. raw:: html
+    
+    <!-- Logo inserted next to title, with hacked custom spacings... -->
+    <div style="display: flex; justify-content: space-between; margin-bottom: -100px">
+        <p></p>
+        <img 
+            src="_static/DySTrack_logo_dark.svg" 
+            class="only-dark" 
+            alt="DySTrack Logo Dark" 
+            style="height: 120px; transform: translate(-25px, -110px)"
+        >
+        <img 
+            src="_static/DySTrack_logo_lite.svg" 
+            class="only-light" 
+            alt="DySTrack Logo Light" 
+            style="height: 120px; transform: translate(-25px, -110px)"
+        >
     </div>
 
 
