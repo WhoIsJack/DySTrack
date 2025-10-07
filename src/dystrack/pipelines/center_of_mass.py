@@ -136,7 +136,7 @@ def analyze_image(
 
     ### Method "otsu": use Otsu's method for masking
 
-    if method == "otsu":
+    elif method == "otsu":
 
         # Run Otsu thresholding
         threshold = threshold_otsu(raw)
@@ -196,7 +196,7 @@ def analyze_image(
     # NOTE: This is an old approach that has empirically proven to work well
     # with bright membrane-labeled tissues like cldnB:EGFP in the lateral line.
 
-    if method == "objct":
+    elif method == "objct":
 
         # Preparations
         thresholds = np.arange(0, 256, 1)
@@ -307,6 +307,13 @@ def analyze_image(
                 plt.title("Mask after clean-up")
                 plt.show(block=False)
                 plt.pause(0.001)
+    
+    ### Invalid method
+
+    else:
+        raise NotImplementedError(
+            f"{method} is not a valid method for center_of_mass."
+        )
 
     ### Find new z and y positions
 
