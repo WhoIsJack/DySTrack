@@ -50,11 +50,7 @@ coords_fpath = os.path.join(output_folder, "dystrack_coords.txt")
 with open(coords_fpath, "r") as infile:
     lines_read = len(infile.readlines())
 
-print(lines_read)
-
 # Get positions
-Zen.Application.Documents.RemoveAll()
-
 experiment1 = ZenExperiment()
 experiment1.Load(prescan_name)
 experiment1.SetActive()
@@ -139,7 +135,7 @@ for i in range(max_iterations):
         y_coord = output_experiment2.GetPositionLeftTop().Y
         z_coord = z_pos
 
-        # Convert from center-of-image FOR to the stage's FOR
+        # Calcualte new stage coordinates
         new_pos_x = x_coord + scaled_x
         new_pos_y = y_coord + scaled_y
         new_pos_z = z_coord + scaled_z
