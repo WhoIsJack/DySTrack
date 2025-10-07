@@ -307,7 +307,7 @@ def analyze_image(
                 plt.title("Mask after clean-up")
                 plt.show(block=False)
                 plt.pause(0.001)
-    
+
     ### Invalid method
 
     else:
