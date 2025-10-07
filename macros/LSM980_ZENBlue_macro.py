@@ -17,6 +17,7 @@ from time import sleep
 from System import DateTime
 from System.IO import Path
 
+
 ### ---------------------------------------------------------------------------
 ### USER INPUT
 ### ---------------------------------------------------------------------------
@@ -135,7 +136,7 @@ for i in range(max_iterations):
         y_coord = output_experiment2.GetPositionLeftTop().Y
         z_coord = z_pos
 
-        # Calcualte new stage coordinates
+        # Calculate new stage coordinates
         new_pos_x = x_coord + scaled_x
         new_pos_y = y_coord + scaled_y
         new_pos_z = z_coord + scaled_z
