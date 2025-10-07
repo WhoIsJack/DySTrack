@@ -53,8 +53,8 @@ from dystrack.pipelines.center_of_mass import analyze_image as image_analysis_fu
 # - For any arguments not specified either here or in the command line, the
 #   function's default values will be used
 
-# Method: Use "objct" for cldnB:EGFP, "raw" for very sparse labeling, and 
-#         "otsu" otherwise
+# Method: Use "objct" for cldnB:EGFP, "intensity" for very sparse labeling, and 
+#         "otsu" otherwise.
 analysis_kwargs = {
     "method"      : "otsu",
     "gauss_sigma" : 3,

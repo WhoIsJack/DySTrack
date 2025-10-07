@@ -138,7 +138,7 @@ def test_analyze_image_2D_intensity_success(mocker, capsys):
 
     # Run test
     output = center_of_mass.analyze_image(
-        os.path.join(testpath, fname), verbose=True
+        os.path.join(testpath, fname), method="intensity", verbose=True
     )
     output = list(output)
     output[:3] = [f"{c:.4f}" for c in output[:3]]
@@ -268,3 +268,14 @@ def test_analyze_image_errors_nothresh(mocker):
     with pytest.raises(Exception) as err:
         center_of_mass.analyze_image("test_path.tiff", method="objct")
     assert "THRESHOLD DETECTION FAILED" in str(err)
+
+
+def test_analyze_image_errors_invalidmethod(mocker):
+
+    mocker.patch(
+        "dystrack.pipelines.center_of_mass.robustly_load_image_after_write",
+        wraps=lambda fp: np.zeros((100, 100), dtype=np.uint8),
+    )
+    with pytest.raises(NotImplementedError) as err:
+        center_of_mass.analyze_image("test_path.tiff", method="bad_method")
+    assert "bad_method is not a valid method for center_of_mass." in str(err)
