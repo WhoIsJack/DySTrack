@@ -28,6 +28,7 @@ def analyze_image(
     channel=None,
     gauss_sigma=3.0,
     count_reduction=0.5,
+    warn_8bit=True,
     show=False,
     verbose=False,
 ):
@@ -53,6 +54,9 @@ def analyze_image(
     count_reduction : float, optional, default 0.5
         Factor by which object count has to be reduced below its initial peak
         for a threshold value to be accepted.
+    warn_8bit : bool, optional, default True
+        Whether to emit a warning when a non-8bit image was found and was down-
+        converted to 8bit using min-max rescaling.
     show : bool, optional, default False
         Whether to show the threshold plot and the mask. Default is False.
         Note that figures will be shown without blocking execution, so if many
@@ -99,7 +103,8 @@ def analyze_image(
     # If the image is not 8bit, convert it
     # NOTE: This conversion scales min to 0 and max to 255!
     if raw.dtype != np.uint8:
-        warn("Image converted down to 8bit using min-max scaling!")
+        if warn_8bit:
+            warn("Image converted down to 8bit using min-max scaling!")
         raw = (
             (raw.astype(float) - raw.min()) / (raw.max() - raw.min()) * 255
         ).astype(np.uint8)

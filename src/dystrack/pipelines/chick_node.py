@@ -22,7 +22,9 @@ from dystrack.pipelines.utilities.loading import (
 )
 
 
-def analyze_image(target_path, channel=None, show=False, verbose=False):
+def analyze_image(
+    target_path, channel=None, warn_8bit=True, show=False, verbose=False
+):
     """Compute new coordinates for the scope to track the developing chick node
     during axis elongation based on a 2D or 3D image. Stable node coordinates
     are inferred by fitting Gaussians to the intensity profiles in z and y, and
@@ -35,6 +37,9 @@ def analyze_image(target_path, channel=None, show=False, verbose=False):
     channel : int, optional, default None
         Index of channel to use for masking in case of multi-channel images.
         If not specified, a single-channel image is assumed.
+    warn_8bit : bool, optional, default True
+        Whether to emit a warning when a non-8bit image was found and was down-
+        converted to 8bit using min-max rescaling.
     show : bool, optional, default False
         Whether to show various intermediate results. Default is False.
         Note that figures will be shown without blocking execution, so if many
@@ -81,7 +86,8 @@ def analyze_image(target_path, channel=None, show=False, verbose=False):
     # If the image is not 8bit, convert it
     # NOTE: This conversion scales min to 0 and max to 255!
     if raw.dtype != np.uint8:
-        # warn("Image converted down to 8bit using min-max scaling!")
+        if warn_8bit:
+            warn("Image converted down to 8bit using min-max scaling!")
         raw = (
             (raw.astype(float) - raw.min()) / (raw.max() - raw.min()) * 255
         ).astype(np.uint8)

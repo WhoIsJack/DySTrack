@@ -53,6 +53,7 @@ from dystrack.pipelines.chick_node import analyze_image as image_analysis_func
 #   function's default values will be used
 
 analysis_kwargs = {
+    "warn_8bit"   : False,  # AXR prescans are always 16bit, so silence warning
     "verbose"     : True,
     "show"        : False,
 }

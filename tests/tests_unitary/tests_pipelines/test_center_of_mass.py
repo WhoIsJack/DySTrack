@@ -214,7 +214,7 @@ def test_analyze_image_2D_objct_success(mocker, capsys):
         assert eso in stdout
 
 
-def test_analyze_image_errors_dimchecks(mocker):
+def test_analyze_image_errors_inputchecks(mocker):
 
     # Too many dimensions
     mocker.patch(
@@ -243,6 +243,10 @@ def test_analyze_image_errors_dimchecks(mocker):
         center_of_mass.analyze_image("test_path.tiff", channel=0)
     assert "CHANNEL given but image dimensionality is <3!" in str(err)
 
+
+def test_analyze_image_warnings_inputchecks(mocker):
+    # Note: Error wrapping is done for perf (to halt function at warning)
+
     # Channel given but large first dimension
     mocker.patch(
         "dystrack.pipelines.center_of_mass.robustly_load_image_after_write",
@@ -253,6 +257,17 @@ def test_analyze_image_errors_dimchecks(mocker):
             warnings.simplefilter(action="error")
             center_of_mass.analyze_image("test_path.tiff", channel=0)
     assert "CHANNEL given but image dim 0 is of size 10!" in str(err)
+
+    # Conversion to 8bit
+    mocker.patch(
+        "dystrack.pipelines.center_of_mass.robustly_load_image_after_write",
+        wraps=lambda fp: np.zeros((3, 5, 5), dtype=np.uint16),
+    )
+    with pytest.raises(Exception) as err:
+        with warnings.catch_warnings():
+            warnings.simplefilter(action="error")
+            center_of_mass.analyze_image("test_path.tiff")
+    assert "Image converted down to 8bit using min-max scaling!" in str(err)
 
 
 def test_analyze_image_errors_nothresh(mocker):
