@@ -48,10 +48,10 @@ def test_analyze_image_3D_success_early(mocker, capsys):
     fname = "test-cnode_early_prescan.tiff"
 
     # Expectations
-    expected_output = ["10.8574", "258.2661", "369.8943", "OK", {}]
+    expected_output = ["9.1426", "258.2661", "369.8943", "OK", {}]
     expected_stdouts = [
         "Loaded image of shape: (21, 512, 512)",
-        "Resulting coords (zyx): 10.8574, 258.2661, 369.8943",
+        "Resulting coords (zyx): 9.1426, 258.2661, 369.8943",
     ]
 
     # Run test and compare results
@@ -67,10 +67,10 @@ def test_analyze_image_3D_success_late(mocker, capsys):
     fname = "test-cnode_late_prescan.tiff"
 
     # Expectations
-    expected_output = ["10.4417", "269.4593", "373.6161", "OK", {}]
+    expected_output = ["9.5583", "269.4593", "373.6161", "OK", {}]
     expected_stdouts = [
         "Loaded image of shape: (21, 512, 512)",
-        "Resulting coords (zyx): 10.4417, 269.4593, 373.6161",
+        "Resulting coords (zyx): 9.5583, 269.4593, 373.6161",
     ]
 
     # Run test and compare results

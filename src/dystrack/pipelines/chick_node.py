@@ -291,11 +291,6 @@ def analyze_image(target_path, channel=None, show=False, verbose=False):
             warn("z_pos < z_limit_bot; using z_limit_bot!")
             z_pos = z_limit_bot
 
-        # Invert resulting z_position for scope frame of reference
-        # FIXME: This should be removed and integrated into the JOBS scripts to
-        #        make the pipelines themselves all consistent!
-        z_pos = (raw.shape[0] - 1) - z_pos
-
     ### Return results
 
     if verbose:
