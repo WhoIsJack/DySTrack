@@ -1,7 +1,4 @@
-.. raw:: html
-
-    <!-- Extra empty space above title -->
-    <p></p>  
+.. include:: /_includes/add_a_bit_of_extra_empty_space.rst
 
 DySTrack - Dynamic Sample Tracking
 ==================================

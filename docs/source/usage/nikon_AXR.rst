@@ -240,11 +240,8 @@ Part 4: Start the JOBS workflow
    .. image:: /images/nikon_AXR/JOBS_wizard_prescan_selection.png
        :alt: JOBS wizard prescan lambda settings
        :width: 70%
-    
-   .. raw:: html
 
-    <!-- Extra empty space beneath image... -->
-    <p></p>  
+   .. include:: /_includes/add_a_bit_of_extra_empty_space.rst
 
    Next, configure the z-stack in the Z tab. The prescan should have a low 
    z-resolution and wide z-range.
@@ -286,10 +283,7 @@ Part 4: Start the JOBS workflow
        :alt: JOBS wizard prescan zstack settings steps 6 to 8
        :width: 70%
 
-   .. raw:: html
-
-    <!-- Extra empty space before next point... -->
-    <p></p>  
+   .. include:: /_includes/add_a_bit_of_extra_empty_space.rst
 
 
 7. **Configure the settings for the main scan**
