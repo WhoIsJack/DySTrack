@@ -113,10 +113,24 @@ def test_run_dystrack_manager(capsys):
             with open(stdout_fpath, "w") as outfile:
                 outfile.write(captured.out)
 
-        # Compare against reference file (with updated testdir time label)
+        # Get reference file for comparison
         with open(stdout_fpath, "r") as infile:
             check_captured = infile.read()
-        assert captured.out == check_captured
+
+        # Drop total checks made from reference
+        # Note: The exact number here is unstable due to runtime variations!
+        check_captured = check_captured.split("\n")
+        check_captured = [
+            cc for cc in check_captured if "Total checks made:" not in cc
+        ]
+        check_captured = "\n".join(check_captured)
+
+        # Drop total checks made from capture
+        captured = captured.out.split("\n")
+        captured = [cc for cc in captured if "Total checks made:" not in cc]
+        captured = "\n".join(captured)
+
+        assert captured == check_captured
 
     # Check resulting dystrack_coords.txt file
     with open(os.path.join(testdir, "dystrack_coords.txt"), "r") as infile:
