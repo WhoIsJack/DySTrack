@@ -43,8 +43,8 @@ def analyze_image(
           object and get the center of mass of its mask; best for tracking
           compact objects / densely labeled tissues.
         - "objct": use object-count method to threshold, then retain only the
-          largest object and get the center of mass of its mask; best for
-          tracking membrane-labeled tissues
+          largest object and get the center of mass of its mask; can succeed in
+          some cases where Otsu is thrown off by structured background.
 
     Parameters
     ----------

@@ -53,10 +53,11 @@ from dystrack.pipelines.center_of_mass import analyze_image as image_analysis_fu
 # - For any arguments not specified either here or in the command line, the
 #   function's default values will be used
 
-# Method: Use "objct" for bright membrane labeling, "intensity" for sparse 
-#         labeling, and "otsu" otherwise (compact objects, dense labeling)
+# Method: Try "intensity" for sparse labeling, and "otsu" for most other cases
+#         (compact objects, dense labeling). Try "objct" if there is structured
+#         background that causes trouble for Otsu thresholding.
 analysis_kwargs = {
-    "method"      : "objct",
+    "method"      : "otsu",
     "gauss_sigma" : 3,
     "verbose"     : True,
     "show"        : False,

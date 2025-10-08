@@ -87,16 +87,14 @@ def test_analyze_image_3D_objct_success(mocker, capsys):
 
     # Targets
     testpath = r"./tests/testdata/"
-    fname = (
-        "test-pllo_cyto_880_prescan.czi"  # TODO: Replace with cldnb example!
-    )
+    fname = "test-pllo_mem_980_prescan.czi"
 
     # Expectations
-    expected_output = ["12.6445", "96.9214", "91.4378", "OK", {}]
+    expected_output = ["10.6192", "105.3974", "93.0783", "OK", {}]
     expected_stdouts = [
-        "Loaded image of shape: (25, 200, 200)",
-        "Detected treshold: 111",
-        "Resulting coords (zyx): 12.6445, 96.9214, 91.4378",
+        "Loaded image of shape: (21, 200, 200)",
+        "Detected treshold: 9",
+        "Resulting coords (zyx): 10.6192, 105.3974, 93.0783",
     ]
 
     # For performance, patch loading's sleep
@@ -187,9 +185,7 @@ def test_analyze_image_2D_objct_success(mocker, capsys):
 
     # Targets
     testpath = r"./tests/testdata/"
-    fname = (
-        "test-pllo_cyto_880_prescan2D.tif"  # TODO: Replace with cldnb example!
-    )
+    fname = "test-pllo_cyto_880_prescan2D.tif"
 
     # Expectations
     expected_output = ["0.0000", "96.1637", "91.7534", "OK", {}]
