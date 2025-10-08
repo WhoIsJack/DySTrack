@@ -142,6 +142,10 @@ Part 3: Configure MyPiC
 
      Example: ``Every 10 mins for 12 hours → 10 min interval, 72 repetitions``
 
+     Calculate sufficient time for prescan, image analysis (usually quick), and 
+     main scan (usually the bottleneck). Multiply by the number of positions 
+     when using multi-positioning and add a bit of buffer time.
+
 
 5. **If using multi-positioning, set your positions**
 

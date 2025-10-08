@@ -90,24 +90,20 @@ The DySTrack repo comes with two JOBS Definitions in the ``Macros`` folder:
 
    .. image:: /images/nikon_AXR/JOBS-GA3_tab.png
        :alt: JOBS/GA3 tab screenshot
-       :width: 40%
+       :width: 50%
 
    If this is unavailable, speak to an expert user / microscope administrator.
 
    
 2. Go to ``Analysis Explorer`` (middle-left):
 
-   .. image:: /images/nikon_AXR/JOBS_explorer.png
-       :alt: JOBS/GA3 tab screenshot
+   .. image:: /images/nikon_AXR/Analysis_explorer.png
+       :alt: Analysis explorer screenshot
        :width: 40%
-
-   (It's the tab to the left of the ``JOBS Explorer`` shown here.)
-
-   .. TODO: Replace with more appropriate screen shot!
 
 3. ``Create New >> Import Analysis From File...``
 
-4. Import ``DySTrack\Macros\DySTrack_PointsExpose``
+4. Import ``DySTrack\Macros\AX_GA3_PointsExpose``
 
 5. To test, double-click it and select the file 
    ``DySTrack\tests\testdata\test-pllp_NSPARC_prescan.tiff``
@@ -121,6 +117,10 @@ The DySTrack repo comes with two JOBS Definitions in the ``Macros`` folder:
 
 1. Go to the ``JOBS Explorer`` (next to the ``Analysis Explorer``)
 
+   .. image:: /images/nikon_AXR/JOBS_explorer.png
+       :alt: JOBS explorer screenshot
+       :width: 40%
+
 2. If necessary, create a new empty JOBS Database
 
 3. If necessary, create a new Project (named e.g. ``DySTrack``)
@@ -128,7 +128,7 @@ The DySTrack repo comes with two JOBS Definitions in the ``Macros`` folder:
 4. Find the ``Import from File`` button
    It's a yellow folder icon with a yellow upwards arrow.
 
-5. Import the desired ``.bin`` file from ``DySTrack\Macros``
+5. Import the desired NISJOBS ``.bin`` file(s) from ``DySTrack\Macros``
 
 If necessary, you can now view and edit/customize the JOBS definition by
 double-clicking on it. We recommend making a copy of an existing JOBS
@@ -174,13 +174,11 @@ The microscope and sample must be ready for this part.
 Part 4: Start the JOBS workflow
 -------------------------------
 
-.. TODO: Double-check that this is all still correct in the latest version!
-
 1. **Enter the** ``JOBS/GA3`` **tab (at the top):**
 
    .. image:: /images/nikon_AXR/JOBS-GA3_tab.png
        :alt: JOBS/GA3 tab screenshot
-       :width: 40%
+       :width: 50%
 
    If this is unavailable, speak to an expert user / microscope administrator.
 
@@ -190,8 +188,6 @@ Part 4: Start the JOBS workflow
    .. image:: /images/nikon_AXR/JOBS_explorer.png
        :alt: JOBS/GA3 tab screenshot
        :width: 40%
-
-   .. TODO: Replace with better screen shot!
 
    Select the JOBS Definition for your experiment and **press the green "Play"
    button** to open the JOBS wizard.
@@ -210,11 +206,21 @@ Part 4: Start the JOBS workflow
    prescans placed in subfolders.
 
 
-4. **Set the duration and acquisition period for your time course**
+4. **If using multiple positions, set the positions**
+   
+   .. image:: /images/nikon_AXR/JOBS_wizard_positions.png
+       :alt: JOBS wizard positions screenshot
+       :width: 85%
+
+   If using a single position, just ``Add`` the current position, as shown in 
+   the screenshot.
+
+
+5. **Set the duration and acquisition period for your time course**
 
    .. image:: /images/nikon_AXR/JOBS_wizard_time_course_settings.png
        :alt: JOBS wizard time course settings screenshot
-       :width: 90%
+       :width: 85%
 
    Calculate sufficient time for prescan, image analysis (usually quick), and 
    main scan (usually the bottleneck). Multiply by the number of positions when
@@ -226,29 +232,37 @@ Part 4: Start the JOBS workflow
        Ensure ``Split Storage per Time point`` is ticked!
 
 
-5. **If using multiple positions, set the positions**
-   
-   .. TODO!
-
-   TODO: [Add screenshot and any further info as needed.]
-
-
 6. **Configure the settings for the prescan**
 
    In the first ND Acqusition block, select your prescan Experiment Setup in
-   the Lambda tab, then configure the z-stack in the Z tab.
+   the Lambda tab.
 
    .. image:: /images/nikon_AXR/JOBS_wizard_prescan_selection.png
        :alt: JOBS wizard prescan lambda settings
        :width: 70%
-   
-   The prescan should have a low z-resolution and wide z-range.
+    
+   .. raw:: html
+
+    <!-- Extra empty space beneath image... -->
+    <p></p>  
+
+   Next, configure the z-stack in the Z tab. The prescan should have a low 
+   z-resolution and wide z-range.
 
    .. admonition:: Important
        :class: important
 
        The z-stack must be defined around the center; see buttons marked 5 and 
        6 in the step-by-step guide below!
+
+   .. admonition:: Note
+       :class: note
+
+       If using a Piezo stage, reset the Piezo (button marked ``+``) to ensure 
+       it is centered near your samples.
+       
+       For multi-positioning, issues with the piezo range may occur if samples 
+       are mounted at very different distances from the cover slip.
    
    We recommend the following process to find good z-stack settings:
 
@@ -265,20 +279,17 @@ Part 4: Start the JOBS workflow
        :width: 70%
 
    6. Click the ``relative`` button.
-   7. Set an appropriate step size (large for prescan) / step number (button 8;
-      small for prescan)
+   7. Set an appropriate step size (large for prescan) / step number (field
+      marked 8; small for prescan)
 
    .. image:: /images/nikon_AXR/JOBS_wizard_prescan_zstack_6to8.png
        :alt: JOBS wizard prescan zstack settings steps 6 to 8
        :width: 70%
 
-   .. admonition:: Tip
-       :class: tip
+   .. raw:: html
 
-       If using a Piezo stage, reset the Piezo (button marked ``+``) to ensure 
-       it is centered near your samples. For multi-positioning, issues with the 
-       piezo range may occur if samples are mounted at very different distances 
-       from the cover slip.
+    <!-- Extra empty space before next point... -->
+    <p></p>  
 
 
 7. **Configure the settings for the main scan**

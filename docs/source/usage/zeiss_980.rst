@@ -129,6 +129,11 @@ Part 3: Configure the ZEN Blue macro
    * ``max_iterations``: number of time points
    * ``interval_min``: interval between time points in minutes
 
+     For the interval, calculate sufficient time for prescan, image analysis 
+     (usually quick), and main scan (usually the bottleneck). Multiply by the 
+     number of positions when using multi-positioning and add a bit of buffer
+     time.
+
    .. admonition:: Tip
        :class: tip
 
