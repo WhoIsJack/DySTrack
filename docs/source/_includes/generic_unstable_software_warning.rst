@@ -19,5 +19,3 @@
 
     We recommend working with your manufacturer rep to resolve problems.
 
-    .. _on GitHub: https://github.com/WhoIsJack/DySTrack
-

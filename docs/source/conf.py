@@ -68,3 +68,10 @@ html_theme_options = {
     "image_dark": "images/logos/DySTrack_logo_dark.svg"
     }
 }
+
+# Global substitutions for common links
+rst_epilog = """
+.. _GitHub: https://github.com/WhoIsJack/DySTrack/
+.. _on GitHub: https://github.com/WhoIsJack/DySTrack/
+.. _GitHub repo: https://github.com/WhoIsJack/DySTrack/
+"""
