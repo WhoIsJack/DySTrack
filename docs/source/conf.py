@@ -35,7 +35,8 @@ author = 'Jonas Hartmann, Zimeng Wu'
 
 extensions = [
     'sphinx.ext.autodoc',
-    'sphinx.ext.napoleon'
+    'sphinx.ext.napoleon',
+    'sphinx_toolbox.collapse',
 ]
 
 templates_path = ['_templates']

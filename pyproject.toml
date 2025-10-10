@@ -51,6 +51,7 @@ dev = [
   "sphinx",
   "nbsphinx",
   "pydata-sphinx-theme",
+  "sphinx-toolbox",
   "jupyter",
   "ipykernel"
 ]

@@ -1,4 +1,4 @@
-Developing DySTrack pipelines
-=============================
+Developing image analysis pipelines
+===================================
 
 TODO!
