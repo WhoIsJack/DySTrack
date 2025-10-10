@@ -104,21 +104,21 @@ Part 3: Configure the ZEN Blue macro
 
 1. **Open the ZEN Blue macro editor**
 
-   .. TODO: Add a screen shot!
+  .. image:: ../images/zeiss_980/start_macro.png
+      :alt: Opening Macro Editor in ZEN Blue
+      :width: 80%
 
-   If this option is not available, your ZEN Blue version is lacking the macro
-   module. Speak to an expert user or facility staff, and/or see
-   :doc:`Installation</intro/installation>`.
-
-   .. TODO: Can the above actually happen or does ZEN Blue always come with the
-      ability to run macros? Double-check!
-
+If this option is not available, your ZEN Blue version is lacking the macro
+module. Speak to an expert user or facility staff, and/or see
+:doc:`Installation</intro/installation>`.
 
 2. **Open the DySTrack macro**
 
-   .. TODO: Add a screen shot!
+  .. image:: ../images/zeiss_980/macro_editor_open.png
+    :alt: Macro Editor in ZEN Blue
+    :width: 80% 
 
-   ``LSM980_ZENBlue_macro.py`` in the ``macros`` folder.
+``LSM980_ZENBlue_macro.py`` in the ``macros`` folder.
 
 
 3. **Configure the settings in the** ``USER INPUT`` **section**
@@ -137,11 +137,12 @@ Part 3: Configure the ZEN Blue macro
    .. admonition:: Tip
        :class: tip
 
-       If you stop your current run but need to revert your positions set in 
-       the prescan, click **Reload** in the prescan menu.
-
-       .. TODO: I do not understand what this means; needs clarification [~JH]
-
+       The macro works by taking all the positions set in the prescan and then 
+       clears all positions to populate them back in the prescan mainscan one by
+       one. This means if you stop the experiment to tweak anything you will lose
+       the positions marked in your prescan setting. 
+       If you need to revert back to your positions set in the prescan, click **Reload**
+       in the prescan .czexp menu.
 
 4. **Pause for a moment to mentally review whether everything is ready**
 
