@@ -5,8 +5,8 @@ Image analysis pipelines
     :maxdepth: 2
 
     Available pipelines<available>
-    Anatomy of DySTrack pipelines<anatomy>
-    Developing DySTrack pipelines<develop>
+    Anatomy of a pipeline<anatomy>
+    Developing pipelines<develop>
     Advanced tools, tips, & tricks<advanced>
 
     

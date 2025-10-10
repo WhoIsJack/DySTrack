@@ -1,5 +1,5 @@
-Using DySTrack on other microscopes
-===================================
+Adapting DySTrack to other microscopes
+======================================
 
 
 DySTrack can be used with any microscope control software that supports basic

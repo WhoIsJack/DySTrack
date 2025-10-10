@@ -5,7 +5,7 @@ Created on Fri Jun 20 19:30:55 2025
 @authors:  Jonas Hartmann @ Mayor lab (UCL)
            Zimeng Wu @ Wong group (UCL)
 
-@descript: DySTrack config file for chick node tracking during axis elongation.
+@descript: DySTrack config file for chick node regression tracking.
 
 @usage:    From the command line (with the dystrack python environment active)
            run `python run_chick_node.py <target_dir> [args]`.
