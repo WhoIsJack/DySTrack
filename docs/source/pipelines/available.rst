@@ -138,6 +138,8 @@ For details on the function's call signature, see the
 Tracking regression of the chick Hensen's node
 ----------------------------------------------
 
+.. TODO: Add example movie as another gif?
+
 The organizer of chick gastrulation, Hensen's node, regresses caudally through 
 the primitive streak as gastrulation proceeds. This pipeline is used to track 
 the node based on electroporated labeling and to image cells that leave the 

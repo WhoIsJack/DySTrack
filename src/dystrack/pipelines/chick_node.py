@@ -26,7 +26,7 @@ def analyze_image(
     target_path, channel=None, warn_8bit=True, show=False, verbose=False
 ):
     """Compute new coordinates for the scope to track the developing chick node
-    during regression based on a 2D or 3D image. Stable node coordinates are 
+    during regression based on a 2D or 3D image. Stable node coordinates are
     inferred by fitting Gaussians to the intensity profiles in z and y, and by
     fitting a sigmoid function to the intensity profile in x.
 
