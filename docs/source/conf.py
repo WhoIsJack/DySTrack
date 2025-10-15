@@ -61,13 +61,21 @@ html_sidebars = {
 }
 
 html_theme_options = {
-  "secondary_sidebar_items": [],
-  "logo": {
-    "alt_text": "DySTrack - Home",
-    "text": "DySTrack Docs",
-    "image_light": "images/logos/DySTrack_logo_lite.svg",
-    "image_dark": "images/logos/DySTrack_logo_dark.svg"
-    }
+  "secondary_sidebar_items" : [],
+  "logo" : {
+    "alt_text"    : "DySTrack - Home",
+    "text"        : "DySTrack Docs",
+    "image_light" : "images/logos/DySTrack_logo_lite.svg",
+    "image_dark"  : "images/logos/DySTrack_logo_dark.svg"
+    },
+  "icon_links": [
+        {
+            "name": "GitHub",
+            "url": "https://github.com/WhoIsJack/DySTrack/",
+            "icon": "fa-brands fa-square-github",
+            "type": "fontawesome",
+        }
+    ],
 }
 
 # Global substitutions for common links
