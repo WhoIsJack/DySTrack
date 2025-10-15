@@ -7,7 +7,7 @@ DySTrack on the Zeiss LSM880 (ZEN Black)
 
     If you've done this many times before and just need a quick reminder:
 
-    #. Create target dir
+    #. Create target dir (on drive with enough free space)
 
     #. Start DySTrack manager
 
@@ -36,6 +36,20 @@ Before you start
 
 Part 1: Start the DySTrack manager
 ----------------------------------
+
+.. admonition:: Important config details
+    :class: important
+
+    Since MyPiC is used to run DySTrack in ZEN Black, DySTrack *must* be
+    configured to send coordinates via the Windows registry by adding 
+    ``tra_method : "MyPiC"`` to ``manager_kwargs`` in the relevant config file
+    (see step 3 and :doc:`Installation</intro/installation>`).
+
+    Also, prescans on the 880 are generally saved in ``.czi`` format, so ensure
+    that ``file_end : ".czi"`` is set.
+
+    .. TODO: Check: Is file_start also particular on the 880?
+
 
 .. include:: _includes/start_dystrack_manager_instructions.rst
 
@@ -66,6 +80,12 @@ The microscope and sample must be ready for this part.
        the acquisition and immediately stop it, the resulting empty image can
        still be saved and contains all the information needed for loading as a
        job file.
+
+   *Side note:* Main scan image data for a 3D time course can be quite large
+   (esp. with AiryScan). Double-check that there is enough free disk space,
+   i.e. roughly the size of a main scan stack times the number of samples (if
+   multi-positioning) times the number of time points (plus some spare space 
+   for prescans and as a precaution to avoid slow-down of file writing).
 
 
 2. **Configure the prescan settings and save as an example stack (job file)**
@@ -212,4 +232,7 @@ should trigger the main scan and then the next position / time point.
 
 * Some advice on how to postprocess DySTrack data can be found 
   :doc:`here<postprocessing>`.
+
+* Be sure to (process and) move data to a different storage location asap to 
+  avoid filling up the scope PC's disk drives
 

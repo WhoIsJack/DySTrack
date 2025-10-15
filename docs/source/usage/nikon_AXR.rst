@@ -7,7 +7,7 @@ DySTrack on the Nikon AX R (NIS Elements)
 
     If you've done this many times before and just need a quick reminder:
 
-    #. Create target dir
+    #. Create target dir (on drive with enough free space)
 
     #. Start DySTrack manager
 
@@ -35,6 +35,14 @@ Before you start
 
 Part 1: Start the DySTrack manager
 ----------------------------------
+
+.. admonition:: Important config details
+    :class: important
+
+    By default, prescans on the AX R are saved in ``.tiff`` format, so ensure
+    that ``file_end : ".tiff"`` is set in the relevant config file (see step 3 
+    and :doc:`Installation</intro/installation>`).
+
 
 .. include:: _includes/start_dystrack_manager_instructions.rst
 
@@ -152,6 +160,12 @@ The microscope and sample must be ready for this part.
    It is usually a high-resolution, high-quality configuration with averaging 
    optimized for SNR, high pixel density (Nyquist if needed), and multiple 
    channels.
+
+   *Side note:* Main scan image data for a 3D time course can be quite large.
+   Double-check that there is enough free disk space, i.e. roughly the size of 
+   a main scan stack times the number of samples (if multi-positioning) times 
+   the number of time points (plus some spare space for prescans and as a 
+   precaution to avoid slow-down of file writing).
 
 
 2. **Configure or reload the prescan Experiment Setup**
@@ -339,5 +353,8 @@ point.
   separate files
 
 * Some advice on how to postprocess DySTrack data can be found 
-  :doc:`here<postprocessing>`.
+  :doc:`here<postprocessing>`
+
+* Be sure to (process and) move data to a different storage location asap to 
+  avoid filling up the scope PC's disk drives
 

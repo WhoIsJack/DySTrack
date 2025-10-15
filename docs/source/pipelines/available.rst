@@ -20,6 +20,8 @@ pipeline, please review the other pages :doc:`in this section<index>`.
 
 
 
+.. _pipeline-section-center-of-mass:
+
 Center-of-mass tracking
 -----------------------
 
@@ -64,6 +66,8 @@ For details on the function's call signature, see the
 :doc:`API reference</api/pipelines/dystrack.pipelines.center_of_mass>`.
 
 
+
+.. _pipeline-section-lateral-line:
 
 Tracking the zebrafish lateral line primordium
 ----------------------------------------------
@@ -134,6 +138,8 @@ For details on the function's call signature, see the
     such as PID controllers or Kalman filters.
 
 
+
+.. _pipeline-section-chick-node:
 
 Tracking regression of the chick Hensen's node
 ----------------------------------------------

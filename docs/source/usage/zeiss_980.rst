@@ -7,7 +7,7 @@ DySTrack on the Zeiss LSM980 (ZEN Blue)
 
     If you've done this many times before and just need a quick reminder:
 
-    #. Create target dir
+    #. Create target dir (on drive with enough free space)
 
     #. Start DySTrack manager
 
@@ -35,6 +35,14 @@ Before you start
 
 Part 1: Start the DySTrack manager
 ----------------------------------
+
+.. admonition:: Important config details
+    :class: important
+
+    Prescans on the 980 are generally saved in ``.czi`` format, so ensure
+    that ``file_end : ".czi"`` is set in the relevant config file (see step 3 
+    and :doc:`Installation</intro/installation>`).
+
 
 .. include:: _includes/start_dystrack_manager_instructions.rst
 
@@ -65,6 +73,12 @@ The microscope and sample must be ready for this part.
          the macro
 
    Save the settings as a ``.czexp`` file.
+
+   *Side note:* Main scan image data for a 3D time course can be quite large
+   (esp. with AiryScan). Double-check that there is enough free disk space,
+   i.e. roughly the size of a main scan stack times the number of samples (if
+   multi-positioning) times the number of time points (plus some spare space 
+   for prescans and as a precaution to avoid slow-down of file writing).
 
 
 2. **Configure the prescan settings and save them as a** ``.czexp`` **file**
@@ -189,4 +203,7 @@ should trigger the main scan and then the next position / time point.
 
 * Some advice on how to postprocess DySTrack data can be found 
   :doc:`here<postprocessing>`.
+
+* Be sure to (process and) move data to a different storage location asap to 
+  avoid filling up the scope PC's disk drives
 

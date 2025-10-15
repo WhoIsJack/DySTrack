@@ -7,14 +7,15 @@
 .. admonition:: Tip
     :class: tip
 
-    This works the same for all microscopes, regardless of manufacturer.
+    This works the same for all microscopes, regardless of manufacturer (aside
+    from config details noted above).
 
 
 0. **Make a new target directory for your experiment**
 
    The DySTrack manager will monitor this directory, and experiment data will 
-   be saved there. Ensure the hard disk has sufficient free space and allows
-   for sufficiently fast file writing.
+   be saved there. *Ensure the hard disk has sufficient free space* and allows
+   for sufficiently fast file writing for your use case.
 
 
 1. **Open a Windows command console**
@@ -35,14 +36,18 @@
 3. **Find/create the configuration file for your experiment**
 
    * Config files are found in ``DySTrack\run``
-   * They specify the **image analysis pipeline** to use
-   * Optionally, they can specify further parameters for the pipeline and the 
-     manager
+   * They specify the :doc:`image analysis pipeline</pipelines/available>` to 
+     use
+   * They can specify further parameters for the pipeline and the manager
    * To create a new config file, best copy an old one and modify it
-   * Further instructions are included in the config file itself
+   * Ensure that ``file_start`` and ``file_end`` (and where applicable 
+     ``tra_method``) are set correctly
    
-   *Note:* If you are a non-expert user, the configuration file for your type 
-   of experiment should be configured for/with you by a more senior user!
+   If you are a non-expert user, the configuration file for your type of
+   experiment should be configured for/with you by a more experienced user and
+   should not require further changes at runtime. Additional information is 
+   found under :doc:`Installation</intro/installation>` and in the provided 
+   config files themselves.
 
 
 4. **Start the DySTrack manager session in your command prompt:**
