@@ -177,3 +177,5 @@ For details on the function's call signature, see the
   (left, by convention), so the intensity profile will tend to be high at the 
   left boundary but low at the right (caudal/posterior) boundary.
 
+
+|

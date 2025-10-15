@@ -63,10 +63,9 @@ The microscope and sample must be ready for this part.
        :class: tip
        
        You do not need to acquire an entire stack as an example; if you start
-       the acquisition and immediately stop it, the resulting empty image still
-       contains all the information needed for loading as a job file.
-
-       .. TODO: This may be old/fake news; confirm it!
+       the acquisition and immediately stop it, the resulting empty image can
+       still be saved and contains all the information needed for loading as a
+       job file.
 
 
 2. **Configure the prescan settings and save as an example stack (job file)**

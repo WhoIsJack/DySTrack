@@ -61,7 +61,7 @@ feature. *Note that the authors cannot guarantee support.*
     ``Wu, Zimeng, ..., and Hartmann, Jonas; [citation forthcoming]``
 
 
-.. TODO: ADD MISSING LINK TO PREPRINT AND INCLUDE CITATION ABOVE!
+.. TODO: Add link to preprint and include full citation above
 .. _MyPiC: https://github.com/manerotoni/mypic/
 .. _Macros: https://github.com/zeiss-microscopy/OAD
 .. _JOBS: https://www.microscope.healthcare.nikon.com/en_EU/products/software/nis-elements/nis-elements-jobs
