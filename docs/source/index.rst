@@ -26,7 +26,7 @@ DySTrack - Dynamic Sample Tracking
 
 **DySTrack ("diss track")** is a simple, modular, python-based, open-source 
 **automated feedback microscopy tool** for live tracking of moving samples like 
-migratory cells or tissues.
+migratory cells or tissues during acquisition.
 
 
 .. figure:: images/landing_page/pllp_movie.gif

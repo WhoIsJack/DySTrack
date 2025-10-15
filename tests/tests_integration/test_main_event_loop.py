@@ -84,16 +84,16 @@ def test_run_dystrack_manager(capsys):
     thread.start()
 
     # Wait for startup
-    # TODO: Would there be a more adaptive way to wait?
-    time.sleep(6)
+    # TODO: Would there be a more adaptive way of waiting?!
+    time.sleep(10)
 
     # Move example prescan into folder
     shutil.copy(prescan_fpath, testdir)
     assert os.path.isfile(os.path.join(testdir, prescan_fname))
 
     # Wait for completion
-    # TODO: Would there be a more adaptive way to wait?
-    time.sleep(12)
+    # TODO: Would there be a more adaptive way of waiting?!
+    time.sleep(10)
 
     # Print the outputs (for debugging)
     if print_dystrack_outputs:
