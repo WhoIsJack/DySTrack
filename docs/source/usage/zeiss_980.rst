@@ -104,21 +104,22 @@ Part 3: Configure the ZEN Blue macro
 
 1. **Open the ZEN Blue macro editor**
 
-  .. image:: ../images/zeiss_980/start_macro.png
+   .. image:: ../images/zeiss_980/start_macro.png
       :alt: Opening Macro Editor in ZEN Blue
-      :width: 80%
+      :width: 60%
 
-If this option is not available, your ZEN Blue version is lacking the macro
-module. Speak to an expert user or facility staff, and/or see
-:doc:`Installation</intro/installation>`.
+   If this option is not available, your ZEN Blue version is lacking the macro
+   module. Speak to an expert user or facility staff, and/or see
+   :doc:`Installation</intro/installation>`.
+
 
 2. **Open the DySTrack macro**
 
-  .. image:: ../images/zeiss_980/macro_editor_open.png
-    :alt: Macro Editor in ZEN Blue
-    :width: 80% 
+   .. image:: ../images/zeiss_980/macro_editor_open.png
+      :alt: Macro Editor in ZEN Blue
+      :width: 80% 
 
-``LSM980_ZENBlue_macro.py`` in the ``macros`` folder.
+   ``LSM980_ZENBlue_macro.py`` in the ``macros`` folder.
 
 
 3. **Configure the settings in the** ``USER INPUT`` **section**
@@ -137,12 +138,13 @@ module. Speak to an expert user or facility staff, and/or see
    .. admonition:: Tip
        :class: tip
 
-       The macro works by taking all the positions set in the prescan and then 
-       clears all positions to populate them back in the prescan mainscan one by
-       one. This means if you stop the experiment to tweak anything you will lose
-       the positions marked in your prescan setting. 
-       If you need to revert back to your positions set in the prescan, click **Reload**
-       in the prescan .czexp menu.
+       The macro works by taking all the initial positions set in the prescan 
+       into its memory and then clearing all positions to populate them back
+       one by one as acquisition proceeds. This means if you stop the 
+       experiment after starting it (e.g. to tweak something), the previously
+       marked initial positions will be gone. To recover them, click **Reload**
+       in the prescan's ``.czexp`` menu.
+
 
 4. **Pause for a moment to mentally review whether everything is ready**
 
