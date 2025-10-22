@@ -45,10 +45,9 @@ Part 1: Start the DySTrack manager
     ``tra_method : "MyPiC"`` to ``manager_kwargs`` in the relevant config file
     (see step 3 and :doc:`Installation</intro/installation>`).
 
-    Also, prescans on the 880 are generally saved in ``.czi`` format, so ensure
-    that ``file_end : ".czi"`` is set.
-
-    .. TODO: Check: Is file_start also particular on the 880?
+    Furthermore, MyPiC saves prescans with the prefix ``DE_1`` and images will
+    be in ``.czi`` format, so ensure that ``file_start : "DE_1"`` and 
+    ``file_end : ".czi"`` are set in the config file.
 
 
 .. include:: _includes/start_dystrack_manager_instructions.rst
