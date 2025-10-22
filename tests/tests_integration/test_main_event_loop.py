@@ -11,9 +11,11 @@ Created on Thu Aug 15 13:21:42 2024
 
 import os
 import shutil
+import sys
 import threading
 import time
 from datetime import datetime
+from queue import Empty, Queue
 
 import pytest
 
@@ -21,7 +23,7 @@ from dystrack.manager.manager import run_dystrack_manager
 from dystrack.pipelines import lateral_line
 
 
-def test_run_dystrack_manager(capsys):
+def test_run_dystrack_manager():
     """Integration test for main event loop.
 
     This runs through the following steps:
@@ -32,18 +34,21 @@ def test_run_dystrack_manager(capsys):
         5. Check the resulting dystrack_coords.txt against a saved reference
         6. Remove the temporary test dir
 
-    Saved references can be automatically generated; see 2nd DEV tag below.
+    Note that the temporary test dir will usually not be removed if the test
+    fails for one reason or another.
     """
 
     # DEV: Set this to True to see standard outputs during the pytest run;
-    # this will make the test fail, but it's very useful for debugging!
+    # useful for debugging (but forces test failure at the very end to ensure
+    # it is not left on in a final commit).
     print_dystrack_outputs = False
 
     # DEV: Set this to True to generate a new reference stdout file (which will
     # overwrite the old) if the stdout behavior of the manager has changed.
     # This will force the test to fail, since generating a new reference from
     # the output and then comparing them to each other would always pass.
-    # Also, note that this will not work if `print_dystrack_outputs` is True.
+    # Note that dystrack_coords.txt files need to be manually updated or copied
+    # from the temporary test directory if the reference file needs updating.
     create_dystrack_stdout = False
 
     # Config
@@ -59,7 +64,7 @@ def test_run_dystrack_manager(capsys):
     testdir = os.path.join(datadir, "testrun_" + now)
     os.mkdir(testdir)
 
-    # Prepare thread object to run DySTrack monitoring w/ run_dystrack_manager
+    # Prepare arguments for run_dystrack_manager
     manager_args = (testdir, lateral_line.analyze_image)
     manager_kwargs = {
         "img_kwargs": {"channel": None, "show": False, "verbose": True},
@@ -67,51 +72,99 @@ def test_run_dystrack_manager(capsys):
         "file_end": dystrack_file_end,
         "max_triggers": 1,
     }
+
+    # To monitor DySTrack as it runs within a separate thread, stdout needs to
+    # be redirected to a thread-save queue...
+    class MonitoringQueue(Queue):
+
+        def __init__(self, *args, **kwargs):
+            Queue.__init__(self, *args, **kwargs)
+
+        def write(self, msg):
+            self.put(msg)
+
+        def flush(self):
+            sys.__stdout__.flush()
+
+    mq = MonitoringQueue()
+    original_stdout = sys.stdout
+    sys.stdout = mq
+    captured = ""
+
+    # Set up the DySTrack thread
     thread = threading.Thread(
         target=run_dystrack_manager,
         args=manager_args,
         kwargs=manager_kwargs,
-        daemon=True,  # Enforces thread termination at end of test
+        daemon=True,
     )
 
-    # For nicer output when printing
-    if print_dystrack_outputs:
-        print(
-            "\n\n[test_run_dystrack.py:] Starting DySTrack monitoring in thread."
-        )
-
-    # Start the DySTrack monitoring thread
+    # Start it
     thread.start()
 
-    # Wait for startup
-    # TODO: Would there be a more adaptive way of waiting?!
-    time.sleep(10)
+    # Wait for startup to complete
+    # TODO: Add an overall maximum wait time, otherwise raise an error?
+    startup_complete = False
+    while thread.is_alive():
+        try:
+            captured += mq.get(timeout=0.1)
+            if "Press <Esc> to terminate." in captured:
+                time.sleep(0.5)  # Avoid possible race condition...
+                startup_complete = True
+                break
+        except Empty:
+            continue
+    if not startup_complete:
+        raise Exception("DySTrack test thread died during startup.")
 
     # Move example prescan into folder
     shutil.copy(prescan_fpath, testdir)
     assert os.path.isfile(os.path.join(testdir, prescan_fname))
 
-    # Wait for completion
-    # TODO: Would there be a more adaptive way of waiting?!
-    time.sleep(10)
+    # Wait for image analysis to complete
+    # Note: DySTrack exits on completion since max_triggers is 1, but you can't
+    #       just wait via `thread.join()`, as that may deadlock with the queue!
+    # TODO: Add an overall maximum wait time, otherwise raise an error?
+    analysis_complete = False
+    while True:
+        try:
+            captured += mq.get(timeout=0.1)
+            if "No. coords sent to scope:" in captured:
+                time.sleep(0.5)  # Avoid possible race condition...
+                analysis_complete = True
+                break
+        except Empty:
+            continue
+    if not analysis_complete:
+        raise Exception("DySTrack test thread died during image analysis.")
+
+    # Capture out anything that remains in the queue
+    # Note: Queue must be empty to avoid possible deadlock on join
+    while not mq.empty():
+        captured += mq.get()
+
+    # Ensure the thread properly exited/exits
+    # Note: The thread should exit on its own because max_triggers is 1
+    thread.join(timeout=5)
+    if thread.is_alive():
+        raise Exception("Join of DySTrack test thread unexpectedly timed out.")
+
+    # Reset sys.stdout
+    sys.stdout = original_stdout
 
     # Print the outputs (for debugging)
     if print_dystrack_outputs:
-        print(
-            "\n[test_run_dystrack.py:] Finished waiting for DySTrack monitoring.\n"
-        )
-        captured = capsys.readouterr()
-        with capsys.disabled():
-            print(captured.out)
+        print("\n\n[Printing captured output:]")
+        print(captured)
+        print("\n")
 
     # Check command line output against expectations
     if not print_dystrack_outputs:
-        captured = capsys.readouterr()
 
         # Generate reference file
         if create_dystrack_stdout:
             with open(stdout_fpath, "w") as outfile:
-                outfile.write(captured.out)
+                outfile.write(captured)
 
         # Get reference file for comparison
         with open(stdout_fpath, "r") as infile:
@@ -126,7 +179,7 @@ def test_run_dystrack_manager(capsys):
         check_captured = "\n".join(check_captured)
 
         # Drop total checks made from capture
-        captured = captured.out.split("\n")
+        captured = captured.split("\n")
         captured = [cc for cc in captured if "Total checks made:" not in cc]
         captured = "\n".join(captured)
 
@@ -148,7 +201,7 @@ def test_run_dystrack_manager(capsys):
     # Enforce test failure if any of the DEV mode flags were set to True
     assert (
         not print_dystrack_outputs
-    ), "Cannot test DySTrack stdout when print_dystrack_outputs is set to True; forcing test failure."
+    ), "`print_dystrack_outputs` is set to True; forcing test failure."
     assert (
         not create_dystrack_stdout
     ), "Generated new DySTrack stdout reference file; forcing test failure."

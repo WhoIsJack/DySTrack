@@ -331,16 +331,6 @@ def run_dystrack_manager(
             + "must not be `None`, or `end_on_esc` must be True."
         )
 
-    # Report
-    print("\n\nDYSTRACK MANAGER SESSION STARTED!")
-    print("Monitoring target dir(s) for new files...")
-    if max_checks is not None:
-        print(f"Will terminate after {max_checks} checks.")
-    if max_triggers is not None:
-        print(f"Will terminate after {max_triggers} pipeline trigger events.")
-    if end_on_esc:
-        print("Press <Esc> to terminate.\n")
-
     # Generate txt file to record coordinates (if necessary)
     if (tra_method == "txt") or write_txt:
         txt_path = os.path.join(target_dir, "dystrack_coords.txt")
@@ -371,6 +361,16 @@ def run_dystrack_manager(
     target_counter = 0
     img_success_counter = 0
     tra_success_counter = 0
+
+    # Report
+    print("\n\nDYSTRACK MANAGER SESSION STARTED!")
+    print("Monitoring target dir(s) for new files...")
+    if max_checks is not None:
+        print(f"Will terminate after {max_checks} checks.")
+    if max_triggers is not None:
+        print(f"Will terminate after {max_triggers} pipeline trigger events.")
+    if end_on_esc:
+        print("Press <Esc> to terminate.\n")
 
     ### Run monitoring loop
 
