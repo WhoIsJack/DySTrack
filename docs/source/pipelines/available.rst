@@ -1,13 +1,16 @@
 Available image analysis pipelines
 ==================================
 
-Whenever the microscope produces a new (prescan) image, the DySTrack manager
-detects it and calls an image analysis pipeline to load the image, process it,
-and return new coordinates for the subsequent (main scan) acquisition.
 
-DySTrack comes with a few pre-configured pipelines, which are described below.
-More pipelines may be added in the future. If you are developing you own 
-pipeline, please review the other pages :doc:`in this section<index>`.
+When the microscope produces a new (prescan) image, the DySTrack manager
+detects it and triggers an **image analysis pipeline** to load the image, 
+process it, and return new coordinates for subsequent acquisitions.
+
+DySTrack comes with a few pre-configured image analysis pipelines, which are
+described below. More pipelines may be added in the future. If you are 
+developing you own pipeline, please also read the other pages 
+:doc:`in this section<index>`.
+
 
 .. admonition:: Note
     :class: note
@@ -15,6 +18,7 @@ pipeline, please review the other pages :doc:`in this section<index>`.
     All pipelines start by loading a target image and all pipelines limit the
     amount by which the z-position can be changed within a single time step (as 
     a safety feature). See :doc:`Anatomy of a pipeline<anatomy>` for more info.
+
 
 *Currently available DySTrack pipelines:*
 

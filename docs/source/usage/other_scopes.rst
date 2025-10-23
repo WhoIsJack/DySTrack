@@ -26,7 +26,7 @@ provides information on how to do this.
     microscope's macro/automation features.
 
 
-.. admonition:: Please share your work
+.. admonition:: Please share your work!
     :class: note
 
     If you build DySTrack support for a microscope that is not currently
@@ -472,7 +472,7 @@ support (a variant of) these features:
 
 
 
-.. admonition:: Please share your work
+.. admonition:: Please share your amazing work!
     :class: note
 
     If you got all the way to this point and actually built DySTrack support 
