@@ -6,6 +6,14 @@ This page describes the general anatomy of DySTrack image analysis pipelines in
 some detail. It is primarily relevant to those who seek to develop their own
 pipelines.
 
+
+.. admonition:: Tip!
+    :class: tip
+
+    To build your own pipeline, best start by making a copy of an existing 
+    pipeline and then modify it as needed.
+
+
 .. include:: _includes/share_your_pipeline_note.rst
 
 
@@ -71,8 +79,9 @@ Pipeline functions will commonly include the following steps:
     :class: warning
 
     The only limitation to this freedom is performance; if a pipeline takes a
-    long time to run, the microscope will be idle in that time, and the sample 
-    may even start moving away.
+    long time to run, the microscope will be idle in that time (at least if
+    using a default acquisition macro), and the sample may even start moving 
+    away.
 
     This is a key reason why we usually use prescans for image analysis, as
     their low pixel/voxel number means they can be loaded and processed very
@@ -83,37 +92,181 @@ Pipeline functions will commonly include the following steps:
 Call signature
 --------------
 
-TODO/WIP! YAH!
+Image analysis pipeline functions must adhere to the following call signature:
 
-Pipeline functions must...
+.. code-block:: python
+
+    z_pos, y_pos, x_pos, img_msg, img_cache = image_analysis_func(
+        target_path, **img_kwargs, **img_cache)
 
 
+**Information on the arguments:**
 
+- ``target_path`` must be the only positional argument and must accept a 
+  string. DySTrack manager will pass the full path of newly generated (prescan) 
+  image files into the pipeline function through this argument.
+
+
+- ``**img_kwargs`` represents any number of optional keyword arguments. 
+  DySTrack manager will pass them as a dictionary using python's arbitrary
+  keyword argument handling (``**dict``). A simple example might be:
+
+  .. code-block:: python
+
+    def image_analysis_func(
+        target_path, channel=None, gauss_sigma=3.0, verbose=False
+    ):
+        <etc...>
+
+  Here, the ``img_kwargs`` dictionary may contain any of ``channel``, 
+  ``gauss_sigma``, and/or ``verbose``. These can be set as a fixed 
+  configuration in the corresponding config file (in the ``run`` folder), or 
+  otherwise dynamically as command line arguments.
+
+
+- ``**img_cache`` works essentially the same way as ``img_kwargs``, but it is
+  also returned by ``image_analysis_func`` itself. Thus, it provides a way of
+  forwarding a variable from one call of the pipeline function to the next.
+  This is an advanced feature; more information can be found 
+  :doc:`here<advanced>`, but most users can safely ignore this.
+
+
+**Information on the return values:**
+
+The pipeline *must* return exactly 5 values:
+
+- ``z_pos`` (float): the new z-coordinate for the next acquisition. Return
+  ``0.0`` when working in 2D.
+
+- ``y_pos`` (float): the new y-coordinate for the next acquisition.
+
+- ``x_pos`` (float): the new x-coordinate for the next acquisition.
+
+- ``img_msg`` (str): a string message that can be used to communicate extra
+  information to the microscope or to log events. By convention, simply return
+  ``"OK"`` if there is no meaningful information to communicate/log.
+
+- ``img_cache`` (dict): Used to forward variables to the next call of the 
+  pipeline function (see above). This is an advanced feature, so most users 
+  will not need it. Simply return ``{}`` (an empty dictionary) in that case.
+
+.. admonition:: Convention
+    :class: note
+    
+    We follow the numpy convention of ordering image dimensions as ZYX (not
+    XYZ). Make sure you do not accidentally return coordinates in the wrong 
+    order!
+
+
+**An example function definition might thus looks like this:**
+
+.. code-block:: python
+
+    def image_analysis_func(
+        target_path, channel=None, gauss_sigma=3.0, verbose=False
+    ):
+        """My very nice image analysis pipeline. It works by <explanation>.
+
+        Parameters
+        ----------
+        target_path : str
+            Path to the image file that is to be analyzed.
+        channel : int, optional, default None
+            Index of channel to use for masking in case of multi-channel images.
+            If not specified, a single-channel image is assumed.
+        gauss_sigma : float, optional, default 3.0
+            Sigma for Gaussian filter prior to masking.
+        verbose : bool, optional, default False
+            If True, more information is printed.
+        
+        Returns
+        -------
+        z_pos, y_pos, x_pos : floats
+            New coordinates for the next acquisition. For 2D inputs, z_pos is 0.0.
+        img_msg : "_"
+            A string output message; required by DySTrack but here unused and just
+            set to "_".
+        img_cache : {}
+            A dictionary to be passed as keyword arguments to future calls to the
+            pipeline; required by DySTrack but here unused and just set to {}.
+        """
+        
+        # <code to load and process the image>
+
+        return z_pos, y_pos, x_pos, "OK", {}
+
+
+.. admonition:: Required: numpy-style doc string!
+    :class: important
+    
+    Note that the ``Parameters`` section of the doc string is automatically
+    parsed by DySTrack to forward information about keyword arguments to the
+    DySTrack command line interface. For this to function properly, your doc
+    string **must follow the numpy style** and should ideally be kept fairly
+    simple.
+
+    In particular, the ``Parameters`` section must adhere strictly to this
+    structure::
+
+        Parameters
+        ----------
+        x : type
+            Description of parameter `x`.
+        y : type
+            Description of parameter `y`.
+        <etc>
 
 
 
 Common pipeline steps
 ---------------------
 
-TODO/WIP!
-
-- Something on file reading
-
-  Inspiration from elsewhere:
-
-    Note that all pipelines start with an image loading step that is designed 
-    to ensure that the microscope has finished writing the file before 
-    attempting to read it, and that performs some basic checks to ensure the 
-    input looks sensible.
+While the image analysis itself can be highly bespoke and completely different
+depending on the sample for which it is defined, the initial and final steps of
+pipelines will usually be very similar. The
+:doc:`pipeline utilities</api/pipelines/dystrack.pipelines.utilities>` module 
+offers a couple of functions that may be used for this, and the information in
+this section provides further context and advice.
 
 
-- Something on the sanity checks
+Step 1: Image loading
+.....................
+
+Load the image specified in the ``target_path`` argument.
+
+In principle, any image reading function that works with the target image 
+format can be used to do this. We use `bioio`_, which is a state-of-the-art
+implementation of many bioimage read/write functions, but other tools could be 
+used just as well. 
+
+.. admonition:: Possible race condition
+  :class: warning
+
+  However, it is important to be aware that the DySTrack manager will call the 
+  image analysis pipeline *as soon as it detects the new image file!* 
+  This can lead to a race condition where the microscope has not yet fully 
+  written the file when the pipeline is trying to load it, possibly causing an 
+  error!
+
+To solve this problem, DySTrack provides |load_func|, which waits until the 
+size of the target file no longer increases within a 2-second window. It then
+attempts to load the image and in case of failure loops back up to 5 times to
+try again (before giving up and raising an error).
+
+By default, |load_func| supports |supported_img_formats| files. Support for other formats may
+be added by installing the relevant bioio plugin (if available) or by adding in 
+a custom reader. The list of supported file extensions in |load_func| must also
+be updated accordingly.
+
+.. _bioio: https://github.com/bioio-devs/bioio
+.. |load_func| replace:: :py:func:`robustly_load_image_after_write()<dystrack.pipelines.utilities.loading.robustly_load_image_after_write>`
 
 
-- Something on image analysis? (Keep it brief here?!)
+
+* Something on the sanity checks  # YAH! TODO!
 
 
-- Something on z-limit
+* Something on z-limit  # TODO!
 
   Inspiration from elsewhere:
 

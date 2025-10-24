@@ -267,8 +267,7 @@ support (a variant of) these features:
 
    * **File format**
 
-     By default, DySTrack supports ``.tif``\ /\ ``.tiff``, ``.czi``, and 
-     ``.nd2`` files. 
+     By default, DySTrack supports |supported_img_formats| files. 
      
      Support for other formats may be added by modifying |load_func|. DySTrack 
      uses `bioio`_ as its backend to load image data, so support for formats 

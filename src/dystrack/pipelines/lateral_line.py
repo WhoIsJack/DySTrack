@@ -44,7 +44,7 @@ def analyze_image(
 
     Parameters
     ----------
-    target_path : path-like
+    target_path : str
         Path to the image file that is to be analyzed.
     channel : int, optional, default None
         Index of channel to use for masking in case of multi-channel images.
@@ -67,7 +67,7 @@ def analyze_image(
 
     Returns
     -------
-    z_pos, y_pos, x_pos : ints
+    z_pos, y_pos, x_pos : floats
         New coordinates for the next acquisition. For 2D inputs, z_pos is 0.0.
     img_msg : "_"
         A string output message; required by DySTrack but here unused and just

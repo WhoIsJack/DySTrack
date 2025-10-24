@@ -75,7 +75,7 @@ def _trigger_image_analysis(
         using `**img_kwargs`.
     img_cache : dict, optional, default {}
         Additional keyword arguments forwarded to the image analysis function
-        using `**img_kwargs`. Unlike `img_kwargs`, this dictionary is also one
+        using `**img_cache`. Unlike `img_kwargs`, this dictionary is also one
         of the outputs of the image analysis function and can thus be modified
         for the next iteration.
 

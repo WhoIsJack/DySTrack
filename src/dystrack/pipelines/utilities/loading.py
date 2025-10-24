@@ -43,7 +43,7 @@ def robustly_load_image_after_write(target_path):
 
     # Make multiple attempts in case loading fails
     attempts_left = 5
-    file_size = -1
+    file_size = os.stat(target_path).st_size
     while True:
 
         # Wait until the file is no longer being written to

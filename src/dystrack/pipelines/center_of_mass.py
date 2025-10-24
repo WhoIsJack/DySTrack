@@ -76,7 +76,7 @@ def analyze_image(
 
     Returns
     -------
-    z_pos, y_pos, x_pos : ints
+    z_pos, y_pos, x_pos : floats
         New coordinates for the next acquisition. For 2D inputs, z_pos is 0.0.
     img_msg : "_"
         A string output message; required by DySTrack but here unused and just
