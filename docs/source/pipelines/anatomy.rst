@@ -18,6 +18,8 @@ pipelines.
 
 
 
+.. _anatomy-section-overview:
+
 Overview
 --------
 
@@ -38,7 +40,7 @@ Pipeline functions will commonly include the following steps:
    .. include:: /_includes/add_a_bit_of_extra_empty_space.rst
 
 3. Detect the desired new target coordinates within the image
-   
+
    Typical steps might include:
 
    - Some smoothing to reduce noise
@@ -56,6 +58,10 @@ Pipeline functions will commonly include the following steps:
 5. Return the final target coordinates
 
    .. include:: /_includes/add_a_bit_of_extra_empty_space.rst
+
+
+Additional information on each step is provided 
+:ref:`below<anatomy-section-pipeline-details>`.
 
 
 .. admonition:: Freedom!
@@ -88,6 +94,8 @@ Pipeline functions will commonly include the following steps:
     quickly.
 
 
+
+.. _anatomy-section-call-signature:
 
 Call signature
 --------------
@@ -218,8 +226,10 @@ The pipeline *must* return exactly 5 values:
 
 
 
-Common pipeline steps
----------------------
+.. _anatomy-section-pipeline-details:
+
+More details on pipeline steps
+------------------------------
 
 While the image analysis itself can be highly bespoke and completely different
 depending on the sample for which it is defined, the initial and final steps of
@@ -262,9 +272,57 @@ be updated accordingly.
 .. |load_func| replace:: :py:func:`robustly_load_image_after_write()<dystrack.pipelines.utilities.loading.robustly_load_image_after_write>`
 
 
+Step 2: Sanity checks
+.....................
 
-* Something on the sanity checks  # YAH! TODO!
+We recommend including some sanity checks on the loaded data. This is mostly to
+ensure that DySTrack errors immediately if something is misconfigured such that
+the data produced by the microscope violates the user's assumptions.
 
+Currently available pipelines include basic checks for appropriate image 
+dimensionality and size. They also usually check if the image is in 8bit 
+format, otherwise converting them down to 8bit (to accelerate processing) and
+optionally issuing a warning.
+
+What checks and adjustments are appropriate can vary considerably depending on 
+the sample and pipeline, and many additional checks could be envisioned. 
+Furthermore, in some cases it may be more useful to focus on sanity checks on 
+the output of the image analysis (see Step 4 below). Thus, there is currently
+no utility function that offers generic sanity checking. Instead, pipeline 
+developers should include bespoke sanity checks as appropriate for their use 
+case.
+
+
+Step 3: Image analysis
+......................
+
+Analyze the image in order to extract new target coordinates for subsequent
+acquisition(s).
+
+The best solution depends entirely on the sample that is being tracked and on
+the (prescan) acquisition parameters. It could take the form of a classical
+image analysis pipeline (involving e.g. smoothing and thresholding), or of a 
+pre-trained machine learning model, or of some other approach (e.g. fitting 
+models/functions to the data).
+ 
+For simple cases, basic thresholding (e.g. using Otsu) and tracking of the
+center of mass may be a good starting point (see 
+:ref:`here<pipeline-section-center-of-mass>`).
+Alternatively, existing pipelines can sometimes be found in the literature or
+are already established in the lab. These can also serve as good starting
+points, but they must be carefully tested as they often assume high-quality 
+data or make other assumptions that may be violated in a live tracking setting.
+
+For more advice on how to develop image analysis pipelines for use with 
+DySTrack, see :doc:`Developing image analysis pipelines</pipelines/develop>`.
+
+.. TODO: ADD A WARNING!
+
+
+Step 4: Post-checks and constraints
+...................................
+
+.. TODO: WRITE ABOUT POST-CHECKS ON PLLP & ABOUT THE Z-LIMIT FUNCTION!
 
 * Something on z-limit  # TODO!
 
@@ -275,3 +333,13 @@ be updated accordingly.
     default limit is to allow movement in either direction of no more than 10% 
     of the full stack size. Extra care needs to be taken when tracking objects
     that require substantially faster movement in z.
+
+
+Step 5: Returning the results
+.............................
+
+See the :ref:`Call signature<anatomy-section-call-signature>` section for 
+details on the format in which the image analysis pipeline function must return
+its outputs to the DySTrack manager.
+
+
