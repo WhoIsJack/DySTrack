@@ -50,8 +50,8 @@ Pipeline functions will commonly include the following steps:
    
    .. include:: /_includes/add_a_bit_of_extra_empty_space.rst
 
-4. Quick checks on the coordinates; constrain them if needed, or error if
-   something is very wrong
+4. Quick checks on the coordinates; trigger fallbacks or constrain movement if
+   needed, or error if something is very wrong
 
    .. include:: /_includes/add_a_bit_of_extra_empty_space.rst
 
@@ -292,6 +292,40 @@ no utility function that offers generic sanity checking. Instead, pipeline
 developers should include bespoke sanity checks as appropriate for their use 
 case.
 
+.. admonition:: DySTrack manager error handling
+  :class: note
+
+  When raising errors within the image analysis pipeline, it is important to
+  consider how DySTrack manager will respond, which is as follows:
+
+  - If an error is raised the very first time the image analysis pipeline is
+    triggered, DySTRack manager will always just raise the error and exit. No
+    coordinates will be sent to the microscope. This is intended to abort a run
+    immediately if user expectations were violated from the very start.
+    
+    .. include:: /_includes/add_a_bit_of_extra_empty_space.rst
+
+  - If an error is raised on subsequent iterations and the keyword argument 
+    ``img_err_fallback`` in |manager_func| is set to ``True`` (the default!),
+    DySTrack manager will print the error but will continue running and **fall
+    back to the previous coordinates**, meaning the same result will be sent
+    to the microscope as in the last iteration, except that the ``msg`` column
+    in ``dystrack_coords.txt`` will read ``"Image analysis failed!"``. This
+    may sometimes save an experiment, or at least keeps it going for the other
+    samples in a multi-positioning setup.
+
+    .. TODO: This seems kinda bad; a better fallback would be to write all zeroes!
+
+  .. include:: /_includes/add_a_bit_of_extra_empty_space.rst
+
+  - If an error is raised on subsequent iterations and ``img_err_fallback`` is
+    set to ``False``, DySTrack manager raises the error and exits. No further
+    coordinates will be sent to the microscope.
+
+
+.. |manager_func| replace:: :py:func:`run_dystrack_manager()<dystrack.manager.manager.run_dystrack_manager>`
+
+
 
 Step 3: Image analysis
 ......................
@@ -319,20 +353,39 @@ DySTrack, see :doc:`Developing image analysis pipelines</pipelines/develop>`.
 .. TODO: ADD A WARNING!
 
 
-Step 4: Post-checks and constraints
-...................................
+Step 4: Post-checks, fallbacks, and constraints
+...............................................
 
-.. TODO: WRITE ABOUT POST-CHECKS ON PLLP & ABOUT THE Z-LIMIT FUNCTION!
+As with the input, it can make sense to do some sanity checks on the outputs of
+the image analysis, either to error out in completely unexpected cases, or to
+try to recover from common problems, or to constrain how much the microscope is
+allowed to move at all as a safety precaution.
 
-* Something on z-limit  # TODO!
+When raising errors at this stage, remember to consider how DySTrack manager
+will respond to them (see the relevant Note above).
 
-  Inspiration from elsewhere:
+An example of attempting to recover from common problems is found in the 
+lateral line tracking pipeline, where two failure cases that crop up 
+occuasionally (one being masking failure, the other being that the tissue has 
+moved too far between time points) are being caught and handled by moving 
+default distances. For more details on this see 
+:ref:`here<pipeline-section-lateral-line>` and in the source code. This is not
+a particularly robust fallback handling and could be further improved, but it
+illustrates the concept and works reasonably well in practice.
 
-    As a safety measure, all pipelines also include a limit on how much the 
-    z-position can change in one time point. Unless otherwise specified, the 
-    default limit is to allow movement in either direction of no more than 10% 
-    of the full stack size. Extra care needs to be taken when tracking objects
-    that require substantially faster movement in z.
+An example of constraining microscope motion is currently included in all
+pipelines and is implemented as a utility function; **[TODO: ADD LINK!]**. To
+reduce the risk of the stage inset / sample being moved against the objective,
+the maximum z-distance that the system is allowed to move per time point is
+being limited to a preset fraction of the stack size. Obviously, a hard limit
+on total movement would be preferable (and can easily be implemented using the
+``img_cache``, see :doc:`here<advanced>`), however in practice it can be 
+difficult to figure out what this limit should be for a given setup, and such
+safety measures would ideally be implemented within the microscope control
+software instead.
+
+.. TODO: Add the link above once z-constraining has been refactored!
+
 
 
 Step 5: Returning the results

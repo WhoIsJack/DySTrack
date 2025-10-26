@@ -11,5 +11,6 @@ Advanced tools, tips, & tricks
 
 - Treating some acquisitions differently from others
 - Returning extra information via the msg
-- Caching for e.g. priors or PID controllers
+- Caching for per-position overall maximum z-movement constraint!
+- Caching for e.g. priors in Kalman filters or for PID controllers
 - ...?
