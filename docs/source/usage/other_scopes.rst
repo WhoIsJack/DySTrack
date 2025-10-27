@@ -438,7 +438,7 @@ support (a variant of) these features:
      absolute reference frame relative to some zero-position of the stage,
      whereas DySTrack coordinates are relative to the prescan itself.
 
-     Luckily, if units and image origins have been accounted for (see above),
+     Luckily, once units and image origins have been accounted for (see above),
      this means the DySTrack coordinates directly correspond to the required
      **offset** between old absolute stage coordinates and the new, updated
      absolute stage coordinates.

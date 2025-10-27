@@ -18,6 +18,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import scipy.ndimage as ndi
 
+from dystrack.pipelines.utilities.constraints import constrain_z_movement
 from dystrack.pipelines.utilities.loading import (
     robustly_load_image_after_write,
 )
@@ -245,16 +246,9 @@ def analyze_image(
         z_pos = cen[0]
         y_pos = cen[1]
 
-        # Z limit: An absolute limitation on how much DySTrack may move in z
+        # Limit how much DySTrack may move in z
         z_limit = 0.1  # Fraction of image size
-        z_limit_top = (raw.shape[0] - 1) / 2.0 + z_limit * (raw.shape[0] - 1)
-        z_limit_bot = (raw.shape[0] - 1) / 2.0 - z_limit * (raw.shape[0] - 1)
-        if z_pos > z_limit_top:
-            warn("z_pos > z_limit_top; using z_limit_top!")
-            z_pos = z_limit_top
-        if z_pos < z_limit_bot:
-            warn("z_pos < z_limit_bot; using z_limit_bot!")
-            z_pos = z_limit_bot
+        z_pos = constrain_z_movement(z_pos, raw.shape[0], z_limit)
 
     # Get "z" and y positions for 2D
     else:

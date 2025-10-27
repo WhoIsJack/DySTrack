@@ -304,24 +304,30 @@ case.
     immediately if user expectations were violated from the very start.
     
     .. include:: /_includes/add_a_bit_of_extra_empty_space.rst
+    .. include:: /_includes/add_a_bit_of_extra_empty_space.rst
 
   - If an error is raised on subsequent iterations and the keyword argument 
-    ``img_err_fallback`` in |manager_func| is set to ``True`` (the default!),
+    ``img_err_fallback`` in |manager_func| is set to ``True`` (the default),
     DySTrack manager will print the error but will continue running and **fall
     back to the previous coordinates**, meaning the same result will be sent
     to the microscope as in the last iteration, except that the ``msg`` column
-    in ``dystrack_coords.txt`` will read ``"Image analysis failed!"``. This
-    may sometimes save an experiment, or at least keeps it going for the other
-    samples in a multi-positioning setup.
+    in ``dystrack_coords.txt`` will read ``"Image analysis failed!"``. This is
+    not without risk, but may occasionally save an experiment or at least keep
+    DySTrack going so tracking may proceed for other samples in a 
+    multi-positioning setup.
+    
+    *Side note:* A safer solution for such cases might be not to move at all,
+    but DySTrack manager cannot know the image size and therefore cannot
+    calculate and return the image center. A "remain in place" fallback would 
+    thus need to be implemented within the pipeline or - ideally - within the
+    microscope control software itself (triggered by the "Image analysis 
+    failed!" message).
 
-    .. TODO: This seems kinda bad; a better fallback would be to write all zeroes!
-
-  .. include:: /_includes/add_a_bit_of_extra_empty_space.rst
+    .. include:: /_includes/add_a_bit_of_extra_empty_space.rst
 
   - If an error is raised on subsequent iterations and ``img_err_fallback`` is
     set to ``False``, DySTrack manager raises the error and exits. No further
     coordinates will be sent to the microscope.
-
 
 .. |manager_func| replace:: :py:func:`run_dystrack_manager()<dystrack.manager.manager.run_dystrack_manager>`
 
@@ -350,7 +356,6 @@ data or make other assumptions that may be violated in a live tracking setting.
 For more advice on how to develop image analysis pipelines for use with 
 DySTrack, see :doc:`Developing image analysis pipelines</pipelines/develop>`.
 
-.. TODO: ADD A WARNING!
 
 
 Step 4: Post-checks, fallbacks, and constraints
@@ -370,19 +375,19 @@ occuasionally (one being masking failure, the other being that the tissue has
 moved too far between time points) are being caught and handled by moving 
 default distances. For more details on this see 
 :ref:`here<pipeline-section-lateral-line>` and in the source code. This is not
-a particularly robust fallback handling and could be further improved, but it
+a particularly robust fallback and could be further improved, but it 
 illustrates the concept and works reasonably well in practice.
 
 An example of constraining microscope motion is currently included in all
 pipelines and is implemented as a utility function; **[TODO: ADD LINK!]**. To
-reduce the risk of the stage inset / sample being moved against the objective,
-the maximum z-distance that the system is allowed to move per time point is
-being limited to a preset fraction of the stack size. Obviously, a hard limit
-on total movement would be preferable (and can easily be implemented using the
-``img_cache``, see :doc:`here<advanced>`), however in practice it can be 
-difficult to figure out what this limit should be for a given setup, and such
-safety measures would ideally be implemented within the microscope control
-software instead.
+reduce the risk of the stage inset / sample accidentally getting pushed against 
+the objective, the maximum z-distance that the system is allowed to move per 
+time point is being limited to a preset fraction of the stack size. A hard 
+limit on total movement would be an even better constraint (and can easily be 
+implemented using the ``img_cache``, see :doc:`here<advanced>`). However, in
+practice it can be difficult to figure out what this limit should be for a 
+given setup, so safety features of this kind are best implemented within the 
+microscope control software instead.
 
 .. TODO: Add the link above once z-constraining has been refactored!
 
