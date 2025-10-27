@@ -379,17 +379,17 @@ a particularly robust fallback and could be further improved, but it
 illustrates the concept and works reasonably well in practice.
 
 An example of constraining microscope motion is currently included in all
-pipelines and is implemented as a utility function; **[TODO: ADD LINK!]**. To
-reduce the risk of the stage inset / sample accidentally getting pushed against 
-the objective, the maximum z-distance that the system is allowed to move per 
-time point is being limited to a preset fraction of the stack size. A hard 
-limit on total movement would be an even better constraint (and can easily be 
-implemented using the ``img_cache``, see :doc:`here<advanced>`). However, in
-practice it can be difficult to figure out what this limit should be for a 
-given setup, so safety features of this kind are best implemented within the 
-microscope control software instead.
+pipelines and is implemented as a utility function; |constrain_func|. To reduce 
+the risk of the stage inset / sample accidentally getting pushed against the 
+objective, the maximum z-distance that the system is allowed to move per time
+point is being limited to a preset fraction of the stack size. A hard limit on 
+total movement would be an even better constraint (and could be implemented 
+using the ``img_cache``, see :doc:`here<advanced>`). However, in practice it 
+can be difficult to figure out what this limit should be for a given setup, so 
+safety features of this kind are best implemented within the microscope control
+software instead.
 
-.. TODO: Add the link above once z-constraining has been refactored!
+.. |constrain_func| replace:: :py:func:`constrain_z_movement()<dystrack.pipelines.utilities.constraints.constrain_z_movement>`
 
 
 

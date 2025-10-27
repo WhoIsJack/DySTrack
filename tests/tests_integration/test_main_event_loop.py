@@ -34,8 +34,9 @@ def test_run_dystrack_manager():
         5. Check the resulting dystrack_coords.txt against a saved reference
         6. Remove the temporary test dir
 
-    Note that the temporary test dir will usually not be removed if the test
-    fails for one reason or another.
+    Note that the temporary test dir will usually *not* be removed if the test
+    fails for one reason or another. Test directories thus require occasional
+    manual removal.
     """
 
     # DEV: Set this to True to see standard outputs during the pytest run;
@@ -101,11 +102,12 @@ def test_run_dystrack_manager():
 
     # Start it
     thread.start()
+    time.sleep(0.5)
 
     # Wait for startup to complete
-    # TODO: Add an overall maximum wait time, otherwise raise an error?
+    time_start, time_elapsed, time_limit = time.time(), 0.0, 20.0
     startup_complete = False
-    while thread.is_alive():
+    while thread.is_alive() and (time_elapsed < time_limit):
         try:
             captured += mq.get(timeout=0.1)
             if "Press <Esc> to terminate." in captured:
@@ -114,6 +116,9 @@ def test_run_dystrack_manager():
                 break
         except Empty:
             continue
+        time_elapsed = time.time() - time_start
+    if time_elapsed >= time_limit:
+        raise Exception("DySTrack test thread startup exceeded time limit!")
     if not startup_complete:
         raise Exception("DySTrack test thread died during startup.")
 
@@ -124,9 +129,9 @@ def test_run_dystrack_manager():
     # Wait for image analysis to complete
     # Note: DySTrack exits on completion since max_triggers is 1, but you can't
     #       just wait via `thread.join()`, as that may deadlock with the queue!
-    # TODO: Add an overall maximum wait time, otherwise raise an error?
+    time_start, time_elapsed, time_limit = time.time(), 0.0, 20.0
     analysis_complete = False
-    while True:
+    while time_elapsed < time_limit:
         try:
             captured += mq.get(timeout=0.1)
             if "No. coords sent to scope:" in captured:
@@ -135,6 +140,9 @@ def test_run_dystrack_manager():
                 break
         except Empty:
             continue
+        time_elapsed = time.time() - time_start
+    if time_elapsed >= time_limit:
+        raise Exception("Image analysis test run exceeded time limit!")
     if not analysis_complete:
         raise Exception("DySTrack test thread died during image analysis.")
 
