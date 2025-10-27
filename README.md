@@ -8,7 +8,7 @@ microscope control software through a minimal interface.
 Please see [the Documentation](LINK!) for more information!
 
 _**Warning:**_ Modern microscopes are expensive machines, and automating them 
-comes with an inherent **risk of damage**. Appropriate care must be taken when
+comes with an inherent risk of damage. Appropriate care must be taken when
 installing, testing, and using DySTrack. The code and documentation are 
 provided "as is", without warranty or liability of any kind (see LICENSE).
 
