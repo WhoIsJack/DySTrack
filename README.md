@@ -19,32 +19,13 @@ provided "as is", without warranty or liability of any kind (see LICENSE).
 ```
 
 
-## Structure
-
-* `run/`: Config files
-    - Config files for users to specify the image analysis pipeline and other parameters
-
-- `src/dystrack/manager/`: Core module
-    - Command line application that starts a DysTrack monitoring session
-    - The monitoring session scans for new prescan images produced by the microscope
-    - Upon detection of a new prescan, an image analysis pipeline is triggered
-    - The pipeline returns new coordinates, which are then forwarded to the microscope
-
-* `src/dystrack/pipelines/`: Image analysis pipelines
-    - An image analysis pipeline reads a prescan and returns new main scan coordinates
-
-- `macros/`: Interfacing with the microscope
-    - Macros are run within commercial microscope software
-    - They control all the microscope's operations
-    - They interface with DySTrack only by saving prescan files and reading new coordinates
-
-
 ## Installation
 
 ```
 # TODO: 
 #  - Remove the dev specs
 #  - Swap local install for pip install (for users)
+#  - [Add env creation for local install?]
 #  - Refer to documentation for more installation instructions
 ```
 
@@ -63,15 +44,68 @@ To update:
 ```pip install -Ue ".[dev]"```
 
 
-## Citing DySTrack
+## Overview of repo structure
+
+* `run\`: Config files
+    - Specify the image analysis pipeline (and optionally other parameters) for a DySTrack run
+    - Run a DySTrack session: ```python path\to\config_file.py path\to\target_dir [optional args]```
+
+- `src\dystrack\manager\`: Core module
+    - Implements "DySTrack manager" sessions and a command line app to launch them
+    - A manager session scans for new (prescan) images produced by the microscope
+    - Upon detection of a new target image, an image analysis pipeline is triggered
+    - The pipeline returns new coordinates, which are then forwarded to the microscope
+
+* `src\dystrack\pipelines\`: Image analysis pipelines
+    - Called by the DyStrack manager when a new target image is detected
+    - A pipeline reads a target image and returns new coordinates for acquisition
+    - Adapting DySTrack to new use cases is mainly a matter of developing new pipelines
+
+- `macros\`: Interfacing with the microscope
+    - Macros are run within commercial microscope software
+    - They control all of the microscope's actual operations
+    - They interface with DySTrack only by saving image files and reading new coordinates
+
+* `tests\`: Automated testing with pytest
+    - Run `pytest` to execute the complete test suite
+
+- `docs\`: DySTrack documentation
+    - Run `make html` to build a local version of the docs
+
+* `notebooks\`: Some potentially useful Jupyter notebooks
+
+
+## Asking for help or contributing to DySTrack
+
+*Disclaimer:* We currently cannot guarantee any level of support whatsoever and
+retain full discretion to close Issues or reject Pull Requests for any reason.
+Nevertheless, we do aspire to be helpful and responsive to the extent our 
+limited resources permit.
+
+We welcome Issues and Pull Requests that:
+
+- Report or fix a bug or other problem
+- Ask a question not answered in [the Documentation](LINK!)
+- Fix or improve something in the documentation
+- (Aim to) add a new image analysis pipeline
+- (Aim to) add support for an unsupported microscope
+- Suggest or make (backwards-compatible) improvements to features or performance
+
+When raising an Issue or PR, please give it a clear title and description, and 
+include as much relevant information as possible.
+
+For PRs, please follow the conventions in the existing code base as closely as
+possible; use `black` and `isort` for code formatting and numpy-style doc 
+strings, and include/update unit tests as necessary. That said, if you are 
+unsure how to do these things, please raise an Issue or PR anyway and ask for 
+support; if we find the time we are happy to help - after all, none of us are 
+professional software developers and we are all still learning!
+
+All interactions must abide by the [Contributor Covenenat Code of Conduct](CODE_OF_CONDUCT.md).
 
 ```
-# TODO: Add link and complete reference once preprint has been posted
+# TODO: Add link to documentation once it is live
 ```
-
-If you are using DySTrack in your research, please cite [the preprint](LINK!):
-
-```Wu, Zimeng, ..., and Hartmann, Jonas; [citation forthcoming]```
 
 
 ## Acknowledgements
@@ -89,3 +123,14 @@ Virginia Silio, Mike Redd, and Alan Greig. Nicolas Sergent (Zeiss) supported
 development for ZEN Black and Robert Tetley (Nikon) for NIS Elements. The chick 
 node tracking experiments were developed with Octavian Voiculescu in the lab of 
 Alessandro Mongera.
+
+
+## Citing DySTrack
+
+```
+# TODO: Add link and complete reference once preprint has been posted
+```
+
+If you are using DySTrack in your research, please cite [the preprint](LINK!):
+
+```Wu, Zimeng, ..., and Hartmann, Jonas; [citation forthcoming]```
