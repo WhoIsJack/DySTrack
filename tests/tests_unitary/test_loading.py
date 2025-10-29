@@ -22,11 +22,11 @@ def test_robust_load_success(mocker):
     # Targets
     testpath = r"./tests/testdata/"
     fnames = [
-        "test-pllp_980_prescan.tif",   # ImageJ .tif
-        "test-pllp_980_prescan.czi",   # ZEISS LSM980 .czi
-        "test-pllp_880_prescan.czi",   # ZEISS LSM880 .czi
+        "test-pllp_980_prescan.tif",  # ImageJ .tif
+        "test-pllp_980_prescan.czi",  # ZEISS LSM980 .czi
+        "test-pllp_880_prescan.czi",  # ZEISS LSM880 .czi
         "test-pllp_AXR_prescan.tiff",  # Nikon AX R .tiff
-        "test-pllp_AXR_prescan.nd2",   # Nikon AX R .nd2
+        "test-pllp_AXR_prescan.nd2",  # Nikon AX R .nd2
     ]
 
     # Expectations
