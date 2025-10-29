@@ -111,7 +111,7 @@ The DySTrack repo comes with two JOBS Definitions in the ``Macros`` folder:
 
 3. ``Create New >> Import Analysis From File...``
 
-4. Import ``DySTrack\Macros\AX_GA3_PointsExpose``
+4. Import ``DySTrack\macros\AX_NISGA3_PointsExpose.ga3``
 
 5. To test, double-click it and select the file 
    ``DySTrack\tests\testdata\test-pllp_NSPARC_prescan.tiff``
@@ -136,7 +136,7 @@ The DySTrack repo comes with two JOBS Definitions in the ``Macros`` folder:
 4. Find the ``Import from File`` button
    It's a yellow folder icon with a yellow upwards arrow.
 
-5. Import the desired NISJOBS ``.bin`` file(s) from ``DySTrack\Macros``
+5. Import the desired NISJOBS ``.bin`` file(s) from ``DySTrack\macros``
 
 If necessary, you can now view and edit/customize the JOBS definition by
 double-clicking on it. We recommend making a copy of an existing JOBS
