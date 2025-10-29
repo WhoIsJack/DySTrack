@@ -22,11 +22,11 @@ def test_robust_load_success(mocker):
     # Targets
     testpath = r"./tests/testdata/"
     fnames = [
-        "test-pllp_980_prescan.tif",  # ImageJ .tif
-        "test-pllp_980_prescan.czi",  # ZEISS LSM980 .czi
-        "test-pllp_880_prescan.czi",  # ZEISS LSM880 .czi
-        "test-pllp_NSPARC_prescan.tiff",  # Nikon AX .tiff
-        # Nikon AX .nd2  # TODO!
+        "test-pllp_980_prescan.tif",   # ImageJ .tif
+        "test-pllp_980_prescan.czi",   # ZEISS LSM980 .czi
+        "test-pllp_880_prescan.czi",   # ZEISS LSM880 .czi
+        "test-pllp_AXR_prescan.tiff",  # Nikon AX R .tiff
+        "test-pllp_AXR_prescan.nd2",   # Nikon AX R .nd2
     ]
 
     # Expectations
@@ -35,8 +35,9 @@ def test_robust_load_success(mocker):
         (21, 200, 500),
         (20, 200, 512),
         (9, 212, 512),
+        (21, 128, 256),
     ]
-    fdtypes = [np.uint8, np.uint8, np.uint8, np.uint16]
+    fdtypes = [np.uint8, np.uint8, np.uint8, np.uint16, np.uint16]
 
     # For performance, patch sleep...
     mocker.patch(

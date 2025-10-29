@@ -114,7 +114,7 @@ The DySTrack repo comes with two JOBS Definitions in the ``Macros`` folder:
 4. Import ``DySTrack\macros\AX_NISGA3_PointsExpose.ga3``
 
 5. To test, double-click it and select the file 
-   ``DySTrack\tests\testdata\test-pllp_NSPARC_prescan.tiff``
+   ``DySTrack\tests\testdata\test-pllp_AXR_prescan.tiff``
    
    The GA3 preview should run and display some numbers about the prescan file;
    ``PrescanDims`` in particular should have 8 columns (``VolumeSizeX[um]``, 

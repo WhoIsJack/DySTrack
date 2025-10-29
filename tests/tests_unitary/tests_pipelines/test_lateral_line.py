@@ -22,7 +22,7 @@ def test_analyze_image_3D_success(mocker, capsys):
 
     # Targets
     testpath = r"./tests/testdata/"
-    fname = "test-pllp_NSPARC_prescan.tiff"
+    fname = "test-pllp_AXR_prescan.tiff"
 
     # Expectations
     expected_output = ["3.4705", "107.8477", "258.4000", "OK", {}]
