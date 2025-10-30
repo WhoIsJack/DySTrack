@@ -7,13 +7,6 @@ some detail. It is primarily relevant to those who seek to develop their own
 pipelines.
 
 
-.. admonition:: Tip!
-    :class: tip
-
-    To build your own pipeline, best start by making a copy of an existing 
-    pipeline and then modify it as needed.
-
-
 .. include:: _includes/share_your_pipeline_note.rst
 
 
