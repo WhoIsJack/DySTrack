@@ -18,6 +18,6 @@ relevant for users who seek to develop their own pipelines.
     Available pipelines<available>
     Anatomy of a pipeline<anatomy>
     Developing pipelines<develop>
-    Advanced tools, tips, & tricks<advanced>
+    Advanced tools & strategies<advanced>
 
     
