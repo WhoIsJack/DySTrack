@@ -43,7 +43,8 @@ migratory cells or tissues during acquisition.
 DySTrack works on common commercial microscopes, with current out-of-the-box
 support covering ``ZEN Black`` (via `MyPiC`_), ``ZEN Blue`` (via `Macros`_), 
 and ``NIS Elements`` (via `JOBS`_). Adaptation to any other microscope control 
-software that supports basic macros/automation is relatively straightforward.
+software that supports basic macros/automation is also possible, and support
+for other systems may be added in the future.
 
 The **source code** for DySTrack is `on GitHub`_, where you may also contribute 
 to DySTrack's continued development and maintenance. Please raise a GitHub 
