@@ -1,6 +1,10 @@
 DySTrack core module
 ====================
 
+
+Core functions to launch and run a DySTrack event loop.
+
+
 .. toctree::
     :maxdepth: 2
 

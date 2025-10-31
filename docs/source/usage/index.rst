@@ -1,6 +1,13 @@
 Running DySTrack
 ================
 
+
+This chapter details how to run a DySTrack experiment on the microscopes that
+are currently supported. It also provides input on how to develop support for
+a currently unsupported microscope (advanced), and gives some advice on how to
+postprocess tracking data.
+
+
 .. toctree::
     :maxdepth: 1
 

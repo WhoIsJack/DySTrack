@@ -1,6 +1,10 @@
 Image analysis pipelines
 ========================
 
+
+Pre-made image analysis pipeline functions and relevant utilities.
+
+
 .. toctree::
     :maxdepth: 1
 

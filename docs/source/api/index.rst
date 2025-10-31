@@ -1,6 +1,11 @@
 API Reference
 =============
 
+
+Call signatures for DyStrack functions, automatically generated from the doc
+strings.
+
+
 .. toctree::
     :maxdepth: 2
 
