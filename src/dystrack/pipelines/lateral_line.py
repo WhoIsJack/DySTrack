@@ -124,9 +124,9 @@ def analyze_image(
 
     ### Mask by object-count thresholding
 
-    # NOTE: This is an old approach that has empirically proven to work well
-    # with cldnb:EGFP under standard conditions. However, there would be a lot
-    # of room for improvement or for an altogether new approach!  # TODO!
+    # TODO: This is an old approach that has empirically proven to work very
+    # well for cldnb:lyn-EGFP and for some other (uniform) labels. However,
+    # there may be room for improvement or for an altogether new approach!
 
     # Preprocessing: Gaussian smoothing
     raw = ndi.gaussian_filter(raw, sigma=gauss_sigma)

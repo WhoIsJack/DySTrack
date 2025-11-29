@@ -7,7 +7,8 @@ Created on Tue Feb 6 17:59:38 2024
 
 @descript:  ZEN Blue IronPython macro to interface Zeiss LSM980 with DySTrack.
 
-@usage:     TODO!
+@usage:     See "Running DySTrack > DySTrack on the Zeiss LSM980 (ZEN Blue)" in
+            the DySTrack documentation.
 """
 
 import os
