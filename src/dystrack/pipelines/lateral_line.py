@@ -29,6 +29,9 @@ def analyze_image(
     channel=None,
     gauss_sigma=3.0,
     count_reduction=0.5,
+    blank_fract=1.0 / 5.0,
+    default_catchup_fract=1.0 / 5.0,
+    default_step_fract=1.0 / 8.0,
     warn_8bit=True,
     show=False,
     verbose=False,
@@ -55,6 +58,17 @@ def analyze_image(
     count_reduction : float, optional, default 0.5
         Factor by which object count has to be reduced below its initial peak
         for a threshold value to be accepted.
+    blank_fract : float, optional, default 1.0/5.0
+        Distance of the leading edge from the right-hand border of the image
+        after the correction, expressed as a fraction of the image size in x.
+    default_catchup_fract : float, optional, default 1.0/5.0
+        Catch-up distance by which the field of view should be moved if the
+        mask touches the right-hand border of the image, expressed as a
+        fraction of the image size in x.
+    default_step_fract : float, optional, default 1.0/8.0
+        Default distance by which the field of view should be moved if masking
+        appears to have failed (leading edge in rear half of image), expressed
+        as a fraction of the image size in x.
     warn_8bit : bool, optional, default True
         Whether to emit a warning when a non-8bit image was found and was down-
         converted to 8bit using min-max rescaling.
@@ -283,7 +297,7 @@ def analyze_image(
         )
 
         # Handle it...
-        default_step_fract = 1.0 / 8.0
+        # default_step_fract = 1.0 / 8.0
         x_pos = (
             0.5 * collapsed.shape[0] + default_step_fract * collapsed.shape[0]
         )
@@ -305,7 +319,7 @@ def analyze_image(
         )
 
         # Handle it...
-        default_catchup_fract = 1.0 / 5.0
+        # default_catchup_fract = 1.0 / 5.0
         x_pos = (
             0.5 * collapsed.shape[0]
             + default_catchup_fract * collapsed.shape[0]
@@ -321,13 +335,12 @@ def analyze_image(
     ### If the above issues did not trigger, compute new x-position for scope
 
     # - This is currently based on putting 1/5th of the image size between the
-    #   current leading edge and the end of the image. This is an estimate that
-    #   should work for standard image sizes and timecourses of about 5min/tp.
+    #   current leading edge and the end of the image. This default should work
+    #   well for standard image sizes (40X) and timecourses of 5-15min/tp.
     # - Would be nice to make this more "adaptive", e.g. using a PID controller
     #   based on previous coordinates stored in img_cache.
-    # - Would it be beneficial to use micron scale instead of pixel scale?
 
-    blank_fract = 1.0 / 5.0
+    # blank_fract = 1.0 / 5.0
     x_pos = (
         front_pos + blank_fract * collapsed.shape[0] - 0.5 * collapsed.shape[0]
     )
