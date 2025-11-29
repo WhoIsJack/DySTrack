@@ -40,8 +40,8 @@ Part 1: Start the DySTrack manager
     :class: important
 
     By default, prescans on the AX R are saved in ``.tiff`` format, so ensure
-    that ``file_end : ".tiff"`` is set in the relevant config file (see step 3 
-    and :doc:`Installation</intro/installation>`).
+    that ``file_end : ".tiff"`` is set in the relevant config file (see step 
+    3).
 
 
 .. include:: _includes/start_dystrack_manager_instructions.rst
@@ -52,47 +52,15 @@ Part 2: Prepare the JOBS Definition
 -----------------------------------
 
 DySTrack uses Nikon's `JOBS`_ module for macro control within NIS Elements. 
-Ideally, JOBS Definitions are prepared before running any experiments and do
-not require changes at runtime. Therefore, **if the JOBS Definition for your
-experiment is already prepared, you can skip to Part 3.**
 
 .. _JOBS: https://www.microscope.healthcare.nikon.com/en_EU/products/software/nis-elements/nis-elements-jobs
 
+**Ideally, JOBS Definitions are prepared before running any experiments and do
+not require changes at runtime. Therefore, if the JOBS Definition for your
+experiment is already prepared, you can skip to Part 3.** 
 
-.. admonition:: Note
-    :class: note
-
-    Non-expert users should work with experienced users, facility staff, and/or
-    Nikon representatives to set up and correctly configure a JOBS definition
-    for DySTrack, as this can be a non-trivial task.
-
-
-The DySTrack repo comes with two JOBS Definitions in the ``Macros`` folder:
-
-* ``AX_NISJOBS_lateral_line.bin``
-
-  This definition is used for standard tracking tasks, optionally with multi-
-  positioning for multiple samples. It should work for most simple experiments
-  and should be the starting point for any customized workflows.
-
-
-* ``AX_NISJOBS_chick_node.bin``
-
-  This definition was implemented for a special case where the main scan is
-  itself a tile scan. Here, a single field of view is acquired as the prescan
-  (e.g. the chick node), but the subsequent main scan is a tile scan that
-  covers a wider area (e.g. somitogenesis anterior of the node). This is an
-  example of a slightly more advanced setup.
-
-
-.. admonition:: GA3 is also needed...
-    :class: warning
-
-    Unfortunately, one particular step of the DySTrack JOBS pipeline requires a
-    GA3 Script. This should be imported before JOBS Definitions are imported.
-
-
-**Follow these steps to import the required GA3 dependency:**
+If you are not sure if this is the case, you can check by following these 
+steps:
 
 1. Enter the ``JOBS/GA3`` tab (at the top):
 
@@ -102,48 +70,40 @@ The DySTrack repo comes with two JOBS Definitions in the ``Macros`` folder:
 
    If this is unavailable, speak to an expert user / microscope administrator.
 
-   
-2. Go to ``Analysis Explorer`` (middle-left):
+2. Check if the GA3 Script ``AX_NISGA3_PointsExpose`` is available in the
+   ``Analysis Explorer`` (middle-left).
 
    .. image:: /images/nikon_AXR/Analysis_explorer.png
        :alt: Analysis explorer screenshot
        :width: 40%
 
-3. ``Create New >> Import Analysis From File...``
+   **Note that this is a necessary dependency for DySTrack JOBS Definitions!**
 
-4. Import ``DySTrack\macros\AX_NISGA3_PointsExpose.ga3``
-
-5. To test, double-click it and select the file 
-   ``DySTrack\tests\testdata\test-pllp_AXR_prescan.tiff``
-   
-   The GA3 preview should run and display some numbers about the prescan file;
-   ``PrescanDims`` in particular should have 8 columns (``VolumeSizeX[um]``, 
-   etc.) with a single number in each.
-
-
-**Next, follow these steps to import a JOBS Definition:**
-
-1. Go to the ``JOBS Explorer`` (next to the ``Analysis Explorer``)
+3. Check if the JOBS Definition you plan to use is available in the
+   ``JOBS Explorer``:
 
    .. image:: /images/nikon_AXR/JOBS_explorer.png
        :alt: JOBS explorer screenshot
        :width: 40%
 
-2. If necessary, create a new empty JOBS Database
 
-3. If necessary, create a new Project (named e.g. ``DySTrack``)
+.. admonition:: Warning
+    :class: warning
+    
+    If the GA3 Script and JOBS Definitions are **not** already prepared, follow
+    the instructions in :ref:`this subsection<install-NIS-JOBS>` of the 
+    DySTrack installation guide to import them.
 
-4. Find the ``Import from File`` button
-   It's a yellow folder icon with a yellow upwards arrow.
-
-5. Import the desired NISJOBS ``.bin`` file(s) from ``DySTrack\macros``
-
-If necessary, you can now view and edit/customize the JOBS definition by
-double-clicking on it. We recommend making a copy of an existing JOBS
-definition before trying out any modifications on it.
+    Note that this is best done together with an experienced user or facility
+    staff to ensure everything is set up correctly!
 
 
-.. include:: /_includes/generic_unstable_software_warning.rst
+.. admonition:: Tip
+    :class: tip
+
+    If you need to make changes to a JOBS Definition for your specific
+    experiment, **we strongly recommend making a copy of an existing 
+    JOBS definition before trying out any modifications on it.**
 
 
 

@@ -40,8 +40,7 @@ Part 1: Start the DySTrack manager
     :class: important
 
     Prescans on the 980 are generally saved in ``.czi`` format, so ensure
-    that ``file_end : ".czi"`` is set in the relevant config file (see step 3 
-    and :doc:`Installation</intro/installation>`).
+    that ``file_end : ".czi"`` is set in the relevant config file (see step 3).
 
 
 .. include:: _includes/start_dystrack_manager_instructions.rst
@@ -123,8 +122,8 @@ Part 3: Configure the ZEN Blue macro
       :width: 60%
 
    If this option is not available, your ZEN Blue version is lacking the macro
-   module. Speak to an expert user or facility staff, and/or see
-   :doc:`Installation</intro/installation>`.
+   module. Speak to an expert user or facility staff, or get in touch with your
+   Zeiss representative.
 
 
 2. **Open the DySTrack macro**

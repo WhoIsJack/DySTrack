@@ -43,7 +43,7 @@ Part 1: Start the DySTrack manager
     Since MyPiC is used to run DySTrack in ZEN Black, DySTrack *must* be
     configured to send coordinates via the Windows registry by adding 
     ``tra_method : "MyPiC"`` to ``manager_kwargs`` in the relevant config file
-    (see step 3 and :doc:`Installation</intro/installation>`).
+    (see step 3).
 
     Furthermore, MyPiC saves prescans with the prefix ``DE_1`` and images will
     be in ``.czi`` format, so ensure that ``file_start : "DE_1"`` and 
@@ -118,7 +118,7 @@ Part 3: Configure MyPiC
 
    .. image:: ../images/zeiss_880/open_mypic.png
        :alt: Opening MyPiC in ZEN Black
-       :width: 80%
+       :width: 60%
 
    If this option is not available, MyPiC must first be installed. Speak to an
    expert user and/or see :doc:`Installation</intro/installation>`.

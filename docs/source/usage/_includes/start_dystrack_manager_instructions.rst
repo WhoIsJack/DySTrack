@@ -18,15 +18,15 @@
    for sufficiently fast file writing for your use case.
 
 
-1. **Open a Windows command console**
+1. **Open a Minifoge prompt**
 
-   Depending on how python was installed, you may need to specifically open a 
-   "Miniforge Prompt" or "Anaconda Prompt", or run ``conda init``.
+   Depending on how python was installed, you may instead need to open an 
+   "Anaconda Prompt" or a standard Windows command prompt.
 
 
 2. **Activate the environment in which DySTrack has been installed**
 
-   For example:
+   Usually it is called ``dystrack``, so run:
 
    .. code-block:: batch
       
@@ -45,9 +45,9 @@
    
    If you are a non-expert user, the configuration file for your type of
    experiment should be configured for/with you by a more experienced user and
-   should not require further changes at runtime. Additional information is 
-   found under :doc:`Installation</intro/installation>` and in the provided 
-   config files themselves.
+   should not require further changes at runtime. 
+   
+   Additional information is found in the provided config files themselves.
 
 
 4. **Start the DySTrack manager session in your command prompt:**

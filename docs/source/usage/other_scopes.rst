@@ -64,7 +64,7 @@ Before you start
   .. admonition:: Paywalled macro modules
       :class: warning
 
-      Many manufacturers paywall access to their macro/automation tools, and in
+      Some manufacturers paywall access to their macro/automation tools, and in
       some cases older microscope software does not support them.
 
       We recommend enquiring with facility staff and/or a manufacturer rep 
