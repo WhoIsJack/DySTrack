@@ -32,7 +32,8 @@ Another, more modular but less interconnected option would be to run multiple
 independent instances of DySTrack that monitor for different file names and
 trigger different pipelines.
 
-Example use case: **Swapping between overview and targetted acquisitions**
+Example use case: **Event-based swapping between overview and targetted 
+acquisitions**
 
   In this example, the microscope periodically images a field of largely
   stationary cells in a monolayer, using a low-magnification objective. These 

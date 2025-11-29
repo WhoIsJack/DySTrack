@@ -194,7 +194,7 @@ An example using this approach is the
     - Visualize every step with plots, and include key plots in the final 
       pipeline
 
-    [Partly derived from ``The Zen of Python, by Tim Peters``]
+    [Partly inspired by ``The Zen of Python, by Tim Peters``]
 
 
 
@@ -207,7 +207,7 @@ ready for the first live test at the microscope.
 .. admonition:: **Warning**
     :class: warning
 
-    Expect the first test(s) to fail!
+    **Expect the first test(s) to fail!**
 
     When they do, try to understand the problem as deeply as possible while at
     the scope. If it's not a simple fix that can be retested immediately, be

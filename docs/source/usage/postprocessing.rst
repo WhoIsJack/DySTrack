@@ -28,9 +28,9 @@ Common postprocessing steps
 1. **Deconvolution of mainscan images**
 
    If required/desired, deconvolve your data using the relevant software (e.g. 
-   AiryScan Processing for Zeiss, or NIS Deconvolution, or any other tool you
-   usually use). Use batch mode to process all the individual time points as A
-   single batch.
+   AiryScan Processing for Zeiss, or NIS Deconvolution or Denoising, or any 
+   other tool you usually use). Use batch mode to process all time points as 
+   one batch.
 
    .. admonition:: Tip
       :class: tip
