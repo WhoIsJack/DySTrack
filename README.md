@@ -19,29 +19,38 @@ provided "as is", without warranty or liability of any kind (see LICENSE).
 ```
 
 
-## Installation
+## Quick start
 
+It is strongly advised that first-time users consult [the Documentation](LINK!)
+before installing and using DySTrack. These Quick Start instructions are
+intended solely for experienced users.
+
+Install from cloned GitHub repo (recommended):
+
+```batch
+git clone https://github.com/WhoIsJack/DySTrack.git
+cd DySTrack
+conda create -n dystrack python=3.13
+conda activate dystrack
+pip install -e .
+pytest
 ```
-# TODO: 
-#  - Remove the dev specs
-#  - Swap local install for pip install (for users)
-#  - [Add env creation for local install?]
-#  - Refer to documentation for more installation instructions
+
+Install from PyPI:
+
+```batch
+conda create -n dystrack python=3.13
+conda activate dystrack
+pip install dystrack
+pytest
 ```
 
-For users:
+Start a DySTrack manager session:
 
-```pip install -e .```
-
-
-For developers:
-
-```pip install -e ".[dev]"```
-
-
-To update:
-
-```pip install -Ue ".[dev]"```
+```batch
+conda activate dystrack
+python <path-to-config-file.py> <path-to-target-dir> [optional arguments]
+```
 
 
 ## Overview of repo structure
@@ -120,17 +129,17 @@ The prototype was then modernized and further developed by Zimeng Wu and Jonas
 Hartmann at UCL, in the groups of Mie Wong and Roberto Mayor, respectively, 
 with support by the Centre for Cell & Molecular Dynamics (CCMD), especially 
 Virginia Silio, Mike Redd, and Alan Greig. Nicolas Sergent (Zeiss) supported 
-development for ZEN Black and Robert Tetley (Nikon) for NIS Elements. The chick 
+development for ZEN Blue and Robert Tetley (Nikon) for NIS Elements. The chick 
 node tracking experiments were developed with Octavian Voiculescu in the lab of 
 Alessandro Mongera.
 
 
 ## Citing DySTrack
 
-```
-# TODO: Add link and complete reference once preprint has been posted
-```
-
 If you are using DySTrack in your research, please cite [the preprint](LINK!):
 
 ```Wu, Zimeng, ..., and Hartmann, Jonas; [citation forthcoming]```
+
+```
+# TODO: Add link and complete BibTeX reference once preprint has been posted
+```
