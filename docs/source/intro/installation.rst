@@ -224,6 +224,55 @@ repo folder, you should be able to run the tests with this simple command:
         jupyter notebook
     
 
+.. admonition:: Installing DySTrack without an internet connection
+    :class: tip
+
+    Some microscope PCs do not have a connection to the internet, but DySTrack
+    can still be installed using similar steps.
+
+    First, on a PC that has an internet connection, clone DySTrack and install
+    it as described in the steps above. Then make a new folder called 
+    ``dependencies`` inside the ``DySTrack`` folder and use pip to add all
+    required dependencies into that subfolder:
+
+    .. code-block:: batch
+
+        conda activate dystrack
+        pip download -d dependencies ".[full]"
+
+    Pip should now package the dependencies into ``.whl`` files in the
+    ``dependencies`` folder. Note that you may need to provide additional
+    options to ensure compatibility if your online PC is not the same OS as
+    your target offline PC.
+    
+    Now transfer the entire ``DySTrack`` folder (including ``dependencies``) as
+    well as the installers for Git for Windows and Miniforge to the PC that
+    does not have internet access.
+
+    Repeat the installation process on that PC, but when you get to the 
+    ``pip install`` command, use the following command instead of the normal 
+    one:
+
+    .. code-block:: batch
+
+        pip install --no-index --find-links dependencies -e ".[full]"
+
+    Run ``pytest`` as usual to check if everything is working.
+
+    You may also wish to build a local copy of the docs so you can view them
+    without an internet connection. Once everything is installed, run:
+
+    .. code-block:: batch
+
+        conda activate dystrack
+        cd docs
+        make html
+
+    You can now open the file ``docs/build/html/index.html`` in a web browser
+    to view the documentation locally. We recommend bookmarking the page in the
+    browser so you don't need to go find the file each time.
+
+
 
 Part 3: Setting up the microscope macro
 ---------------------------------------
