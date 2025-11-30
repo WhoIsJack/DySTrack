@@ -46,10 +46,10 @@ and ``NIS Elements`` (via `JOBS`_). Adaptation to any other microscope control
 software that supports basic macros/automation is also possible, and support
 for other systems may be added in the future.
 
-The **source code** for DySTrack is `on GitHub`_, where you may also contribute 
-to DySTrack's continued development and maintenance. Please raise a GitHub 
-Issue  if you encounter a problem with DySTrack or would like to suggest a 
-feature. *Note that the authors cannot guarantee support.*
+The **source code** for DySTrack is `on GitHub`_, where you may also 
+`contribute`_ to DySTrack's continued development and maintenance. Please raise 
+a GitHub Issue if you encounter a problem with DySTrack or would like to 
+suggest a new feature. *Note that the authors cannot guarantee support.*
 
 
 .. admonition:: **Citing DySTrack**
@@ -66,6 +66,7 @@ feature. *Note that the authors cannot guarantee support.*
 .. _MyPiC: https://github.com/manerotoni/mypic/
 .. _Macros: https://github.com/zeiss-microscopy/OAD
 .. _JOBS: https://www.microscope.healthcare.nikon.com/en_EU/products/software/nis-elements/nis-elements-jobs
+.. _contribute: https://github.com/WhoIsJack/DySTrack/contribute
 .. _the preprint: https://domain.invalid/
 
 
