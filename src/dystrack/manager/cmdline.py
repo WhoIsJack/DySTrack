@@ -79,22 +79,22 @@ def _get_docstr_args_numpy(func):
 
     # Filter out Parameters section
     argstr = re.split(
-        r"^\s+Parameters$\n^\s+----------$", docstr, flags=re.MULTILINE
+        r"^\s*Parameters$\n^\s*----------\s*$", docstr, flags=re.MULTILINE
     )[1]
     argstr = re.split(
-        r"^\s+Returns$\n^\s+-------$", argstr, flags=re.MULTILINE
+        r"^\s*Returns$\n^\s*-------\s*$", argstr, flags=re.MULTILINE
     )[0]
 
     # Identify type annotations and text descriptions for each argument
     argtypes, argdescr = {}, {}
     for arg, arg_next in zip(args[:-1], args[1:]):
         argtypes[arg], argdescr[arg] = re.search(
-            rf"^\s+({arg} : )(.+)$\s^\s+([\S\s]+)({arg_next} : )",
+            rf"^\s*({arg} : )(.+)$\s^\s*([\S\s]+)({arg_next} : )",
             argstr,
             flags=re.MULTILINE,
         ).groups()[1:3]
     argtypes[args[-1]], argdescr[args[-1]] = re.search(
-        rf"^\s+({args[-1]} : )(.+)$\s^\s+([\S\s]+)", argstr, flags=re.MULTILINE
+        rf"^\s*({args[-1]} : )(.+)$\s^\s*([\S\s]+)", argstr, flags=re.MULTILINE
     ).groups()[1:]
 
     # Clean text descriptions
