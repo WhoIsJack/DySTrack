@@ -128,8 +128,8 @@ on the microscope PC:
 ...............................................
 
 Using your preferred python environment/package manager, create a new
-environment for DySTrack with a supported version of python (``>=3.10``) and
-pip (installed automatically if using ``conda create``).
+environment for DySTrack with a supported version of python (``>=3.10, <3.14``) 
+and pip (installed automatically if using ``conda create``).
 
 **In a Miniforge prompt:**
 
