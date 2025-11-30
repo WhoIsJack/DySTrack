@@ -1,7 +1,9 @@
 # Continuous Integration workflow for DySTrack
-# On a push or on creation of a pull request to branches main or ci_dev, this 
-# workflow will install python and DySTrack (along with dependencies) and run 
-# black, isort, and pytest.
+# On a push or on creation of a pull request to to branches main or ci_dev, 
+# this workflow will install python and DySTrack (along with dependencies) and 
+# run black, isort, and pytest. This is currently run once for all supported
+# python versions and only on Windows 11 (since running things on Windows 10 is
+# not supported by GitHub, even though DySTrack does for now support it).
 
 name: DYSTRACK CI
 
@@ -18,11 +20,10 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        #os: [windows-2019, windows-2022, windows-latest]  # TODO: Change to Win10 and Win11
-        os: [windows-latest]  # DEV-TEMP: To save minutes while repo is not yet public!
-        #python-version: ["3.10", "3.11", "3.12", "3.13"]
-        python-version: ["3.10"]  # DEV-TEMP: To save minutes while repo is not yet public!
-
+        os: [windows-latest]
+        #python-version: ["3.10", "3.14"]
+        python-version: ["3.10", "3.11", "3.12", "3.13", "3.14"]
+        
     # Setup
     steps:
     - uses: actions/checkout@v4
@@ -36,14 +37,11 @@ jobs:
         python -m pip install ".[full]"
 
     # Code formatting
-    # DEV-TEMP: Instead of specifying src and test explicitly here, we could
-    # add an extend-exclude kwarg to pyproject.toml that stops black from
-    # looking at folders we don't want checked. But for now, I want folders 
-    # like prototype and macros excluded here, but not in pyproject.toml!
-    # UPDATE: Seems like use_pyproject is only supported for python 3.11 or
-    # higher, so for now I guess this should stay as it is anyways.
-    # UPDATE: Exclusion of prototype/notebooks and macros is actually desirable
-    # in all cases, so from 3.11 onward it makes sense to swap!  # TODO!
+    # TODO: When dropping python 3.10 support, add an extend-exclude kwarg to
+    # pyproject.toml that stops black (and isort?) from looking at folders we 
+    # do not want them to check, so they do not need to be specified here (and
+    # will also apply to local runs of black). For now, this is not possible as
+    # support for use_pyproject is only available for python>3.11.
     - name: Code formatting with black
       if: success() || failure()
       uses: psf/black@stable
@@ -54,7 +52,7 @@ jobs:
       if: success() || failure()
       run: |
         isort --check-only --diff ./src ./tests
-      # Using the isort action fails for an obscure reason...
+      # Note: Using the isort action fails for some obscure reason...
       #uses: isort/isort-action@v1
       #with:
       #  sort-paths: "./src ./tests"
