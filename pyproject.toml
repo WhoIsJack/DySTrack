@@ -39,12 +39,10 @@ dependencies = [
 ]
 
 [project.urls]
-"Homepage" = "https://charliebritton.github.io/website-placeholder"
-"Source Code" = "https://github.com/WhoIsJack/DySTrack"
-"Documentation" = "https://charliebritton.github.io/website-placeholder"
-"Issues" = "https://github.com/WhoIsJack/DySTrack/issues"
-"Bug Tracker" = "https://github.com/WhoIsJack/DySTrack/issues"
-"User Support" = "https://github.com/WhoIsJack/DySTrack/issues"
+homepage = "https://charliebritton.github.io/website-placeholder"
+source = "https://github.com/WhoIsJack/DySTrack"
+documentation = "https://charliebritton.github.io/website-placeholder"
+issues = "https://github.com/WhoIsJack/DySTrack/issues"
 
 [project.optional-dependencies]
 
