@@ -24,7 +24,12 @@ from dystrack.pipelines.utilities.loading import (
 
 
 def analyze_image(
-    target_path, channel=None, warn_8bit=True, show=False, verbose=False
+    target_path,
+    channel=None,
+    await_write=2,
+    warn_8bit=True,
+    show=False,
+    verbose=False,
 ):
     """Compute new coordinates for the scope to track the developing chick node
     during regression based on a 2D or 3D image. Stable node coordinates are
@@ -38,6 +43,10 @@ def analyze_image(
     channel : int, optional, default None
         Index of channel to use for masking in case of multi-channel images.
         If not specified, a single-channel image is assumed.
+    await_write : int, optional, default 2
+        Seconds to wait between each check of the target file size to determine
+        if the file is still being written to. Reducing this will shave off
+        latency but increases the risk of race conditions.
     warn_8bit : bool, optional, default True
         Whether to emit a warning when a non-8bit image was found and was down-
         converted to 8bit using min-max rescaling.
@@ -64,7 +73,7 @@ def analyze_image(
     ### Load data
 
     # Wait for image to be written and then load it
-    raw = robustly_load_image_after_write(target_path)
+    raw = robustly_load_image_after_write(target_path, await_write=await_write)
 
     # Report
     if verbose:

@@ -18,7 +18,7 @@ import numpy as np
 from bioio import BioImage
 
 
-def robustly_load_image_after_write(target_path):
+def robustly_load_image_after_write(target_path, await_write=2):
     """Load an image from a specified target path using bioio, ensuring (as)
     (best as possible using simple means) that the image is no longer being
     actively written out by the microscope.
@@ -34,6 +34,10 @@ def robustly_load_image_after_write(target_path):
     ----------
     target_path : path-like
         Path to the image file that is to be analyzed.
+    await_write : int, optional, default 2
+        Seconds to wait between each check of the target file size to determine
+        if the file is still being written to. Reducing this will shave off
+        latency but increases the risk of race conditions.
 
     Returns
     -------
@@ -51,7 +55,7 @@ def robustly_load_image_after_write(target_path):
         #       this is not a perfect check for whether the file is complete;
         #       hence the multiple loading attempts...
         while True:
-            sleep(2)
+            sleep(await_write)
             new_file_size = os.stat(target_path).st_size
             if new_file_size > file_size:
                 file_size = new_file_size

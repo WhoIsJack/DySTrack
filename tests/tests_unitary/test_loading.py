@@ -39,15 +39,10 @@ def test_robust_load_success(mocker):
     ]
     fdtypes = [np.uint8, np.uint8, np.uint8, np.uint16, np.uint16]
 
-    # For performance, patch sleep...
-    mocker.patch(
-        "dystrack.pipelines.utilities.loading.sleep", lambda t: sleep(0.1)
-    )
-
     # Run tests
     for fn, fs, fdt in zip(fnames, fshapes, fdtypes):
         raw = loading.robustly_load_image_after_write(
-            os.path.join(testpath, fn)
+            os.path.join(testpath, fn), await_write=0.1
         )
         assert raw.shape == fs
         assert raw.dtype == fdt
@@ -83,14 +78,9 @@ def test_robust_load_slowrite(mocker):
         "dystrack.pipelines.utilities.loading.os.stat", wraps=mock_stat
     )
 
-    # For performance, patch sleep...
-    mocker.patch(
-        "dystrack.pipelines.utilities.loading.sleep", lambda t: sleep(0.1)
-    )
-
     # Run the test
     raw = loading.robustly_load_image_after_write(
-        os.path.join(testpath, fname)
+        os.path.join(testpath, fname), await_write=0.1
     )
     assert raw.shape == (21, 200, 500)
     assert raw.dtype == np.uint8
@@ -125,15 +115,11 @@ def test_robust_load_errors_filext(mocker, capsys):
         "dystrack.pipelines.utilities.loading.os.stat", wraps=mock_stat
     )
 
-    # For performance, patch sleep...
-    mocker.patch(
-        "dystrack.pipelines.utilities.loading.sleep", lambda t: sleep(0.1)
-    )
-
     # Test unsupported file ending
     with pytest.raises(ValueError) as err:
         raw = loading.robustly_load_image_after_write(
-            os.path.join(testpath, fname)
+            os.path.join(testpath, fname),
+            await_write=0.1,  # Short for tests perf
         )
 
     # Check error message
@@ -155,11 +141,6 @@ def test_robust_load_errors_loadnonnumeric(capsys, mocker):
     testpath = r"./tests/testdata/"
     fname = "test-pllp_980_prescan.tif"
 
-    # For performance, patch sleep...
-    mocker.patch(
-        "dystrack.pipelines.utilities.loading.sleep", lambda t: sleep(0.1)
-    )
-
     # Patch Bioimage to return string array
     mock_bioimage = mocker.patch(
         "dystrack.pipelines.utilities.loading.BioImage",
@@ -169,7 +150,8 @@ def test_robust_load_errors_loadnonnumeric(capsys, mocker):
     # Test string array case
     with pytest.raises(IOError) as err:
         raw = loading.robustly_load_image_after_write(
-            os.path.join(testpath, fname)
+            os.path.join(testpath, fname),
+            await_write=0.1,  # Short for tests perf
         )
 
     # Check error message
@@ -191,11 +173,6 @@ def test_robust_load_errors_loadempty(capsys, mocker):
     testpath = r"./tests/testdata/"
     fname = "test-pllp_980_prescan.tif"
 
-    # For performance, patch sleep...
-    mocker.patch(
-        "dystrack.pipelines.utilities.loading.sleep", lambda t: sleep(0.1)
-    )
-
     # Patch Bioimage to return empty array
     mock_bioimage = mocker.patch(
         "dystrack.pipelines.utilities.loading.BioImage",
@@ -205,7 +182,8 @@ def test_robust_load_errors_loadempty(capsys, mocker):
     # Test empty array case
     with pytest.raises(IOError) as err:
         raw = loading.robustly_load_image_after_write(
-            os.path.join(testpath, fname)
+            os.path.join(testpath, fname),
+            await_write=0.1,  # Short for tests perf
         )
 
     # Check error message
@@ -226,7 +204,7 @@ def test_robust_load_errors_bioimagearbitrary(capsys, mocker):
     testpath = r"./tests/testdata/"
     fname = "test-pllp_980_prescan.tif"
 
-    # For performance, patch sleep...
+    # For performance, patch sleep
     mocker.patch(
         "dystrack.pipelines.utilities.loading.sleep", lambda t: sleep(0.1)
     )

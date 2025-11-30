@@ -219,7 +219,7 @@ def test_analyze_image_errors_inputchecks(mocker):
     # Too many dimensions
     mocker.patch(
         "dystrack.pipelines.center_of_mass.robustly_load_image_after_write",
-        wraps=lambda fp: np.zeros((1, 1, 1, 1, 1)),
+        wraps=lambda fp, await_write: np.zeros((1, 1, 1, 1, 1)),
     )
     with pytest.raises(IOError) as err:
         center_of_mass.analyze_image("test_path.tiff")
@@ -228,7 +228,7 @@ def test_analyze_image_errors_inputchecks(mocker):
     # Too few dimensions
     mocker.patch(
         "dystrack.pipelines.center_of_mass.robustly_load_image_after_write",
-        wraps=lambda fp: np.zeros((1,)),
+        wraps=lambda fp, await_write: np.zeros((1,)),
     )
     with pytest.raises(IOError) as err:
         center_of_mass.analyze_image("test_path.tiff")
@@ -237,7 +237,7 @@ def test_analyze_image_errors_inputchecks(mocker):
     # Too few dimensions with channel
     mocker.patch(
         "dystrack.pipelines.center_of_mass.robustly_load_image_after_write",
-        wraps=lambda fp: np.zeros((1, 1)),
+        wraps=lambda fp, await_write: np.zeros((1, 1)),
     )
     with pytest.raises(IOError) as err:
         center_of_mass.analyze_image("test_path.tiff", channel=0)
@@ -250,7 +250,7 @@ def test_analyze_image_warnings_inputchecks(mocker):
     # Channel given but large first dimension
     mocker.patch(
         "dystrack.pipelines.center_of_mass.robustly_load_image_after_write",
-        wraps=lambda fp: np.zeros((10, 1, 1, 1)),
+        wraps=lambda fp, await_write: np.zeros((10, 1, 1, 1)),
     )
     with pytest.raises(Exception) as err:
         with warnings.catch_warnings():
@@ -261,7 +261,7 @@ def test_analyze_image_warnings_inputchecks(mocker):
     # Conversion to 8bit
     mocker.patch(
         "dystrack.pipelines.center_of_mass.robustly_load_image_after_write",
-        wraps=lambda fp: np.zeros((3, 5, 5), dtype=np.uint16),
+        wraps=lambda fp, await_write: np.zeros((3, 5, 5), dtype=np.uint16),
     )
     with pytest.raises(Exception) as err:
         with warnings.catch_warnings():
@@ -274,7 +274,7 @@ def test_analyze_image_errors_nothresh(mocker):
 
     mocker.patch(
         "dystrack.pipelines.center_of_mass.robustly_load_image_after_write",
-        wraps=lambda fp: np.zeros((100, 100), dtype=np.uint8),
+        wraps=lambda fp, await_write: np.zeros((100, 100), dtype=np.uint8),
     )
     with pytest.raises(Exception) as err:
         center_of_mass.analyze_image("test_path.tiff", method="objct")
@@ -285,7 +285,7 @@ def test_analyze_image_errors_invalidmethod(mocker):
 
     mocker.patch(
         "dystrack.pipelines.center_of_mass.robustly_load_image_after_write",
-        wraps=lambda fp: np.zeros((100, 100), dtype=np.uint8),
+        wraps=lambda fp, await_write: np.zeros((100, 100), dtype=np.uint8),
     )
     with pytest.raises(NotImplementedError) as err:
         center_of_mass.analyze_image("test_path.tiff", method="bad_method")

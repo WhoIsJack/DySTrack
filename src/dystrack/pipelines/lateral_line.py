@@ -32,6 +32,7 @@ def analyze_image(
     blank_fract=1.0 / 5.0,
     default_catchup_fract=1.0 / 5.0,
     default_step_fract=1.0 / 8.0,
+    await_write=2,
     warn_8bit=True,
     show=False,
     verbose=False,
@@ -69,6 +70,10 @@ def analyze_image(
         Default distance by which the field of view should be moved if masking
         appears to have failed (leading edge in rear half of image), expressed
         as a fraction of the image size in x.
+    await_write : int, optional, default 2
+        Seconds to wait between each check of the target file size to determine
+        if the file is still being written to. Reducing this will shave off
+        latency but increases the risk of race conditions.
     warn_8bit : bool, optional, default True
         Whether to emit a warning when a non-8bit image was found and was down-
         converted to 8bit using min-max rescaling.
@@ -95,7 +100,7 @@ def analyze_image(
     ### Load data
 
     # Wait for image to be written and then load it
-    raw = robustly_load_image_after_write(target_path)
+    raw = robustly_load_image_after_write(target_path, await_write=await_write)
 
     # Report
     if verbose:
