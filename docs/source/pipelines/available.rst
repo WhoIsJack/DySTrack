@@ -76,10 +76,10 @@ For details on the function's call signature, see the
 Tracking the zebrafish lateral line primordium
 ----------------------------------------------
 
-This pipeline is how the example on the landing page was generated:
+This pipeline is how the example gif on the landing page was generated:
 
 .. figure:: /images/landing_page/pllp_movie.gif
-    :alt: DySTrack lateral line primordium animation
+    :alt: DySTrack lateral line primordium animation (downsampled)
     :align: center
     :width: 95%
 
@@ -148,12 +148,18 @@ For details on the function's call signature, see the
 Tracking regression of the chick Hensen's node
 ----------------------------------------------
 
-.. TODO: Add example movie as another gif?
-
 The organizer of chick gastrulation, Hensen's node, regresses caudally through 
 the primitive streak as gastrulation proceeds. This pipeline is used to track 
 the node based on electroporated labeling and to image cells that leave the 
-node toward the anterior.
+node toward the anterior. 
+
+Here's an example of a resulting time course (maximum z-projected and 
+downsampled in space and time to limit file size):
+
+.. figure:: /images/pipelines/node_movie.gif
+    :alt: DySTrack chick regressing Hensen's node animation (downsampled)
+    :align: center
+    :width: 85%
 
 The chick node pipeline uses a different approach to find coordinates that is 
 not based on foreground masking. Instead, it defines simple models of expected

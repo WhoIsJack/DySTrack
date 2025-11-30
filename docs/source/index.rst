@@ -30,7 +30,7 @@ migratory cells or tissues during acquisition.
 
 
 .. figure:: images/landing_page/pllp_movie.gif
-    :alt: DySTrack lateral line primordium animation
+    :alt: DySTrack lateral line primordium animation (downsampled)
     :align: center
     :width: 95%
 
@@ -38,6 +38,7 @@ migratory cells or tissues during acquisition.
     highly migratory tissue, as it crawls along the flank of a developing 
     embryo. DySTrack was used to enable autonomous tracking and 3D confocal 
     imaging of the primordium over several hours on a Zeiss LSM980 microscope.
+    (This gif is maximum z-projected and downsampled to limit file size.)
 
 
 DySTrack works on common commercial microscopes, with current out-of-the-box
