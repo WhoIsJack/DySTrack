@@ -32,7 +32,7 @@ git clone https://github.com/WhoIsJack/DySTrack.git
 cd DySTrack
 conda create -n dystrack python=3.13
 conda activate dystrack
-pip install -e .
+pip install -e ".[full]"
 pytest
 ```
 
@@ -41,7 +41,7 @@ Install from PyPI:
 ```batch
 conda create -n dystrack python=3.13
 conda activate dystrack
-pip install dystrack
+pip install "dystrack[full]"
 pytest
 ```
 
