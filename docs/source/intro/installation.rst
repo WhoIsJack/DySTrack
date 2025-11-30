@@ -161,8 +161,8 @@ adding a new pipline) will be applied immediately. There is no need to
 reinstall unless changes are made to the project metadata (e.g. addition of 
 dependencies to ``pyproject.toml``)
 
-Side note: Expert users may choose not to do a "full" install (see details in
-pyproject.toml), but it is recommended in virtually all use cases.
+Side note: Expert users may choose not to do a "full" install (see 
+pyproject.toml for specs), but we always recommend "full".
 
 Once the installation is complete, we strongly recommend running the DySTrack
 test suite to check that everything is working as intended. With the
