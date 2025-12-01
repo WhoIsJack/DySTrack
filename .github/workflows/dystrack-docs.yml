@@ -9,24 +9,24 @@ permissions:
 
 jobs:
   docs:
-    runs-on: ubuntu-latest
+    runs-on: windows-latest
     steps:
 
     # Setup
     - uses: actions/checkout@v4
     - name: Set up Python 3.13
-      uses: actions/setup-python@v5
+      uses: actions/setup-python@v3
       with:
         python-version: "3.13"
     - name: Install dependencies
       run: |
-        pip install sphinx nbsphinx pydata-sphinx-theme sphinx-toolbox
-        #pip install sphinx sphinx_rtd_theme myst_parser
+        python -m pip install --upgrade pip
+        python -m pip install ".[full]"
 
     # Build
     - name: Sphinx build
       run: |
-        sphinx-build docs _build
+        sphinx-build ./docs/source ./docs/build
 
     # Deploy
     - name: Deploy to GitHub Pages
@@ -35,5 +35,5 @@ jobs:
       with:
         publish_branch: docs-gh-pages
         github_token: ${{ secrets.GITHUB_TOKEN }}
-        publish_dir: _build/
+        publish_dir: ./docs/build/
         force_orphan: true
