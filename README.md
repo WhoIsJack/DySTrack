@@ -39,7 +39,6 @@ Install from PyPI:
 conda create -n dystrack python=3.13
 conda activate dystrack
 pip install "dystrack[full]"
-pytest
 ```
 
 Start a DySTrack manager session:
