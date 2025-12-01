@@ -39,9 +39,9 @@ dependencies = [
 ]
 
 [project.urls]
-homepage = "https://charliebritton.github.io/website-placeholder"
+homepage = "https://whoisjack.github.io/DySTrack/"
 source = "https://github.com/WhoIsJack/DySTrack"
-documentation = "https://charliebritton.github.io/website-placeholder"
+documentation = "https://whoisjack.github.io/DySTrack/"
 issues = "https://github.com/WhoIsJack/DySTrack/issues"
 
 [project.optional-dependencies]

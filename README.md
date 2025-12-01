@@ -5,7 +5,7 @@
 migratory cells or tissues during acquisition. It works with common commercial
 microscope control software through a minimal interface.
 
-Please see [the Documentation](LINK!) for more information!
+Please see [the Documentation](https://whoisjack.github.io/DySTrack/) for more information!
 
 _**Warning:**_ Modern microscopes are expensive machines, and automating them 
 comes with an inherent risk of damage. Appropriate care must be taken when
@@ -14,16 +14,13 @@ provided "as is", without warranty or liability of any kind (see LICENSE).
 
 ![DySTrack lateral line primordium animation](docs/source/images/landing_page/pllp_movie.gif)
 
-```
-# TODO: Add link to documentation once it is live
-```
-
 
 ## Quick start
 
-It is strongly advised that first-time users consult [the Documentation](LINK!)
-before installing and using DySTrack. These Quick Start instructions are
-intended solely for experienced users.
+It is strongly advised that first-time users consult 
+[the Documentation](https://whoisjack.github.io/DySTrack/) before installing 
+and using DySTrack. These Quick Start instructions are intended solely for 
+experienced users.
 
 Install from cloned GitHub repo (recommended):
 
@@ -89,7 +86,7 @@ python <path-to-config-file.py> <path-to-target-dir> [optional arguments]
 We welcome Issues and Pull Requests that:
 
 - Report or fix a bug or other problem
-- Ask a question not answered in [the Documentation](LINK!)
+- Ask a question not answered in [the Documentation](https://whoisjack.github.io/DySTrack/)
 - Fix or improve something in the documentation
 - (Aim to) add a new image analysis pipeline
 - (Aim to) add support for an unsupported microscope
@@ -113,10 +110,6 @@ Nevertheless, we do aspire to be helpful and responsive to the extent our
 limited resources permit.
 
 All interactions must abide by the [Contributor Covenenat Code of Conduct](CODE_OF_CONDUCT.md).
-
-```
-# TODO: Add link to documentation once it is live
-```
 
 
 ## Acknowledgements
