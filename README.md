@@ -130,10 +130,17 @@ Alessandro Mongera.
 
 ## Citing DySTrack
 
-If you are using DySTrack in your research, please cite [the preprint](LINK!):
-
-```Wu, Zimeng, ..., and Hartmann, Jonas; [citation forthcoming]```
+If you are using DySTrack in your research, please cite [the preprint](https://www.biorxiv.org/content/10.64898/2025.12.02.691816v1):
 
 ```
-# TODO: Add link and complete BibTeX reference once preprint has been posted
+@article {Wu2025.12.02.691816,
+  author = {Wu, Zimeng and Voiculescu, Octavian and Mongera, Alessandro and Mayor, Roberto and Wong, Mie and Hartmann, Jonas},
+  title = {DySTrack: a modular smart microscopy tool for live tracking of dynamic samples on modern commercial microscopes},
+  elocation-id = {2025.12.02.691816},
+  year = {2025},
+  doi = {10.64898/2025.12.02.691816},
+  publisher = {Cold Spring Harbor Laboratory},
+  URL = {https://www.biorxiv.org/content/10.64898/2025.12.02.691816v1},
+  journal = {bioRxiv}
+}
 ```
