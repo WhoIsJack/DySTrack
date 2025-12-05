@@ -12,7 +12,8 @@ comes with an inherent risk of damage. Appropriate care must be taken when
 installing, testing, and using DySTrack. The code and documentation are 
 provided "as is", without warranty or liability of any kind (see LICENSE).
 
-![[Gif: DySTrack lateral line primordium animation]](https://whoisjack.github.io/DySTrack/_images/pllp_movie.gif)
+![[Gif: DySTrack lateral line primordium animation]](https://github.com/WhoIsJack/DySTrack/raw/main/docs/source/images/landing_page/pllp_movie.gif)
+
 
 
 ## Quick start
