@@ -190,12 +190,6 @@ repo folder, you should be able to run the tests with this simple command:
 
         pip install "dystrack[full]"
 
-    To check that the install worked, run the test suite:
-
-    .. code-block:: batch
-
-        pytest
-
 
 .. admonition:: DySTrack in Jupyter notebook
     :class: tip

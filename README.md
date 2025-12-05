@@ -1,4 +1,4 @@
-# DySTrack - Dynamic Sample Tracker
+# DySTrack - Dynamic Sample Tracking
 
 **DySTrack ("diss track")** is a simple, modular, python-based, open-source 
 **automated feedback microscopy tool** for live tracking of moving samples like 
@@ -12,7 +12,8 @@ comes with an inherent risk of damage. Appropriate care must be taken when
 installing, testing, and using DySTrack. The code and documentation are 
 provided "as is", without warranty or liability of any kind (see LICENSE).
 
-![DySTrack lateral line primordium animation](docs/source/images/landing_page/pllp_movie.gif)
+![[Gif: DySTrack lateral line primordium animation]](https://github.com/WhoIsJack/DySTrack/raw/main/docs/source/images/landing_page/pllp_movie.gif)
+
 
 
 ## Quick start
@@ -39,7 +40,6 @@ Install from PyPI:
 conda create -n dystrack python=3.13
 conda activate dystrack
 pip install "dystrack[full]"
-pytest
 ```
 
 Start a DySTrack manager session:
@@ -131,10 +131,17 @@ Alessandro Mongera.
 
 ## Citing DySTrack
 
-If you are using DySTrack in your research, please cite [the preprint](LINK!):
-
-```Wu, Zimeng, ..., and Hartmann, Jonas; [citation forthcoming]```
+If you are using DySTrack in your research, please cite [the preprint](https://www.biorxiv.org/content/10.64898/2025.12.02.691816v1):
 
 ```
-# TODO: Add link and complete BibTeX reference once preprint has been posted
+@article {Wu2025.12.02.691816,
+  author = {Wu, Zimeng and Voiculescu, Octavian and Mongera, Alessandro and Mayor, Roberto and Wong, Mie and Hartmann, Jonas},
+  title = {DySTrack: a modular smart microscopy tool for live tracking of dynamic samples on modern commercial microscopes},
+  elocation-id = {2025.12.02.691816},
+  year = {2025},
+  doi = {10.64898/2025.12.02.691816},
+  publisher = {Cold Spring Harbor Laboratory},
+  URL = {https://www.biorxiv.org/content/10.64898/2025.12.02.691816v1},
+  journal = {bioRxiv}
+}
 ```
