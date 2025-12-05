@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "dystrack"
-version = "1.0.0"
+version = "1.0.1"
 authors = [
   { name="Jonas Hartmann", email="jonas.hartmann@ucl.ac.uk" },
   { name="Zimeng Wu", email="zimeng.wu.18@ucl.ac.uk" },
