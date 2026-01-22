@@ -10,7 +10,6 @@ Created on Sun Jan 15 00:34:07 2017
             line inputs and launch the DySTrack manager event loop.
 """
 
-
 import argparse
 import re
 

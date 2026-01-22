@@ -9,7 +9,6 @@ Created on Sun Jan 15 00:34:07 2017
             rather to the macros that are running in their software.
 """
 
-
 import os
 import winreg as winr
 

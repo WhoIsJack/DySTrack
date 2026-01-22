@@ -12,7 +12,6 @@ Created on Sun Jan 15 00:34:07 2017
             microscope through a specified channel.
 """
 
-
 import os
 import re
 from msvcrt import getch, kbhit
