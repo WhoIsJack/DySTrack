@@ -1,0 +1,781 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" data-theme="dark">
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Anatomy of an image analysis pipeline &#8212; DySTrack  documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "dark";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "dark";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'pipelines/anatomy';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Developing image analysis pipelines" href="develop.html" />
+    <link rel="prev" title="Available image analysis pipelines" href="available.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="dark">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+    
+    
+    
+    <img src="../_static/DySTrack_logo_dark.svg" class="logo__image only-dark" alt="DySTrack - Home"/>
+    <img src="../_static/DySTrack_logo_lite.svg" class="logo__image only-light pst-js-only" alt="DySTrack - Home"/>
+  
+  
+    <p class="title logo__title">DySTrack Docs</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../intro/index.html">
+    Getting started
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../usage/index.html">
+    Running DySTrack
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="index.html">
+    Image analysis pipelines
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../api/index.html">
+    API Reference
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/WhoIsJack/DySTrack/" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../intro/index.html">
+    Getting started
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../usage/index.html">
+    Running DySTrack
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="index.html">
+    Image analysis pipelines
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../api/index.html">
+    API Reference
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/WhoIsJack/DySTrack/" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+<nav class="bd-docs-nav bd-links"
+     aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="available.html">Available pipelines</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Anatomy of a pipeline</a></li>
+<li class="toctree-l1"><a class="reference internal" href="develop.html">Developing pipelines</a></li>
+<li class="toctree-l1"><a class="reference internal" href="advanced.html">Advanced tools &amp; strategies</a></li>
+</ul>
+</div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="index.html" class="nav-link">Image analysis pipelines</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Anatomy of an image analysis pipeline</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="anatomy-of-an-image-analysis-pipeline">
+<h1>Anatomy of an image analysis pipeline<a class="headerlink" href="#anatomy-of-an-image-analysis-pipeline" title="Link to this heading">#</a></h1>
+<p>This page describes the general anatomy of DySTrack image analysis pipelines in
+some detail. It is primarily relevant to those who seek to develop their own
+pipelines.</p>
+<div class="note admonition">
+<p class="admonition-title">Please share your work!</p>
+<p>If you build a DySTrack image analysis pipeline that could be of interest
+for others, please consider sharing your work with the community by adding
+it to the DySTrack repo. You can do so during/after publication, if this is
+a constraint.</p>
+<p>If you would like to add a pipeline, please open an issue <a class="reference external" href="https://github.com/WhoIsJack/DySTrack/">on GitHub</a>.</p>
+</div>
+<section id="overview">
+<span id="anatomy-section-overview"></span><h2>Overview<a class="headerlink" href="#overview" title="Link to this heading">#</a></h2>
+<p>DySTrack image analysis pipelines are python functions that take a file path as
+their first and only positional argument and return new z, y, and x coordinates
+(along with a couple of other things). They are called by the DySTrack manager,
+which passes them the file path to a newly detected image file that the
+pipeline is to analyze.</p>
+<p>Pipeline functions will commonly include the following steps:</p>
+<ol class="arabic">
+<li><p>Load the image specified in the file path argument</p>
+<p></p></li>
+<li><p>Quick checks on the data; error out or warn users if something is wrong</p>
+<p></p></li>
+<li><p>Detect the desired new target coordinates within the image</p>
+<p>Typical steps might include:</p>
+<ul class="simple">
+<li><p>Some smoothing to reduce noise</p></li>
+<li><p>Masking foreground pixels/voxels (e.g. by thresholding)</p></li>
+<li><p>Cleaning the foreground mask and/or identifying a specific target object</p></li>
+<li><p>Detecting new coordinates based on the foreground mask / target object</p></li>
+</ul>
+<p></p></li>
+<li><p>Quick checks on the coordinates; trigger fallbacks or constrain movement if
+needed, or error if something is very wrong</p>
+<p></p></li>
+<li><p>Return the final target coordinates</p>
+<p></p></li>
+</ol>
+<p>Additional information on each step is provided
+<a class="reference internal" href="#anatomy-section-pipeline-details"><span class="std std-ref">below</span></a>.</p>
+<div class="note admonition">
+<p class="admonition-title">Freedom!</p>
+<p>Ultimately, pipeline functions are just python functions, so the above
+structure is not prescriptive; <em>you can do anything python allows you to
+do!</em></p>
+<p>For instance, you could run a machine learning model trained to detect your
+target object instead of using standard image analysis functions. You could
+also do additional things besides detecting new target coordinates, such as
+pushing results to a live dashboard that can be monitored over the internet
+from another location. It doesn’t even have to all be in python; you could
+just write a small python pipeline function that runs/triggers some
+non-python code/software in another process and retrieves the resulting
+coordinates at the end.</p>
+</div>
+<div class="warning admonition">
+<p class="admonition-title">Performance…</p>
+<p>The only limitation to this freedom is performance; if a pipeline takes a
+long time to run, the microscope will be idle in that time (at least if
+using a default acquisition macro), and the sample may even start moving
+away.</p>
+<p>This is a key reason why we usually use prescans for image analysis, as
+their low pixel/voxel number means they can be loaded and processed very
+quickly.</p>
+</div>
+</section>
+<section id="call-signature">
+<span id="anatomy-section-call-signature"></span><h2>Call signature<a class="headerlink" href="#call-signature" title="Link to this heading">#</a></h2>
+<p>Image analysis pipeline functions must adhere to the following call signature:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">z_pos</span><span class="p">,</span> <span class="n">y_pos</span><span class="p">,</span> <span class="n">x_pos</span><span class="p">,</span> <span class="n">img_msg</span><span class="p">,</span> <span class="n">img_cache</span> <span class="o">=</span> <span class="n">image_analysis_func</span><span class="p">(</span>
+    <span class="n">target_path</span><span class="p">,</span> <span class="o">**</span><span class="n">img_kwargs</span><span class="p">,</span> <span class="o">**</span><span class="n">img_cache</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><strong>Information on the arguments:</strong></p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">target_path</span></code> must be the only positional argument and must accept a
+string. DySTrack manager will pass the full path of newly generated (prescan)
+image files into the pipeline function through this argument.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">**img_kwargs</span></code> represents any number of optional keyword arguments.
+DySTrack manager will pass them as a dictionary using python’s arbitrary
+keyword argument handling (<code class="docutils literal notranslate"><span class="pre">**dict</span></code>). A simple example might be:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">image_analysis_func</span><span class="p">(</span>
+    <span class="n">target_path</span><span class="p">,</span> <span class="n">channel</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">gauss_sigma</span><span class="o">=</span><span class="mf">3.0</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span>
+<span class="p">):</span>
+    <span class="o">&lt;</span><span class="n">etc</span><span class="o">...&gt;</span>
+</pre></div>
+</div>
+<p>Here, the <code class="docutils literal notranslate"><span class="pre">img_kwargs</span></code> dictionary may contain any of <code class="docutils literal notranslate"><span class="pre">channel</span></code>,
+<code class="docutils literal notranslate"><span class="pre">gauss_sigma</span></code>, and/or <code class="docutils literal notranslate"><span class="pre">verbose</span></code>. These can be set as a fixed
+configuration in the corresponding config file (in the <code class="docutils literal notranslate"><span class="pre">run</span></code> folder), or
+otherwise dynamically as command line arguments.</p>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">**img_cache</span></code> works essentially the same way as <code class="docutils literal notranslate"><span class="pre">img_kwargs</span></code>, but it is
+also returned by <code class="docutils literal notranslate"><span class="pre">image_analysis_func</span></code> itself. Thus, it provides a way of
+forwarding a variable from one call of the pipeline function to the next.
+This is an advanced feature; more information can be found
+<a class="reference internal" href="advanced.html"><span class="doc">here</span></a>, but most users can safely ignore this.</p></li>
+</ul>
+<p><strong>Information on the return values:</strong></p>
+<p>The pipeline <em>must</em> return exactly 5 values:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">z_pos</span></code> (float): the new z-coordinate for the next acquisition. Return
+<code class="docutils literal notranslate"><span class="pre">0.0</span></code> when working in 2D.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">y_pos</span></code> (float): the new y-coordinate for the next acquisition.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">x_pos</span></code> (float): the new x-coordinate for the next acquisition.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">img_msg</span></code> (str): a string message that can be used to communicate extra
+information to the microscope or to log events. By convention, simply return
+<code class="docutils literal notranslate"><span class="pre">&quot;OK&quot;</span></code> if there is no meaningful information to communicate/log.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">img_cache</span></code> (dict): Used to forward variables to the next call of the
+pipeline function (see above). This is an advanced feature, so most users
+will not need it. Simply return <code class="docutils literal notranslate"><span class="pre">{}</span></code> (an empty dictionary) in that case.</p></li>
+</ul>
+<div class="note admonition">
+<p class="admonition-title">Convention</p>
+<p>We follow the numpy convention of ordering image dimensions as ZYX (not
+XYZ). Make sure you do not accidentally return coordinates in the wrong
+order!</p>
+</div>
+<p><strong>An example function definition might thus looks like this:</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">image_analysis_func</span><span class="p">(</span>
+    <span class="n">target_path</span><span class="p">,</span> <span class="n">channel</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">gauss_sigma</span><span class="o">=</span><span class="mf">3.0</span><span class="p">,</span> <span class="n">verbose</span><span class="o">=</span><span class="kc">False</span>
+<span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;My very nice image analysis pipeline. It works by &lt;explanation&gt;.</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    target_path : str</span>
+<span class="sd">        Path to the image file that is to be analyzed.</span>
+<span class="sd">    channel : int, optional, default None</span>
+<span class="sd">        Index of channel to use for masking in case of multi-channel images.</span>
+<span class="sd">        If not specified, a single-channel image is assumed.</span>
+<span class="sd">    gauss_sigma : float, optional, default 3.0</span>
+<span class="sd">        Sigma for Gaussian filter prior to masking.</span>
+<span class="sd">    verbose : bool, optional, default False</span>
+<span class="sd">        If True, more information is printed.</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    z_pos, y_pos, x_pos : floats</span>
+<span class="sd">        New coordinates for the next acquisition. For 2D inputs, z_pos is 0.0.</span>
+<span class="sd">    img_msg : &quot;_&quot;</span>
+<span class="sd">        A string output message; required by DySTrack but here unused and just</span>
+<span class="sd">        set to &quot;_&quot;.</span>
+<span class="sd">    img_cache : {}</span>
+<span class="sd">        A dictionary to be passed as keyword arguments to future calls to the</span>
+<span class="sd">        pipeline; required by DySTrack but here unused and just set to {}.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="c1"># &lt;code to load and process the image&gt;</span>
+
+    <span class="k">return</span> <span class="n">z_pos</span><span class="p">,</span> <span class="n">y_pos</span><span class="p">,</span> <span class="n">x_pos</span><span class="p">,</span> <span class="s2">&quot;OK&quot;</span><span class="p">,</span> <span class="p">{}</span>
+</pre></div>
+</div>
+<div class="important admonition">
+<p class="admonition-title">Required: numpy-style doc string!</p>
+<p>Note that the <code class="docutils literal notranslate"><span class="pre">Parameters</span></code> section of the doc string is automatically
+parsed by DySTrack to forward information about keyword arguments to the
+DySTrack command line interface. For this to function properly, your doc
+string <strong>must follow the numpy style</strong> and should ideally be kept fairly
+simple.</p>
+<p>In particular, the <code class="docutils literal notranslate"><span class="pre">Parameters</span></code> section must adhere strictly to this
+structure:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>Parameters
+----------
+x : type
+    Description of parameter `x`.
+y : type
+    Description of parameter `y`.
+&lt;etc&gt;
+</pre></div>
+</div>
+</div>
+</section>
+<section id="more-details-on-pipeline-steps">
+<span id="anatomy-section-pipeline-details"></span><h2>More details on pipeline steps<a class="headerlink" href="#more-details-on-pipeline-steps" title="Link to this heading">#</a></h2>
+<p>While the image analysis itself can be highly bespoke and completely different
+depending on the sample for which it is defined, the initial and final steps of
+pipelines will usually be very similar. The
+<a class="reference internal" href="../api/pipelines/dystrack.pipelines.utilities.html"><span class="doc">pipeline utilities</span></a> module
+offers a couple of functions that may be used for this, and the information in
+this section provides further context and advice.</p>
+<section id="step-1-image-loading">
+<h3>Step 1: Image loading<a class="headerlink" href="#step-1-image-loading" title="Link to this heading">#</a></h3>
+<p>Load the image specified in the <code class="docutils literal notranslate"><span class="pre">target_path</span></code> argument.</p>
+<p>In principle, any image reading function that works with the target image
+format can be used to do this. We use <a class="reference external" href="https://github.com/bioio-devs/bioio">bioio</a>, which is a state-of-the-art
+implementation of many bioimage read/write functions, but other tools could be
+used just as well.</p>
+<div class="warning admonition">
+<p class="admonition-title">Possible race condition</p>
+<p>However, it is important to be aware that the DySTrack manager will call the
+image analysis pipeline <em>as soon as it detects the new image file!</em>
+This can lead to a race condition where the microscope has not yet fully
+written the file when the pipeline is trying to load it, possibly causing an
+error!</p>
+</div>
+<p>To solve this problem, DySTrack provides <a class="reference internal" href="../api/pipelines/dystrack.pipelines.utilities.html#dystrack.pipelines.utilities.loading.robustly_load_image_after_write" title="dystrack.pipelines.utilities.loading.robustly_load_image_after_write"><code class="xref py py-func docutils literal notranslate"><span class="pre">robustly_load_image_after_write()</span></code></a>, which waits until the
+size of the target file no longer increases within a 2-second window. It then
+attempts to load the image and in case of failure loops back up to 5 times to
+try again (before giving up and raising an error).</p>
+<p>By default, <a class="reference internal" href="../api/pipelines/dystrack.pipelines.utilities.html#dystrack.pipelines.utilities.loading.robustly_load_image_after_write" title="dystrack.pipelines.utilities.loading.robustly_load_image_after_write"><code class="xref py py-func docutils literal notranslate"><span class="pre">robustly_load_image_after_write()</span></code></a> supports <code class="docutils literal notranslate"><span class="pre">.tif</span></code>, <code class="docutils literal notranslate"><span class="pre">.tiff</span></code>, <code class="docutils literal notranslate"><span class="pre">.czi</span></code>, and <code class="docutils literal notranslate"><span class="pre">.nd2</span></code> files. Support for other formats may
+be added by installing the relevant bioio plugin (if available) or by adding in
+a custom reader. The list of supported file extensions in <a class="reference internal" href="../api/pipelines/dystrack.pipelines.utilities.html#dystrack.pipelines.utilities.loading.robustly_load_image_after_write" title="dystrack.pipelines.utilities.loading.robustly_load_image_after_write"><code class="xref py py-func docutils literal notranslate"><span class="pre">robustly_load_image_after_write()</span></code></a> must also
+be updated accordingly.</p>
+</section>
+<section id="step-2-sanity-checks">
+<h3>Step 2: Sanity checks<a class="headerlink" href="#step-2-sanity-checks" title="Link to this heading">#</a></h3>
+<p>We recommend including some sanity checks on the loaded data. This is mostly to
+ensure that DySTrack errors immediately if something is misconfigured such that
+the data produced by the microscope violates the user’s assumptions.</p>
+<p>Currently available pipelines include basic checks for appropriate image
+dimensionality and size. They also usually check if the image is in 8bit
+format, otherwise converting them down to 8bit (to accelerate processing) and
+optionally issuing a warning.</p>
+<p>What checks and adjustments are appropriate can vary considerably depending on
+the sample and pipeline, and many additional checks could be envisioned.
+Furthermore, in some cases it may be more useful to focus on sanity checks on
+the output of the image analysis (see Step 4 below). Thus, there is currently
+no utility function that offers generic sanity checking. Instead, pipeline
+developers should include bespoke sanity checks as appropriate for their use
+case.</p>
+<div class="note admonition">
+<p class="admonition-title">DySTrack manager error handling</p>
+<p>When raising errors within the image analysis pipeline, it is important to
+consider how DySTrack manager will respond, which is as follows:</p>
+<ul>
+<li><p>If an error is raised the very first time the image analysis pipeline is
+triggered, DySTRack manager will always just raise the error and exit. No
+coordinates will be sent to the microscope. This is intended to abort a run
+immediately if user expectations were violated from the very start.</p>
+<p></p><p></p></li>
+<li><p>If an error is raised on subsequent iterations and the keyword argument
+<code class="docutils literal notranslate"><span class="pre">img_err_fallback</span></code> in <a class="reference internal" href="../api/manager/dystrack.manager.manager.html#dystrack.manager.manager.run_dystrack_manager" title="dystrack.manager.manager.run_dystrack_manager"><code class="xref py py-func docutils literal notranslate"><span class="pre">run_dystrack_manager()</span></code></a> is set to <code class="docutils literal notranslate"><span class="pre">True</span></code> (the default),
+DySTrack manager will print the error but will continue running and <strong>fall
+back to the previous coordinates</strong>, meaning the same result will be sent
+to the microscope as in the last iteration, except that the <code class="docutils literal notranslate"><span class="pre">msg</span></code> column
+in <code class="docutils literal notranslate"><span class="pre">dystrack_coords.txt</span></code> will read <code class="docutils literal notranslate"><span class="pre">&quot;Image</span> <span class="pre">analysis</span> <span class="pre">failed!&quot;</span></code>. This is
+not without risk, but may occasionally save an experiment or at least keep
+DySTrack going so tracking may proceed for other samples in a
+multi-positioning setup.</p>
+<p><em>Side note:</em> A safer solution for such cases might be not to move at all,
+but DySTrack manager cannot know the image size and therefore cannot
+calculate and return the image center. A “remain in place” fallback would
+thus need to be implemented within the pipeline or - ideally - within the
+microscope control software itself (triggered by the “Image analysis
+failed!” message).</p>
+<p></p></li>
+<li><p>If an error is raised on subsequent iterations and <code class="docutils literal notranslate"><span class="pre">img_err_fallback</span></code> is
+set to <code class="docutils literal notranslate"><span class="pre">False</span></code>, DySTrack manager raises the error and exits. No further
+coordinates will be sent to the microscope.</p></li>
+</ul>
+</div>
+</section>
+<section id="step-3-image-analysis">
+<h3>Step 3: Image analysis<a class="headerlink" href="#step-3-image-analysis" title="Link to this heading">#</a></h3>
+<p>Analyze the image in order to extract new target coordinates for subsequent
+acquisition(s).</p>
+<p>The best solution depends entirely on the sample that is being tracked and on
+the (prescan) acquisition parameters. It could take the form of a classical
+image analysis pipeline (involving e.g. smoothing and thresholding), or of a
+pre-trained machine learning model, or of some other approach (e.g. fitting
+models/functions to the data).</p>
+<p>For simple cases, basic thresholding (e.g. using Otsu) and tracking of the
+center of mass may be a good starting point (see
+<a class="reference internal" href="available.html#pipeline-section-center-of-mass"><span class="std std-ref">here</span></a>).
+Alternatively, existing pipelines can sometimes be found in the literature or
+are already established in the lab. These can also serve as good starting
+points, but they must be carefully tested as they often assume high-quality
+data or make other assumptions that may be violated in a live tracking setting.</p>
+<p>For more advice on how to develop image analysis pipelines for use with
+DySTrack, see <a class="reference internal" href="develop.html"><span class="doc">Developing image analysis pipelines</span></a>.</p>
+</section>
+<section id="step-4-post-checks-fallbacks-and-constraints">
+<h3>Step 4: Post-checks, fallbacks, and constraints<a class="headerlink" href="#step-4-post-checks-fallbacks-and-constraints" title="Link to this heading">#</a></h3>
+<p>As with the input, it can make sense to do some sanity checks on the outputs of
+the image analysis, either to error out in completely unexpected cases, or to
+try to recover from common problems, or to constrain how much the microscope is
+allowed to move at all as a safety precaution.</p>
+<p>When raising errors at this stage, remember to consider how DySTrack manager
+will respond to them (see the relevant Note above).</p>
+<p>An example of attempting to recover from common problems is found in the
+lateral line tracking pipeline, where two failure cases that crop up
+occuasionally (one being masking failure, the other being that the tissue has
+moved too far between time points) are being caught and handled by moving
+default distances. For more details on this see
+<a class="reference internal" href="available.html#pipeline-section-lateral-line"><span class="std std-ref">here</span></a> and in the source code. This is not
+a particularly robust fallback and could be further improved, but it
+illustrates the concept and works reasonably well in practice.</p>
+<p>An example of constraining microscope motion is currently included in all
+pipelines and is implemented as a utility function; <a class="reference internal" href="../api/pipelines/dystrack.pipelines.utilities.html#dystrack.pipelines.utilities.constraints.constrain_z_movement" title="dystrack.pipelines.utilities.constraints.constrain_z_movement"><code class="xref py py-func docutils literal notranslate"><span class="pre">constrain_z_movement()</span></code></a>. To reduce
+the risk of the stage inset / sample accidentally getting pushed against the
+objective, the maximum z-distance that the system is allowed to move per time
+point is being limited to a preset fraction of the stack size. A hard limit on
+total movement would be an even better constraint (and could be implemented
+using the <code class="docutils literal notranslate"><span class="pre">img_cache</span></code>, see <a class="reference internal" href="advanced.html"><span class="doc">here</span></a>). However, in practice it
+can be difficult to figure out what this limit should be for a given setup, so
+safety features of this kind are best implemented within the microscope control
+software instead.</p>
+</section>
+<section id="step-5-returning-the-results">
+<h3>Step 5: Returning the results<a class="headerlink" href="#step-5-returning-the-results" title="Link to this heading">#</a></h3>
+<p>See the <a class="reference internal" href="#anatomy-section-call-signature"><span class="std std-ref">Call signature</span></a> section for
+details on the format in which the image analysis pipeline function must return
+its outputs to the DySTrack manager.</p>
+</section>
+</section>
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="available.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Available image analysis pipelines</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="develop.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Developing image analysis pipelines</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2025, Jonas Hartmann, Zimeng Wu.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.2.3.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.1.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

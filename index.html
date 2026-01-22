@@ -1,0 +1,587 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="./" data-theme="dark">
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>DySTrack - Dynamic Sample Tracking &#8212; DySTrack  documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "dark";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "dark";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="_static/custom.css" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="_static/doctools.js?v=9bcbadda"></script>
+    <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'index';</script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Getting started" href="intro/index.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="dark">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="#">
+  
+  
+  
+  
+  
+    
+    
+    
+    <img src="_static/DySTrack_logo_dark.svg" class="logo__image only-dark" alt="DySTrack - Home"/>
+    <img src="_static/DySTrack_logo_lite.svg" class="logo__image only-light pst-js-only" alt="DySTrack - Home"/>
+  
+  
+    <p class="title logo__title">DySTrack Docs</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="intro/index.html">
+    Getting started
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="usage/index.html">
+    Running DySTrack
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="pipelines/index.html">
+    Image analysis pipelines
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="api/index.html">
+    API Reference
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/WhoIsJack/DySTrack/" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar hide-on-wide">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="intro/index.html">
+    Getting started
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="usage/index.html">
+    Running DySTrack
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="pipelines/index.html">
+    Image analysis pipelines
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="api/index.html">
+    API Reference
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/WhoIsJack/DySTrack/" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none"></div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <p></p><section id="dystrack-dynamic-sample-tracking">
+<h1>DySTrack - Dynamic Sample Tracking<a class="headerlink" href="#dystrack-dynamic-sample-tracking" title="Link to this heading">#</a></h1>
+<!-- Logo inserted next to title, with hacked custom spacings... -->
+<div style="display: flex; justify-content: space-between; margin-bottom: -100px">
+    <p></p>
+    <img
+        src="_static/DySTrack_logo_dark.svg"
+        class="only-dark"
+        alt="DySTrack Logo Dark"
+        style="height: 120px; transform: translate(-25px, -110px)"
+    >
+    <img
+        src="_static/DySTrack_logo_lite.svg"
+        class="only-light"
+        alt="DySTrack Logo Light"
+        style="height: 120px; transform: translate(-25px, -110px)"
+    >
+</div><p><strong>DySTrack (“diss track”)</strong> is a simple, modular, python-based, open-source
+<strong>automated feedback microscopy tool</strong> for live tracking of moving samples like
+migratory cells or tissues during acquisition.</p>
+<figure class="align-center" id="id1">
+<a class="reference internal image-reference" href="_images/pllp_movie.gif"><img alt="DySTrack lateral line primordium animation (downsampled)" src="_images/pllp_movie.gif" style="width: 95%;" />
+</a>
+<figcaption>
+<p><span class="caption-text">This example shows the zebrafish <em>posterior lateral line primordium</em>, a
+highly migratory tissue, as it crawls along the flank of a developing
+embryo. DySTrack was used to enable autonomous tracking and 3D confocal
+imaging of the primordium over several hours on a Zeiss LSM980 microscope.
+(This gif is maximum z-projected and downsampled to limit file size.)</span><a class="headerlink" href="#id1" title="Link to this image">#</a></p>
+</figcaption>
+</figure>
+<p>DySTrack works on common commercial microscopes, with current out-of-the-box
+support covering <code class="docutils literal notranslate"><span class="pre">ZEN</span> <span class="pre">Black</span></code> (via <a class="reference external" href="https://github.com/manerotoni/mypic/">MyPiC</a>), <code class="docutils literal notranslate"><span class="pre">ZEN</span> <span class="pre">Blue</span></code> (via <a class="reference external" href="https://github.com/zeiss-microscopy/OAD">Macros</a>),
+and <code class="docutils literal notranslate"><span class="pre">NIS</span> <span class="pre">Elements</span></code> (via <a class="reference external" href="https://www.microscope.healthcare.nikon.com/en_EU/products/software/nis-elements/nis-elements-jobs">JOBS</a>). Adaptation to any other microscope control
+software that supports basic macros/automation is also possible, and support
+for other systems may be added in the future.</p>
+<p>The <strong>source code</strong> for DySTrack is <a class="reference external" href="https://github.com/WhoIsJack/DySTrack/">on GitHub</a>, where you may also
+<a class="reference external" href="https://github.com/WhoIsJack/DySTrack/contribute">contribute</a> to DySTrack’s continued development and maintenance. Please raise
+a GitHub Issue if you encounter a problem with DySTrack or would like to
+suggest a new feature. <em>Note that the authors cannot guarantee support.</em></p>
+<div class="note admonition">
+<p class="admonition-title"><strong>Citing DySTrack</strong></p>
+<p>DySTrack was developed by Jonas Hartmann and Zimeng Wu, in collaboration
+with many others (acknowledged on GitHub). If you are using DySTrack in
+your research, please cite <a class="reference external" href="https://www.biorxiv.org/content/10.64898/2025.12.02.691816v1">the preprint</a>:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>@article {Wu2025.12.02.691816,
+  author = {Wu, Zimeng and Voiculescu, Octavian and Mongera, Alessandro and Mayor, Roberto and Wong, Mie and Hartmann, Jonas},
+  title = {DySTrack: a modular smart microscopy tool for live tracking of dynamic samples on modern commercial microscopes},
+  elocation-id = {2025.12.02.691816},
+  year = {2025},
+  doi = {10.64898/2025.12.02.691816},
+  publisher = {Cold Spring Harbor Laboratory},
+  URL = {https://www.biorxiv.org/content/10.64898/2025.12.02.691816v1},
+  journal = {bioRxiv}
+}
+</pre></div>
+</div>
+</div>
+<section id="why-use-dystrack">
+<h2>Why use DySTrack?<a class="headerlink" href="#why-use-dystrack" title="Link to this heading">#</a></h2>
+<p>DySTrack is useful when imaging moving, growing, or drifting samples where the
+microscope’s limited field of view becomes an issue. Instead of sitting at the
+microscope all day and all night, or accepting lower quality (reducing
+magnification to increase the field of view) or lower time-resolution (using
+tiled/stitched acquisition to cover a larger field of view), DySTrack can be
+deployed to have the microscope autonomously follow cells or tissues of
+interest.</p>
+<p>Some advantages of DySTrack over other tools include:</p>
+<ol class="arabic simple">
+<li><p><strong>Minimal interface with the microscope</strong></p>
+<ul class="simple">
+<li><p>Can interface with any microscope control software that has basic
+macro/automation support</p></li>
+<li><p>No specialized custom microscope setup or custom control software required</p></li>
+<li><p>Allows easy switching/reuse of the same image analysis pipeline; no
+lock-in to vendor ecosystems</p></li>
+</ul>
+</li>
+<li><p><strong>Simple and modular python tool</strong></p>
+<ul class="simple">
+<li><p>Usable, understandable, and extendable for a large &amp; growing fraction of
+life scientists</p></li>
+</ul>
+</li>
+<li><p><strong>Custom python image analysis pipelines</strong></p>
+<ul class="simple">
+<li><p>Python is the <em>de facto</em> standard for both basic and advanced bioimage
+analysis</p></li>
+<li><p>DySTrack lets you use it to automate your microscopes!</p></li>
+</ul>
+</li>
+</ol>
+</section>
+<section id="a-word-of-warning">
+<h2>A word of warning…<a class="headerlink" href="#a-word-of-warning" title="Link to this heading">#</a></h2>
+<div class="danger admonition">
+<p class="admonition-title"><strong>DANGER: USE AT YOUR OWN RISK!</strong></p>
+<p>Modern microscopes are expensive machines, and automating them comes with
+an inherent <strong>risk of damage</strong>.</p>
+<p>Although DySTrack includes some basic precautions and has been extensively
+tested, and although several labs have been using (prototypes of) DySTrack
+successfully for years, <strong>DySTrack is ultimately a minimal tool that does
+not offer comprehensive built-in safety features.</strong></p>
+<p>We recommend that installation and initial tests be conducted by expert
+users with experience in microscopy and coding, and that the microscope be
+monitored during initial tests and when running newly customized pipelines.</p>
+<p><strong>Users are advised that the authors provide no warranty of any kind for
+DySTrack and are not liable for damages of any kind resulting from its
+use.</strong> Note the relevant part of DySTrack’s MIT license:</p>
+<blockquote>
+<div><p>THE SOFTWARE IS PROVIDED “AS IS”, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.</p>
+</div></blockquote>
+</div>
+</section>
+<section id="table-of-contents">
+<h2>Table of contents<a class="headerlink" href="#table-of-contents" title="Link to this heading">#</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="intro/index.html">Getting started</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="intro/howitworks.html">How DySTrack works</a></li>
+<li class="toctree-l2"><a class="reference internal" href="intro/installation.html">Installation</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="usage/index.html">Running DySTrack</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="usage/zeiss_880.html">DySTrack on the Zeiss LSM880 (ZEN Black)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="usage/zeiss_980.html">DySTrack on the Zeiss LSM980 (ZEN Blue)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="usage/nikon_AXR.html">DySTrack on the Nikon AX R (NIS Elements)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="usage/other_scopes.html">DySTrack on other microscopes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="usage/postprocessing.html">Advice on postprocessing data</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="pipelines/index.html">Image analysis pipelines</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="pipelines/available.html">Available pipelines</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pipelines/anatomy.html">Anatomy of a pipeline</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pipelines/develop.html">Developing pipelines</a></li>
+<li class="toctree-l2"><a class="reference internal" href="pipelines/advanced.html">Advanced tools &amp; strategies</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="api/index.html">API Reference</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="api/manager/index.html">DySTrack core module (dystrack.manager)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="api/pipelines/index.html">Image analysis pipelines (dystrack.pipelines)</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="right-next"
+       href="intro/index.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Getting started</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2025, Jonas Hartmann, Zimeng Wu.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.2.3.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.1.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

@@ -1,0 +1,798 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" data-theme="dark">
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Installation &#8212; DySTrack  documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "dark";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "dark";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'intro/installation';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Running DySTrack" href="../usage/index.html" />
+    <link rel="prev" title="How DySTrack works" href="howitworks.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="dark">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+    
+    
+    
+    <img src="../_static/DySTrack_logo_dark.svg" class="logo__image only-dark" alt="DySTrack - Home"/>
+    <img src="../_static/DySTrack_logo_lite.svg" class="logo__image only-light pst-js-only" alt="DySTrack - Home"/>
+  
+  
+    <p class="title logo__title">DySTrack Docs</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="index.html">
+    Getting started
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../usage/index.html">
+    Running DySTrack
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../pipelines/index.html">
+    Image analysis pipelines
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../api/index.html">
+    API Reference
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/WhoIsJack/DySTrack/" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="index.html">
+    Getting started
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../usage/index.html">
+    Running DySTrack
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../pipelines/index.html">
+    Image analysis pipelines
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../api/index.html">
+    API Reference
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/WhoIsJack/DySTrack/" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+<nav class="bd-docs-nav bd-links"
+     aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="howitworks.html">How DySTrack works</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Installation</a></li>
+</ul>
+</div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="index.html" class="nav-link">Getting started</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Installation</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="installation">
+<h1>Installation<a class="headerlink" href="#installation" title="Link to this heading">#</a></h1>
+<p>Broadly speaking, the following steps are required to get DySTrack running:</p>
+<ol class="arabic simple">
+<li><p>Installing software dependencies</p></li>
+<li><p>Installing the DySTrack python package</p></li>
+<li><p>Setting up the microscope macro / automation workflow</p></li>
+</ol>
+<div class="tip admonition">
+<p class="admonition-title">Installation can be tricky…</p>
+<p>Installing DySTrack is more complicated than simply using it.</p>
+<p>Before jumping in, be sure to familiarize yourself with
+<a class="reference internal" href="howitworks.html"><span class="doc">how DyStrack works</span></a> in general and
+<a class="reference internal" href="../usage/index.html"><span class="doc">how to use it</span></a> on your particular microscope.</p>
+<p>The person(s) performing the installation should be well-versed with the
+microscope in question and ideally have some experience with python and
+computers in general (though basic knowledge should be sufficient). It can
+be useful for more than one person to work together, for example a user and
+a member of a microscope facility team.</p>
+<p>Also, do plan in ample time (at least a half-day) to go through all steps
+carefully and to debug any problems that crop up along the way. Since
+operating systems, microscope setups, and software versions all change
+frequently, there are many moving parts that may give rise to unexpected
+roadblocks.</p>
+<p>If we might have missed something in our documentation or if something
+seems out of date, we welcome questions and (constructive) feedback; please
+raise an Issue <a class="reference external" href="https://github.com/WhoIsJack/DySTrack/">on GitHub</a>. (Alas, we cannot guarantee that we will be
+able to solve your problem or address your feedback.)</p>
+</div>
+<div class="note admonition">
+<p class="admonition-title">Supported configurations</p>
+<p>Currently, DySTrack provides out-of-the-box support for microscopes running
+<code class="docutils literal notranslate"><span class="pre">ZEN</span> <span class="pre">Black</span></code> via <a class="reference external" href="https://github.com/manerotoni/mypic/">MyPiC</a> (tested on Zeiss LSM880), <code class="docutils literal notranslate"><span class="pre">ZEN</span> <span class="pre">Blue</span></code> via
+<a class="reference external" href="https://github.com/zeiss-microscopy/OAD">Macros</a> (Zeiss LSM980), or <code class="docutils literal notranslate"><span class="pre">NIS</span> <span class="pre">Elements</span></code> via <a class="reference external" href="https://www.microscope.healthcare.nikon.com/en_EU/products/software/nis-elements/nis-elements-jobs">JOBS</a> (Nikon AXR).</p>
+<p>Adaptation to any other microscope control software that supports basic
+macros/automation is also possible but requires extra work (see
+<a class="reference internal" href="../usage/other_scopes.html"><span class="doc">here</span></a>), and support for other systems may be
+added in the future.</p>
+<p>The microscope PC’s Operating System must be Windows 10 or 11.</p>
+</div>
+<div class="warning admonition">
+<p class="admonition-title">Risk of damage</p>
+<p>Modern microscopes are expensive machines, and automating them comes with
+an inherent risk of damage.</p>
+<p><strong>Do not install DySTrack without permission from the microscope’s
+administrator!</strong></p>
+<p>Also, be sure to test the installed setup carefully, and always ask for
+help if you are unsure about something!</p>
+</div>
+<section id="part-1-installing-software-dependencies">
+<h2>Part 1: Installing software dependencies<a class="headerlink" href="#part-1-installing-software-dependencies" title="Link to this heading">#</a></h2>
+<p>The DySTrack manager and pipelines are written in python and shared via GitHub,
+so you need to first install python and git (git is optional but recommended).</p>
+<p>If you are familiar with a particular python distribution, feel free to use it.
+We recommend <strong>Miniforge</strong> for environment/package management using <code class="docutils literal notranslate"><span class="pre">conda</span></code>,
+and we will be using it here in the documentation to explain how to install
+DySTrack. To use Miniforge, <a class="reference external" href="https://conda-forge.org/download/">download the Miniforge Installer here</a> and then
+follow its instructions to install it.</p>
+<p>The DySTrack library can be installed via pip directly from PyPI. <strong>However</strong>,
+since it is likely that some degree of coding (e.g. addition or modification of
+an image analysis pipeline) will be required to adapt DySTrack to your
+particular experiment of interest, we recommend using <strong>git</strong> to clone and
+manage the source code repository. You can
+<a class="reference external" href="https://git-scm.com/install/windows">download the Git for Windows Installer here</a> and follow its instructions to
+install it.</p>
+</section>
+<section id="part-2-installing-the-dystrack-python-package">
+<h2>Part 2: Installing the DySTrack python package<a class="headerlink" href="#part-2-installing-the-dystrack-python-package" title="Link to this heading">#</a></h2>
+<p>As mentioned above, we recommend installing DySTrack and its python
+dependencies from the GitHub source code. The following steps explain how to do
+this. If you instead prefer to install via pip from PyPI, skip these steps and
+find the relevant note (blue box) at the end of this section.</p>
+<section id="cloning-the-github-repository">
+<h3>2.1: Cloning the GitHub repository<a class="headerlink" href="#cloning-the-github-repository" title="Link to this heading">#</a></h3>
+<p>(Optionally, first create your own GitHub <strong>fork</strong> of the DySTrack
+<a class="reference external" href="https://github.com/WhoIsJack/DySTrack/">Github repo</a>. This is recommended if you plan to contribute improvements to
+DySTrack. If you don’t know what this means, you can skip it.)</p>
+<p>Use git to clone the DySTrack repository (or your fork of it) to a local folder
+on the microscope PC:</p>
+<p><strong>In Git Bash:</strong></p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/WhoIsJack/DySTrack.git
+</pre></div>
+</div>
+</section>
+<section id="creating-a-python-environment-for-dystrack">
+<h3>2.2: Creating a python environment for DySTrack<a class="headerlink" href="#creating-a-python-environment-for-dystrack" title="Link to this heading">#</a></h3>
+<p>Using your preferred python environment/package manager, create a new
+environment for DySTrack with a supported version of python (<code class="docutils literal notranslate"><span class="pre">&gt;=3.10,</span> <span class="pre">&lt;3.14</span></code>)
+and pip (installed automatically if using <code class="docutils literal notranslate"><span class="pre">conda</span> <span class="pre">create</span></code>).</p>
+<p><strong>In a Miniforge prompt:</strong></p>
+<div class="highlight-batch notranslate"><div class="highlight"><pre><span></span>conda create -n dystrack python=3.13
+</pre></div>
+</div>
+<p>Next, ensure your environment is active:</p>
+<div class="highlight-batch notranslate"><div class="highlight"><pre><span></span>conda activate dystrack
+</pre></div>
+</div>
+</section>
+<section id="installing-dystrack-into-the-environment">
+<h3>2.3: Installing DySTrack into the environment<a class="headerlink" href="#installing-dystrack-into-the-environment" title="Link to this heading">#</a></h3>
+<p>With the dystrack conda environment active, use <code class="docutils literal notranslate"><span class="pre">cd</span></code> to change directory into
+the DySTrack git repository folder cloned during step 2.1. Then use <code class="docutils literal notranslate"><span class="pre">pip</span></code> to
+install DySTrack and its python dependencies:</p>
+<div class="highlight-batch notranslate"><div class="highlight"><pre><span></span>pip install -e <span class="s2">&quot;.[full]&quot;</span>
+</pre></div>
+</div>
+<p>This results in an “editable” install, where changes to the source code (e.g.
+adding a new pipline) will be applied immediately. There is no need to
+reinstall unless changes are made to the project metadata (e.g. addition of
+dependencies to <code class="docutils literal notranslate"><span class="pre">pyproject.toml</span></code>)</p>
+<p>Side note: Expert users may choose not to do a “full” install (see
+pyproject.toml for specs), but we always recommend “full”.</p>
+<p>Once the installation is complete, we strongly recommend running the DySTrack
+test suite to check that everything is working as intended. With the
+environment still active and the working directory still being the DySTrack
+repo folder, you should be able to run the tests with this simple command:</p>
+<div class="highlight-batch notranslate"><div class="highlight"><pre><span></span>pytest
+</pre></div>
+</div>
+<div class="note admonition">
+<p class="admonition-title">Installation from PyPI</p>
+<p>If you have just installed DySTrack by going through the steps above
+(recommended), please skip this.</p>
+<p>If you instead want to install DySTrack from PyPI, first go back and
+complete step 2.2 to create and activate a new conda environment for
+DySTrack.</p>
+<p>With the new environment active, you can install from PyPI:</p>
+<div class="highlight-batch notranslate"><div class="highlight"><pre><span></span>pip install <span class="s2">&quot;dystrack[full]&quot;</span>
+</pre></div>
+</div>
+</div>
+<div class="tip admonition">
+<p class="admonition-title">DySTrack in Jupyter notebook</p>
+<p>If you would like to use DySTrack from Jupyter notebook (not normally
+recommended, but it is an option), we recommend installing Jupyter notebook
+in your base conda environment:</p>
+<div class="highlight-batch notranslate"><div class="highlight"><pre><span></span>conda deactivate dystrack
+conda install notebook=6
+</pre></div>
+</div>
+<p>Then add your DySTrack environment as a kernel:</p>
+<div class="highlight-batch notranslate"><div class="highlight"><pre><span></span>conda activate dystrack
+python -m ipykernel install --user --name=dystrack
+</pre></div>
+</div>
+<p>And launch Jupyter notebook from the base env:</p>
+<div class="highlight-batch notranslate"><div class="highlight"><pre><span></span>conda deactivate dystrack
+jupyter notebook
+</pre></div>
+</div>
+</div>
+<div class="tip admonition">
+<p class="admonition-title">Installing DySTrack without an internet connection</p>
+<p>Some microscope PCs do not have a connection to the internet, but DySTrack
+can still be installed using similar steps.</p>
+<p>First, on a PC that has an internet connection, clone DySTrack and install
+it as described in the steps above. Then make a new folder called
+<code class="docutils literal notranslate"><span class="pre">dependencies</span></code> inside the <code class="docutils literal notranslate"><span class="pre">DySTrack</span></code> folder and use pip to add all
+required dependencies into that subfolder:</p>
+<div class="highlight-batch notranslate"><div class="highlight"><pre><span></span>conda activate dystrack
+pip download -d dependencies <span class="s2">&quot;.[full]&quot;</span>
+</pre></div>
+</div>
+<p>Pip should now package the dependencies into <code class="docutils literal notranslate"><span class="pre">.whl</span></code> files in the
+<code class="docutils literal notranslate"><span class="pre">dependencies</span></code> folder. Note that you may need to provide additional
+options to ensure compatibility if your online PC is not the same OS as
+your target offline PC.</p>
+<p>Now transfer the entire <code class="docutils literal notranslate"><span class="pre">DySTrack</span></code> folder (including <code class="docutils literal notranslate"><span class="pre">dependencies</span></code>) as
+well as the installers for Git for Windows and Miniforge to the PC that
+does not have internet access.</p>
+<p>Repeat the installation process on that PC, but when you get to the
+<code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span></code> command, use the following command instead of the normal
+one:</p>
+<div class="highlight-batch notranslate"><div class="highlight"><pre><span></span>pip install --no-index --find-links dependencies -e <span class="s2">&quot;.[full]&quot;</span>
+</pre></div>
+</div>
+<p>Run <code class="docutils literal notranslate"><span class="pre">pytest</span></code> as usual to check if everything is working.</p>
+<p>You may also wish to build a local copy of the docs so you can view them
+without an internet connection. Once everything is installed, run:</p>
+<div class="highlight-batch notranslate"><div class="highlight"><pre><span></span>conda activate dystrack
+<span class="k">cd</span> docs
+make html
+</pre></div>
+</div>
+<p>You can now open the file <code class="docutils literal notranslate"><span class="pre">docs/build/html/index.html</span></code> in a web browser
+to view the documentation locally. We recommend bookmarking the page in the
+browser so you don’t need to go find the file each time.</p>
+</div>
+</section>
+</section>
+<section id="part-3-setting-up-the-microscope-macro">
+<h2>Part 3: Setting up the microscope macro<a class="headerlink" href="#part-3-setting-up-the-microscope-macro" title="Link to this heading">#</a></h2>
+<p>The microscope macro / automation workflow handles acquisition control and
+communicates with DySTrack from within the microscope’s native control
+software. Therefore, the steps here depend on the microscope/software that is
+being used.</p>
+<section id="zeiss-zen-blue-with-ironpython-macro">
+<h3>Zeiss ZEN Blue with IronPython macro<a class="headerlink" href="#zeiss-zen-blue-with-ironpython-macro" title="Link to this heading">#</a></h3>
+<p>DySTrack uses a <a class="reference external" href="https://github.com/zeiss-microscopy/OAD">Zeiss OAD</a> IronPython macro to interface with ZEN Blue.</p>
+<p>No special installation should be required. Simply start ZEN Blue as usual and
+then open the Macro editor:</p>
+<a class="reference internal image-reference" href="../_images/start_macro.png"><img alt="Opening Macro Editor in ZEN Blue" src="../_images/start_macro.png" style="width: 40%;" />
+</a>
+<p>If this option is not available, speak to facility staff or get in touch with
+your Zeiss representative.</p>
+<p>In the editor, find and open the DySTrack macro. It is located in the DySTrack
+repository’s <code class="docutils literal notranslate"><span class="pre">macros</span></code> folder and called <code class="docutils literal notranslate"><span class="pre">LSM980_ZENBlue_macro.py</span></code>.</p>
+<p>With this, DySTrack is now ready for use in ZEN Blue. Detailed usage
+instructions are found <a class="reference internal" href="../usage/zeiss_980.html"><span class="doc">here</span></a>.</p>
+</section>
+<section id="zeiss-zen-black-with-mypic">
+<h3>Zeiss ZEN Black with MyPiC<a class="headerlink" href="#zeiss-zen-black-with-mypic" title="Link to this heading">#</a></h3>
+<p>DySTrack uses the <a class="reference external" href="https://github.com/manerotoni/mypic/">MyPiC</a> VBA macro to interface with ZEN Black. You can find
+everything you need to install it in the GitHub repo, including installation
+instructions in the associated <a class="reference external" href="https://github.com/manerotoni/mypic/wiki">Wiki</a>.</p>
+<p>With MyPiC installed, DySTrack is now ready for use in ZEN Black. Detailed
+usage instructions are found <a class="reference internal" href="../usage/zeiss_880.html"><span class="doc">here</span></a>.</p>
+</section>
+<section id="nikon-nis-elements-with-jobs">
+<span id="install-nis-jobs"></span><h3>Nikon NIS-Elements with JOBS<a class="headerlink" href="#nikon-nis-elements-with-jobs" title="Link to this heading">#</a></h3>
+<p>DySTrack uses the <a class="reference external" href="https://www.microscope.healthcare.nikon.com/en_EU/products/software/nis-elements/nis-elements-jobs">JOBS</a> automation suite to interface with NIS-Elements.</p>
+<p>Due to technical reasons, DySTrack JOBS Definitions also require a GA3 Script
+as a dependency.</p>
+<p><strong>Follow these steps to import the required GA3 Script:</strong></p>
+<ol class="arabic">
+<li><p>Enter the <code class="docutils literal notranslate"><span class="pre">JOBS/GA3</span></code> tab (at the top):</p>
+<a class="reference internal image-reference" href="../_images/JOBS-GA3_tab.png"><img alt="JOBS/GA3 tab screenshot" src="../_images/JOBS-GA3_tab.png" style="width: 50%;" />
+</a>
+<p>If this option is not available, speak to facility staff or get in touch
+with your Nikon representative.</p>
+</li>
+<li><p>Go to <code class="docutils literal notranslate"><span class="pre">Analysis</span> <span class="pre">Explorer</span></code> (middle-left):</p>
+<a class="reference internal image-reference" href="../_images/Analysis_explorer.png"><img alt="Analysis explorer screenshot" src="../_images/Analysis_explorer.png" style="width: 40%;" />
+</a>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Create</span> <span class="pre">New</span> <span class="pre">&gt;&gt;</span> <span class="pre">Import</span> <span class="pre">Analysis</span> <span class="pre">From</span> <span class="pre">File...</span></code></p></li>
+<li><p>Import <code class="docutils literal notranslate"><span class="pre">DySTrack\macros\AX_NISGA3_PointsExpose_vX-XX-XX.ga3</span></code></p>
+<p>The <code class="docutils literal notranslate"><span class="pre">vX-XX-XX</span></code> relates to the version number of NIS Elements. You can find
+this in <code class="docutils literal notranslate"><span class="pre">Help</span> <span class="pre">&gt;&gt;</span> <span class="pre">About...</span></code>. Use the GA3 file that matches your version
+number as best as possible, or simply try the latest version available.</p>
+</li>
+<li><p>To test, double-click it and select the file
+<code class="docutils literal notranslate"><span class="pre">DySTrack\tests\testdata\test-pllp_AXR_prescan.tiff</span></code></p>
+<p>The GA3 preview should run and display some numbers about the prescan file;
+<code class="docutils literal notranslate"><span class="pre">PrescanDims</span></code> in particular should have 8 columns (<code class="docutils literal notranslate"><span class="pre">VolumeSizeX[um]</span></code>,
+etc.) with a single number in each.</p>
+</li>
+</ol>
+<p><strong>Next, follow these steps to import DySTrack JOBS Definitions:</strong></p>
+<ol class="arabic">
+<li><p>Go to the <code class="docutils literal notranslate"><span class="pre">JOBS</span> <span class="pre">Explorer</span></code> (next to the <code class="docutils literal notranslate"><span class="pre">Analysis</span> <span class="pre">Explorer</span></code>)</p>
+<a class="reference internal image-reference" href="../_images/JOBS_explorer.png"><img alt="JOBS explorer screenshot" src="../_images/JOBS_explorer.png" style="width: 40%;" />
+</a>
+</li>
+<li><p>If necessary, create a new empty JOBS Database</p></li>
+<li><p>If necessary, create a new Project (named e.g. <code class="docutils literal notranslate"><span class="pre">DySTrack</span></code>)</p></li>
+<li><p>Find the <code class="docutils literal notranslate"><span class="pre">Import</span> <span class="pre">from</span> <span class="pre">File</span></code> button
+It’s a yellow folder icon with a yellow upwards arrow.</p></li>
+<li><p>Import the desired NISJOBS <code class="docutils literal notranslate"><span class="pre">.bin</span></code> file(s) from <code class="docutils literal notranslate"><span class="pre">DySTrack\macros</span></code></p>
+<p>Currently, DySTrack offers two out-of-the-box JOBS Definitions (see below
+for more information). It may make sense at this point to just import both,
+so they are available and can be inspected as examples.</p>
+<p>Again, there are version numbers <code class="docutils literal notranslate"><span class="pre">vX-XX-XX</span></code> associated with each JOBS
+file. Use the one that matches the GA3 file imported above.</p>
+</li>
+</ol>
+<p>You can now view and if necessary edit/customize a JOBS definition by
+double-clicking on it. <strong>We strongly recommend making a copy of an existing
+JOBS definition before trying out any modifications on it.</strong></p>
+<div class="warning admonition">
+<p class="admonition-title">Common issues with GA3 and JOBS</p>
+<p>The interplay of GA3 and JOBS can be rather fickle.</p>
+<p>One common problem arises because GA3 files and sometimes JOBS files will
+“pay attention” to open images and may (mal)adapt automatically to them. To
+head this off, we recommend configuring example acquisition settings and
+acquiring or reloading a prescan stack prior to opening GA3/JOBS scripts.
+The file <code class="docutils literal notranslate"><span class="pre">DySTrack\tests\testdata\test-pllp_AXR_prescan.tiff</span></code> included in
+the DySTrack repo should work for this.</p>
+<p>Another common issue is that changes to the GA3 Script may trigger the JOBS
+script to automatically toggle some settings (and sometimes this seemingly
+happens for no reason whatsoever). To ensure everything is correct, there
+are two things to check in the JOBS block that uses the PointsExpose GA3
+script:</p>
+<ul class="simple">
+<li><p>In the <code class="docutils literal notranslate"><span class="pre">Save</span> <span class="pre">outputs</span></code> tab, check that the box under <code class="docutils literal notranslate"><span class="pre">Images</span></code> (usually
+<code class="docutils literal notranslate"><span class="pre">EGFP</span></code>, but this may change) is <em>unticked</em> and the box under <code class="docutils literal notranslate"><span class="pre">Tables</span></code>
+(should be <code class="docutils literal notranslate"><span class="pre">PrescanDims</span></code>) is <em>ticked</em>.</p></li>
+<li><p>In the <code class="docutils literal notranslate"><span class="pre">Export</span> <span class="pre">parameters</span></code> tab, check that both <code class="docutils literal notranslate"><span class="pre">Tables</span></code> and its
+descendant, <code class="docutils literal notranslate"><span class="pre">PrescanDims</span></code>, are <em>ticked</em>.</p></li>
+</ul>
+<p>If a problem persists that cannot easily be solved, it may be necessary to
+speak to your Nikon rep.</p>
+</div>
+<div class="note admonition">
+<p class="admonition-title">Out-of-the-box JOBS Definitions</p>
+<p>The DySTrack repo comes with two pre-built JOBS Definitions in the
+<code class="docutils literal notranslate"><span class="pre">macros</span></code> folder:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">AX_NISJOBS_lateral_line_vX-XX-XX.bin</span></code></p></li>
+</ul>
+<p>This definition is used for standard tracking tasks, optionally with multi-
+positioning for multiple samples. It should work for most simple
+experiments and should be the starting point for any customized workflows.</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">AX_NISJOBS_chick_node_vX-XX-XX.bin</span></code></p></li>
+</ul>
+<p>This definition was implemented for a special case where the main scan is
+itself a tile scan. Here, a single field of view is acquired as the prescan
+(e.g. the chick node), but the subsequent main scan is a tile scan that
+covers a wider area (e.g. somitogenesis anterior of the node). This is an
+example of a slightly more advanced setup.</p>
+</div>
+<p>With the GA3 dependency and the DySTrack JOBS available, DyStrack is now ready
+for use in NIS-Elements. Detailed usage instructions are found
+<a class="reference internal" href="../usage/nikon_AXR.html"><span class="doc">here</span></a>.</p>
+</section>
+<section id="other-microscopes">
+<h3>Other microscopes<a class="headerlink" href="#other-microscopes" title="Link to this heading">#</a></h3>
+<p>Currently, DySTrack only works “out of the box” on microscopes controlled with
+one of the applications listed above.</p>
+<p>Detailed guidance on how to implement a new macro / automation workflow to
+support another system is provided <a class="reference internal" href="../usage/other_scopes.html"><span class="doc">here</span></a>, but note
+that this will require more time and expertise than is needed to install and
+use DySTrack on an officially supported system.</p>
+<p>We plan to add official support for other microscopes in the future.</p>
+</section>
+</section>
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="howitworks.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">How DySTrack works</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="../usage/index.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Running DySTrack</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2025, Jonas Hartmann, Zimeng Wu.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.2.3.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.1.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

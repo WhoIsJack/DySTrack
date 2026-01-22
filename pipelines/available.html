@@ -1,0 +1,624 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" data-theme="dark">
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Available image analysis pipelines &#8212; DySTrack  documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "dark";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "dark";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'pipelines/available';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Anatomy of an image analysis pipeline" href="anatomy.html" />
+    <link rel="prev" title="Image analysis pipelines" href="index.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="dark">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+    
+    
+    
+    <img src="../_static/DySTrack_logo_dark.svg" class="logo__image only-dark" alt="DySTrack - Home"/>
+    <img src="../_static/DySTrack_logo_lite.svg" class="logo__image only-light pst-js-only" alt="DySTrack - Home"/>
+  
+  
+    <p class="title logo__title">DySTrack Docs</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../intro/index.html">
+    Getting started
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../usage/index.html">
+    Running DySTrack
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="index.html">
+    Image analysis pipelines
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../api/index.html">
+    API Reference
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/WhoIsJack/DySTrack/" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../intro/index.html">
+    Getting started
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../usage/index.html">
+    Running DySTrack
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="index.html">
+    Image analysis pipelines
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../api/index.html">
+    API Reference
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/WhoIsJack/DySTrack/" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+<nav class="bd-docs-nav bd-links"
+     aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Available pipelines</a></li>
+<li class="toctree-l1"><a class="reference internal" href="anatomy.html">Anatomy of a pipeline</a></li>
+<li class="toctree-l1"><a class="reference internal" href="develop.html">Developing pipelines</a></li>
+<li class="toctree-l1"><a class="reference internal" href="advanced.html">Advanced tools &amp; strategies</a></li>
+</ul>
+</div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="index.html" class="nav-link">Image analysis pipelines</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Available image analysis pipelines</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="available-image-analysis-pipelines">
+<h1>Available image analysis pipelines<a class="headerlink" href="#available-image-analysis-pipelines" title="Link to this heading">#</a></h1>
+<p>When the microscope produces a new (prescan) image, the DySTrack manager
+detects it and triggers an <strong>image analysis pipeline</strong> to load the image,
+process it, and return new coordinates for subsequent acquisitions.</p>
+<p>DySTrack comes with a few pre-configured image analysis pipelines, which are
+described below. More pipelines may be added in the future. If you are
+developing you own pipeline, please also read the other pages
+<a class="reference internal" href="index.html"><span class="doc">in this section</span></a>.</p>
+<div class="note admonition">
+<p class="admonition-title">Note</p>
+<p>All pipelines start by loading a target image and all pipelines limit the
+amount by which the z-position can be changed within a single time step (as
+a safety feature). See <a class="reference internal" href="anatomy.html"><span class="doc">Anatomy of a pipeline</span></a> for more info.</p>
+</div>
+<p><em>Currently available DySTrack pipelines:</em></p>
+<section id="center-of-mass-tracking">
+<span id="pipeline-section-center-of-mass"></span><h2>Center-of-mass tracking<a class="headerlink" href="#center-of-mass-tracking" title="Link to this heading">#</a></h2>
+<p>The most straightforward use case for automated tracking is to keep a bright
+foreground object (e.g. a labeled cell, tissue, or organoid) in the center of
+the field of view as it slowly moves or drifts. This can be accomplished by
+tracking the center of mass of the signal in the image.</p>
+<p>This pipeline first applies some Gaussian smoothing to reduce noise in the
+input image, followed by one of three different methods of retrieving the
+center of mass, some of which may work better than others depending on the type
+of sample:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;intensity&quot;</span></code>: This method computes the center of mass of all signal in the
+image/stack. It may perform better than the others when tracking sparsely
+labeled tissues.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;otsu&quot;</span></code>: This method uses standard Otsu thresholding to mask foreground
+signal, then retains only the largest foreground object and finds the center
+of mass of its mask. This often performs well for tracking of distinct,
+densely-labeled objects/tissues/organoids.</p>
+<div class="tip admonition">
+<p class="admonition-title">Tip: Start here!</p>
+<p>For many simple tracking tasks, Otsu-based center-of-mass tracking may be
+a good starting point!</p>
+</div>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;objct&quot;</span></code>: This method applies object-count thresholding to mask foreground
+signal, which is a method that can be more robust than Otsu if there is a lot
+of structure in the background signal. This method has historically been very
+robust for lateral line tracking (see below), but usually probably shouldn’t
+be your first choice. As with the Otsu mask, this method retains only the
+largest foreground object and returns the center of mass of its mask as the
+new coordinates.</p></li>
+</ul>
+<p>Note that all these methods assume the foreground signal to be bright. For
+transmission imaging, where the object of interest will usually appear dark,
+an inversion of the input image needs to be added to the pipeline.</p>
+<p>For details on the function’s call signature, see the
+<a class="reference internal" href="../api/pipelines/dystrack.pipelines.center_of_mass.html"><span class="doc">API reference</span></a>.</p>
+</section>
+<section id="tracking-the-zebrafish-lateral-line-primordium">
+<span id="pipeline-section-lateral-line"></span><h2>Tracking the zebrafish lateral line primordium<a class="headerlink" href="#tracking-the-zebrafish-lateral-line-primordium" title="Link to this heading">#</a></h2>
+<p>This pipeline is how the example gif on the landing page was generated:</p>
+<figure class="align-center">
+<a class="reference internal image-reference" href="../_images/pllp_movie.gif"><img alt="DySTrack lateral line primordium animation (downsampled)" src="../_images/pllp_movie.gif" style="width: 95%;" />
+</a>
+</figure>
+<p>The zebrafish posterior lateral line primordium is a group of embryonic cells
+in fish and amphibia that undergo collective cell migration over a large
+distance along the embryo’s flank, periodically depositing clusters of cells
+that develop into sensory organs, so-called neuromasts. Because of its coherent
+long-range migration behavior, the lateral line primordium is an ideal use case
+for DySTrack (and indeed inspired the development of the first DySTrack
+prototype).</p>
+<p>The lateral line pipeline employs Gaussian smoothing and object-count
+thresholding to find a foreground mask, then retains only the largest object
+therein (the primordium itself). The new coordinates for z and y are the
+centers of mass for this mask, whereas the new x-coordinate is calculated based
+on the leading edge such that migratory movement is anticipated.</p>
+<div class="note admonition">
+<p class="admonition-title">Convention</p>
+<p>By convention, pipelines assume that embryos are mounted with the anterior
+to the left, so the leading edge of the primordium is on the right of the
+image.</p>
+</div>
+<p>For details on the function’s call signature, see the
+<a class="reference internal" href="../api/pipelines/dystrack.pipelines.lateral_line.html"><span class="doc">API reference</span></a>.</p>
+<details class="summary-expand-to-view-more-details-on-this-pipeline">
+<summary>[Expand to view more details on this pipeline]</summary><p>Object-count thresholding applies a series of thresholds (from low to high)
+and checks how many individual objects result at each threshold. In images
+with a patterned background (such as the skin cells in the <code class="docutils literal notranslate"><span class="pre">cldnB:EGFP</span></code>
+transgenic zebrafish line), the number of individual objects is high at low
+thresholds and then rapidly decreases before reaching a low trough or
+plateau, which corresponds to a good threshold value.</p>
+<p>Only the largest object from the resulting foreground mask is retained,
+which robustly corresponds to the main body of the lateral line primordium
+itself.</p>
+<p>Since the primordium is aligned with the x-axis and migrating from left to
+right (by convention, see above), the leading edge can be detected as the
+right-most voxel of the foreground mask. The new x-coordinate is then
+calculated such that the leading edge will end up 1/5th of the x-axis
+extent behind the right border of the image, leaving enough space for
+migration before the next prescan. (More optimal alternatives to this
+approach could conceivably be implemented, but this solution has
+empirically proven highly robust.)</p>
+<p>Two additional fallback mechanisms are in place to handle occasional
+issues. First, if the leading edge position is too far back (i.e. in the
+rear half of the image), the masking likely failed to pick up a significant
+chunk of the tissue. A default distance of 1/8th of the x-axis extent is
+moved in this case, though how reasonable this is depends on the field of
+view and acquisition speed. Second if the mask touches the right border of
+the image, a default catch-up distance of 1/5th of the x-axis extent is
+moved</p>
+<p>In future, this explicit handling of issues could be improved using tools
+such as PID controllers or Kalman filters.</p>
+</details></section>
+<section id="tracking-regression-of-the-chick-hensen-s-node">
+<span id="pipeline-section-chick-node"></span><h2>Tracking regression of the chick Hensen’s node<a class="headerlink" href="#tracking-regression-of-the-chick-hensen-s-node" title="Link to this heading">#</a></h2>
+<p>The organizer of chick gastrulation, Hensen’s node, regresses caudally through
+the primitive streak as gastrulation proceeds. This pipeline is used to track
+the node based on electroporated labeling and to image cells that leave the
+node toward the anterior.</p>
+<p>Here’s an example of a resulting time course (maximum z-projected and
+downsampled in space and time to limit file size):</p>
+<figure class="align-center">
+<a class="reference internal image-reference" href="../_images/node_movie.gif"><img alt="DySTrack chick regressing Hensen's node animation (downsampled)" src="../_images/node_movie.gif" style="width: 85%;" />
+</a>
+</figure>
+<p>The chick node pipeline uses a different approach to find coordinates that is
+not based on foreground masking. Instead, it defines simple models of expected
+instensity profiles along each axis, then fits these models to the observed
+intensity profiles, and finally uses parameters of the models as new
+coordinates.</p>
+<div class="note admonition">
+<p class="admonition-title">Convention</p>
+<p>By convention, pipelines assume that embryos are mounted with the anterior
+to the left, so the node regresses toward the right and labeled cells leave
+the node toward the left.</p>
+</div>
+<p>For details on the function’s call signature, see the
+<a class="reference internal" href="../api/pipelines/dystrack.pipelines.chick_node.html"><span class="doc">API reference</span></a>.</p>
+<details class="summary-expand-to-view-more-details-on-this-pipeline">
+<summary>[Expand to view more details on this pipeline]</summary><p>To track z, a mean-intensity projection is performed over the y and x axis to
+get a 1d intensity profile along the z-axis. A Gaussian curve is then fit to
+this profile and its mean is used as the new z coordinate.</p>
+<p>The equivalent is done to track y (mean-projecting x and z).</p>
+<p>To track x, a mean-projection across all of z and across a 1-sigma range of
+the fitted y-profile is performed to get a 1d itensity profile along the
+x-axis. A sigmoid curve decreasing from left to righ is then fit to this
+profile and its inflection point is used as the new x coordinate. This
+captures the fact that labeled cells will leave the node toward the anterior
+(left, by convention), so the intensity profile will tend to be high at the
+left boundary but low at the right (caudal/posterior) boundary.</p>
+</details><div class="line-block">
+<div class="line"><br /></div>
+</div>
+</section>
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="index.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Image analysis pipelines</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="anatomy.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Anatomy of an image analysis pipeline</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2025, Jonas Hartmann, Zimeng Wu.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.2.3.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.1.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

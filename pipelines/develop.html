@@ -1,0 +1,692 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" data-theme="dark">
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Developing image analysis pipelines &#8212; DySTrack  documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "dark";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "dark";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'pipelines/develop';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Advanced tools and strategies" href="advanced.html" />
+    <link rel="prev" title="Anatomy of an image analysis pipeline" href="anatomy.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="dark">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+    
+    
+    
+    <img src="../_static/DySTrack_logo_dark.svg" class="logo__image only-dark" alt="DySTrack - Home"/>
+    <img src="../_static/DySTrack_logo_lite.svg" class="logo__image only-light pst-js-only" alt="DySTrack - Home"/>
+  
+  
+    <p class="title logo__title">DySTrack Docs</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../intro/index.html">
+    Getting started
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../usage/index.html">
+    Running DySTrack
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="index.html">
+    Image analysis pipelines
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../api/index.html">
+    API Reference
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/WhoIsJack/DySTrack/" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../intro/index.html">
+    Getting started
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../usage/index.html">
+    Running DySTrack
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="index.html">
+    Image analysis pipelines
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../api/index.html">
+    API Reference
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/WhoIsJack/DySTrack/" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+<nav class="bd-docs-nav bd-links"
+     aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="available.html">Available pipelines</a></li>
+<li class="toctree-l1"><a class="reference internal" href="anatomy.html">Anatomy of a pipeline</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Developing pipelines</a></li>
+<li class="toctree-l1"><a class="reference internal" href="advanced.html">Advanced tools &amp; strategies</a></li>
+</ul>
+</div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="index.html" class="nav-link">Image analysis pipelines</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Developing image analysis pipelines</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="developing-image-analysis-pipelines">
+<h1>Developing image analysis pipelines<a class="headerlink" href="#developing-image-analysis-pipelines" title="Link to this heading">#</a></h1>
+<p>This section provides practical advice on how to develop a new image analysis
+pipeline for use with DySTrack.</p>
+<div class="warning admonition">
+<p class="admonition-title"><strong>Advanced topic</strong></p>
+<p>Building a custom image analysis pipeline requires some experience with
+python and bioimage analysis, and a good understanding of how DySTrack
+works in general.</p>
+<p>It is recommended to first read through most of this documentation and
+ideally to get hands-on experience by installing DySTrack on a microscope
+and testing it with one of the available pipelines (e.g. using
+center-of-mass tracking on some simple test sample).</p>
+<p>Also, be warned once again that serious mistakes in your pipeline could in
+the worst case trigger large stage movements and potentially cause damage.
+<strong>Carefully test everything you do!</strong></p>
+</div>
+<div class="note admonition">
+<p class="admonition-title">Please share your work!</p>
+<p>If you build a DySTrack image analysis pipeline that could be of interest
+for others, please consider sharing your work with the community by adding
+it to the DySTrack repo. You can do so during/after publication, if this is
+a constraint.</p>
+<p>If you would like to add a pipeline, please open an issue <a class="reference external" href="https://github.com/WhoIsJack/DySTrack/">on GitHub</a>.</p>
+</div>
+<section id="collecting-test-data">
+<h2>Collecting test data<a class="headerlink" href="#collecting-test-data" title="Link to this heading">#</a></h2>
+<p>To make pipeline development efficient, we <em>stongly</em> recommend to first collect
+a <em>comprehensive</em> set of example (prescan) data against which prototypes of the
+pipeline can be tested and rapidly iterated. It is <em>very slow</em> to iterate by
+going to the microscope and realizing after an hour of imaging that the
+prototype pipeline doesn’t work because the sample looks ever so slightly
+different from the singular test case against which the pipeline was developed.</p>
+<p>Thus, first collect a battery of test data:</p>
+<ul class="simple">
+<li><p>Several (5+) different samples, ideally including some that are sub-optimal,
+e.g. comparably weak transgene expression or comparably poor mounting</p></li>
+<li><p>Several (2-3) acquisition settings, with different levels of optimization for
+speed over quality (though all prescan settings ultimately focus on speed)</p></li>
+<li><p>Examples across different stages; some samples change in structure or
+intensity over time, e.g. as the embryo develops; the pipeline should work
+across all stages that will ultimately be tracked; consider also that
+time-course acquisition may cause bleaching, so the pipeline may need to be
+robust to this as well</p></li>
+<li><p>Examples where the field of view is deliberately offset compared to the
+optimum (in all different dimensions and combinations thereof; x, y, z, xy, x
+z, yz, xzy)</p></li>
+<li><p>Examples where the sample is completely outside the field of view; this is
+useful to understand how the pipeline might behave if something has gone
+wrong and the sample has been lost entirely</p></li>
+<li><p>Other examples of common failure cases that can be anticipated and that the
+pipeline should be robust to (e.g. if there is a chance that a tracked cell
+will undergo apoptosis)</p></li>
+<li><p>Unless the desired pipeline is specific to a highly bespoke use case on a
+particular microscope, it may well pay off in the long term to aim to create
+a highly robust pipeline that works on different micorscopes; where possible,
+test data should thus be acquired on a couple different machines</p></li>
+</ul>
+<p>With these data available, the pipeline can then be developed and tested
+efficiently <em>in silico</em>, yielding a relatively robust implementation as the
+starting point for live testing at the microscope.</p>
+<div class="note admonition">
+<p class="admonition-title"><strong>A note on ML-based pipelines</strong></p>
+<p>When considering whether to use machine learning-based approaches for a
+DySTrack pipeline, the following caveats should be kept in mind:</p>
+<ol class="arabic">
+<li><p>Directly training a model from scratch to predict target coordinates
+based on an input image will likely require a much larger set of
+training data than what is needed for an experienced image analyst to
+develop a robust algorithmic pipeline.</p>
+<p></p></li>
+<li><p>Using an established ML tool as part of a pipeline (e.g. detecting
+nuclei with a pre-trained nuclear segmentation model, followed by some
+post-processing to exclude artifacts and to find the coordinates of the
+nucleus/nuclei of interest) may be more straightforward, but since
+prescans are usually optimized for rapid acquisition at the cost of
+image quality, they may be out-of-distribution for pre-trained models
+and require extensive fine-tuning. The result may also not be robust to
+use with other settings, markers, or microscopes without further
+fine-tuning.</p></li>
+</ol>
+</div>
+</section>
+<section id="prototyping-the-image-analysis">
+<h2>Prototyping the image analysis<a class="headerlink" href="#prototyping-the-image-analysis" title="Link to this heading">#</a></h2>
+<p>With the test data in your hands, you are ready to develop a prototype
+pipeline.</p>
+<p>The <a class="reference internal" href="anatomy.html"><span class="doc">Anatomy</span></a> section details the structure of image analysis
+pipelines and in particular their call signature, which must be adhered to for
+DySTrack manager to correctly interact with them.</p>
+<p>Other than that, the choice of approach depends entirely on the target sample
+and imaging setup in question. Two approaches we have successfully used are
+sketched below, but of course there are countless other possibilities.</p>
+<div class="tip admonition">
+<p class="admonition-title">Tip!</p>
+<p>Always best start by making a copy of an existing pipeline and then modify
+it as needed!</p>
+</div>
+<p><strong>Standard masking-based approach:</strong></p>
+<ol class="arabic">
+<li><p>Preprocessing (image cleaning)</p>
+<ul class="simple">
+<li><p>Gaussian smoothing is a near-universal step to suppress noise</p></li>
+<li><p>Median smoothing can be useful for shot noise / dead pixels</p></li>
+<li><p>Various background subtraction approaches could be useful</p></li>
+</ul>
+<p></p></li>
+<li><p>Foreground detection (masking)</p>
+<ul class="simple">
+<li><p>Usually based on some form of global or local threshold detection</p></li>
+</ul>
+<p></p></li>
+<li><p>Postprocessing (mask clean-up)</p>
+<ul class="simple">
+<li><p>Morphological methods (e.g. hole filling) may be useful</p></li>
+<li><p>Volume filtering or retaining only the largest object may also be useful</p></li>
+</ul>
+<p></p></li>
+<li><p>Coordinate identification</p>
+<ul class="simple">
+<li><p>Based on either the center, or an edge, or some other feature of the mask</p></li>
+<li><p>Different dimensions may track different features, e.g. the center in z
+and y and the leading edge in x</p></li>
+</ul>
+<p></p></li>
+</ol>
+<p>Examples using this approach include the
+<a class="reference internal" href="available.html#pipeline-section-center-of-mass"><span class="std std-ref">center of mass pipeline</span></a> and the
+<a class="reference internal" href="available.html#pipeline-section-lateral-line"><span class="std std-ref">lateral line pipeline</span></a>.</p>
+<p><strong>Model fitting approach:</strong></p>
+<ol class="arabic">
+<li><p>Preprocessing (image cleaning), as above</p>
+<p></p></li>
+<li><p>Fit a model/function to the signal</p>
+<ul class="simple">
+<li><p>We’ve had success fitting a 1d function to the intensity profile along
+each axis</p></li>
+<li><p>Fit e.g. a Gaussian to track the center of a diffuse signal</p></li>
+<li><p>Fit e.g. a sigmoid function to track a leading edge</p></li>
+<li><p>Different functions can be chosen along different axes</p></li>
+<li><p>Fitting bespoke functions (e.g. templates) could also work</p></li>
+</ul>
+<p></p></li>
+<li><p>Use the relevant fitted parameter as a target coordinate</p>
+<ul class="simple">
+<li><p>E.g. the mean of a Gaussian or the inflection point of a sigmoid function</p></li>
+</ul>
+<p></p></li>
+</ol>
+<p>An example using this approach is the
+<a class="reference internal" href="available.html#pipeline-section-chick-node"><span class="std std-ref">chick node pipeline</span></a>.</p>
+<div class="tip admonition">
+<p class="admonition-title"><strong>Some general tips</strong></p>
+<ul class="simple">
+<li><p>Simplicity <em>greatly</em> helps with robustness!</p></li>
+<li><p>Fully understand your code before testing at the scope</p></li>
+<li><p>Expect edge cases to be a problem; incorporate sanity checks</p></li>
+<li><p>Errors should not pass silently; the experimenter needs to be aware</p></li>
+<li><p>Visualize every step with plots, and include key plots in the final
+pipeline</p></li>
+</ul>
+<p>[Partly inspired by <code class="docutils literal notranslate"><span class="pre">The</span> <span class="pre">Zen</span> <span class="pre">of</span> <span class="pre">Python,</span> <span class="pre">by</span> <span class="pre">Tim</span> <span class="pre">Peters</span></code>]</p>
+</div>
+</section>
+<section id="live-testing-at-the-microscope">
+<h2>Live testing at the microscope<a class="headerlink" href="#live-testing-at-the-microscope" title="Link to this heading">#</a></h2>
+<p>Once the prototype works robustly across the battery of test data, you are
+ready for the first live test at the microscope.</p>
+<div class="warning admonition">
+<p class="admonition-title"><strong>Warning</strong></p>
+<p><strong>Expect the first test(s) to fail!</strong></p>
+<p>When they do, try to understand the problem as deeply as possible while at
+the scope. If it’s not a simple fix that can be retested immediately, be
+sure to collect relevant test data for offline testing of improved versions
+of the prototype!</p>
+</div>
+<p>A sensible testing sequence for a fresh pipeline might include the following:</p>
+<ol class="arabic">
+<li><p><strong>Dry run</strong></p>
+<p>Remove the sample and stage inset, ensuring ample clearance for the
+stage/objective. Have the microscope acquire an empty prescan in a different
+folder and then manually move a previously acquired example prescan to the
+target folder that DySTrack is monitoring.</p>
+<p>This is to check against order-of-magnitude conversion errors where the
+stage might move e.g. a centimeter instead of a micron.</p>
+</li>
+<li><p><strong>Single time-point checks</strong></p>
+<p>Set everything up as if for a full time course, but start by only running
+the first two time points to check if everything behaves as intended.</p>
+<p>Do the same thing again, but deliberately offset the sample in the initial
+position to check that DySTrack corrects properly corrects for it (and
+doesn’t e.g. correct in the opposite direction).</p>
+</li>
+<li><p><strong>Supervised time-lapse test</strong></p>
+<p>Start an actual full time lapse but supervise the microscope for the first
+several iterations to ensure everything is running as intended, and even if
+things look good still check back at very regular intervals throughout the
+entire duration of the time course.</p>
+<p><em>Tip:</em> It can be useful to configure remote access to the microscope PC to
+enable regular remote checks during the first several tests.</p>
+</li>
+<li><p><strong>Celebrate!</strong></p>
+<p>When it works, the results are often spectacular! :)</p>
+</li>
+</ol>
+<div class="tip admonition">
+<p class="admonition-title"><strong>Future-proofing with automated tests</strong></p>
+<p>We recommend writing automated tests (ideally within the pytest framework
+included in the DySTrack distribution) that make it easy to check whether
+the pipeline behaves as expected after any fixes, improvements, or version
+upgrades.</p>
+<p>The DySTrack GitHub repository implements a simple set of tests for all
+included pipelines, which can be used for inspiration (see
+<code class="docutils literal notranslate"><span class="pre">DySTrack\tests\tests_unitary\tests_pipelines</span></code>). These tests generally
+just use a single prescan example to keep the size of the GitHub repo in
+check, but when developing your own pipeline you could include additional
+private tests on data that is in a different folder (not tracked by git).</p>
+</div>
+</section>
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="anatomy.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Anatomy of an image analysis pipeline</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="advanced.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Advanced tools and strategies</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2025, Jonas Hartmann, Zimeng Wu.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.2.3.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.1.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

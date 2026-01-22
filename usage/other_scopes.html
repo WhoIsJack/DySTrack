@@ -1,0 +1,860 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" data-theme="dark">
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Adapting DySTrack to other microscopes &#8212; DySTrack  documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "dark";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "dark";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'usage/other_scopes';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Advice on postprocessing DySTrack data" href="postprocessing.html" />
+    <link rel="prev" title="DySTrack on the Nikon AX R (NIS Elements)" href="nikon_AXR.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="dark">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+    
+    
+    
+    <img src="../_static/DySTrack_logo_dark.svg" class="logo__image only-dark" alt="DySTrack - Home"/>
+    <img src="../_static/DySTrack_logo_lite.svg" class="logo__image only-light pst-js-only" alt="DySTrack - Home"/>
+  
+  
+    <p class="title logo__title">DySTrack Docs</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../intro/index.html">
+    Getting started
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="index.html">
+    Running DySTrack
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../pipelines/index.html">
+    Image analysis pipelines
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../api/index.html">
+    API Reference
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/WhoIsJack/DySTrack/" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../intro/index.html">
+    Getting started
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="index.html">
+    Running DySTrack
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../pipelines/index.html">
+    Image analysis pipelines
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../api/index.html">
+    API Reference
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/WhoIsJack/DySTrack/" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+<nav class="bd-docs-nav bd-links"
+     aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="zeiss_880.html">DySTrack on the Zeiss LSM880 (ZEN Black)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="zeiss_980.html">DySTrack on the Zeiss LSM980 (ZEN Blue)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="nikon_AXR.html">DySTrack on the Nikon AX R (NIS Elements)</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">DySTrack on other microscopes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="postprocessing.html">Advice on postprocessing data</a></li>
+</ul>
+</div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="index.html" class="nav-link">Running DySTrack</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Adapting DySTrack to other microscopes</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="adapting-dystrack-to-other-microscopes">
+<h1>Adapting DySTrack to other microscopes<a class="headerlink" href="#adapting-dystrack-to-other-microscopes" title="Link to this heading">#</a></h1>
+<p>DySTrack can be used with any microscope control software that supports basic
+macro/automation features, even if there is no official support for it (yet).</p>
+<p>To make this happen, you need to implement the equivalent to the macro/job
+definitions provided in DySTrack’s <code class="docutils literal notranslate"><span class="pre">Macros</span></code> folder, using whatever
+macro/automation tools are available on the desired microscope. This page
+provides information on how to do this.</p>
+<div class="warning admonition">
+<p class="admonition-title"><strong>Advanced topic</strong></p>
+<p>Building a custom microscope interface macro for DySTrack is a somewhat
+advanced task, and creative solutions may be required (cue MacGyver meme).</p>
+<p>It is recommended that you get a good understanding of how DySTrack
+operates first, both through this documentation and by using it on one of
+the supported microscopes.</p>
+<p>Furthermore, it is recommended that you work with facility staff or ideally
+with a rep from the microscope manufacturer who has experience with the
+microscope’s macro/automation features.</p>
+</div>
+<div class="note admonition">
+<p class="admonition-title">Please share your work!</p>
+<p>If you build DySTrack support for a microscope that is not currently
+supported, please consider contributing your work to the DySTrack project
+to make it available for others in the community.</p>
+<p>If you are interested in doing so, please open an issue <a class="reference external" href="https://github.com/WhoIsJack/DySTrack/">on GitHub</a>.</p>
+</div>
+<section id="before-you-start">
+<h2>Before you start<a class="headerlink" href="#before-you-start" title="Link to this heading">#</a></h2>
+<ul>
+<li><p><strong>Ensure you have permission to use DySTrack on this microscope</strong></p>
+<div class="danger admonition">
+<p class="admonition-title"><strong>Tread carefully - risk of damage!</strong></p>
+<p>Modern microscopes are expensive machines, and automating them comes with
+an inherent risk of damage. Do not run DySTrack without permission from the
+microscope’s administrator, and always ask for help if you are unsure about
+something.</p>
+<p><strong>For developers:</strong> Build up your solution incrementally and test every
+step carefully, if possible at first without actually controlling the
+microscope hardware or with a configuration where the risk of damage is
+minimized even if the stage makes unexpected movements (e.g. no stage
+inset/sample, or even no objective). When testing with an actual sample,
+monitor the microscope for a prolonged time to ensure there are no minor
+errors that accumulate over time.</p>
+</div>
+</li>
+<li><p><strong>Check if the microscope’s macro/automation tools are installed/available</strong></p>
+<div class="warning admonition">
+<p class="admonition-title">Paywalled macro modules</p>
+<p>Some manufacturers paywall access to their macro/automation tools, and in
+some cases older microscope software does not support them.</p>
+<p>We recommend enquiring with facility staff and/or a manufacturer rep
+about the availability and cost of these tools for your microscope of
+interest, prior to embarking on DySTrack Macro development.</p>
+<p>Note that reps can often offer a free trial for a couple months. We
+recommend asking for this and then prototyping the DySTrack Macro during
+the free trial. You can then decide whether to pay for long-term access
+to the macro module based on whether it works for your purposes.</p>
+</div>
+</li>
+<li><p><strong>“Save early, save often” while working with commercial macro tools!</strong></p>
+<div class="warning admonition">
+<p class="admonition-title">Microscope macro/automation tools can be unstable</p>
+<p>Advanced software features in commercial microscope control software are
+often somewhat unstable, as they are not the manufacturer’s focus and lack
+extensive user feedback. Manufacturers / facilities also tend to update
+software in ways that can break advanced uses.</p>
+<p><strong>You should expect the possibility that the software will crash at any
+time</strong> while you are writing macros or editing automation workflows. All
+unsaved changes will usually be gone if this happens.</p>
+<p>Say it with me: <strong>Save early, save often!</strong></p>
+</div>
+</li>
+</ul>
+</section>
+<section id="general-macro-structure">
+<h2>General macro structure<a class="headerlink" href="#general-macro-structure" title="Link to this heading">#</a></h2>
+<p>A standard DySTrack macro follows some variant of this pseudocode:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>for timepoint in timepoints:
+
+    for position in positions:
+
+        # Prescan
+        move to position
+        reload prescan settings
+        acquire prescan
+
+        # Wait for new coordinates
+        while no new coordinates detected:
+            check for new coordinates in `dystrack_coords.txt`
+            wait for a second
+
+        # Handle new coordinates
+        parse coordinates from `dystrack_coords.txt`
+        convert dystrack coordinates to stage coordinates
+        update position
+
+        # Mainscan
+        move to updated position
+        reload mainscan settings
+        acquire mainscan
+
+    wait until timepoint duration is up
+</pre></div>
+</div>
+<p>For a fully worked example in python (using the Zeiss ZEN Blue IronPython API),
+see <code class="docutils literal notranslate"><span class="pre">Macros\LSM980_ZENBlue_macro.py</span></code>. This is the macro that runs DySTrack
+<a class="reference internal" href="zeiss_980.html"><span class="doc">on the LSM980</span></a>.</p>
+<p>On rare occasions, automation tools already exist that support all required
+features purely through configuration of a GUI. An example of this is the
+<a class="reference external" href="https://github.com/manerotoni/mypic/">MyPiC</a> ZEN Black macro, which is used to run DySTrack
+<a class="reference internal" href="zeiss_880.html"><span class="doc">on the LSM880</span></a>.</p>
+</section>
+<section id="notes-on-required-features">
+<h2>Notes on required features<a class="headerlink" href="#notes-on-required-features" title="Link to this heading">#</a></h2>
+<p>To implement the macro logic outlined above, the microscope software must
+support (a variant of) these features:</p>
+<ol class="arabic">
+<li><p><strong>Looping</strong></p>
+<p>Some microscopes do not support arbitrary loops (especially <code class="docutils literal notranslate"><span class="pre">while</span></code>
+loops), but may support specific workflows that loop over preset time points
+and positions. Depending on the details, this may be sufficient to get
+DySTrack to work.</p>
+</li>
+<li><p><strong>Waiting for some time</strong></p>
+<p>This functionality is missing surprisingly often.</p>
+<p>For the purpose of waiting for new DySTrack coordinates, a creative solution
+may be needed to emulate a waiting command. This could e.g. be a loop or
+other command that does something pointless for a while (ideally not
+something that interacts with the hardware).</p>
+<p>For the purpose of waiting until a timepoint’s duration has elapsed, an
+actual wait command may not be required, as the microscope software may
+offer some variant of a specialized time point loop that allows durations to
+be set as a parameter.</p>
+</li>
+<li><p><strong>Recalling and moving to stage positions</strong></p>
+<p>In the ideal case, the microscope macro supports the use of the microscope’s
+built-in tool for multipositioning, allowing the user to specify the initial
+positions as they would do for any other multiposition experiment, and then
+supporting macro commands to loop over these positions and update them as
+needed.</p>
+<p>If this is not directly supported, the next-best option is a simple command
+that allows movement of the stage to given coordinates, in combination with
+a way of setting and updating custom variables. In this case, the
+coordinates can be stored and updated as custom variables, then passed to
+the stage movement command as needed. Setting initial coordinates within the
+custom variables may require a creative solution.</p>
+<p>If there is a command to move the stage to provided coordinates but no way
+to store and update coordinates in memory, the DySTrack pipelines could be
+altered to return absolute instead of relative coordinates, based on some
+starting point. To pass the absolutely coordinates from one time point to
+the next within DySTrack manager, use the <code class="docutils literal notranslate"><span class="pre">img_cache</span></code> keyword argument.
+(See also point 7 below for more on coordinate processing.)</p>
+<p>Note that XY coordinates and Z coordinates are sometimes controlled by two
+separate commands.</p>
+<div class="tip admonition">
+<p class="admonition-title">Tip</p>
+<p>In some cases, it may be significantly easier to create a version that
+only tracks a single position (without support for multi-positioning), at
+least as a first step.</p>
+</div>
+</li>
+<li><p><strong>Reloading acquisition settings</strong></p>
+<p>This feature (or some variant of it) is required to enable switching between
+prescan and mainscan acquisition settings. Different microscopes may
+implement this differently, e.g. by reloading from an example stack or by
+restoring from a specific settings file or from a list of saved settings.</p>
+<p>Stage/focus positions are sometimes stored and reloaded along with other
+acquisition settings, which can interfere with step 3 above. This option
+must be turned off (or creatively dealt with in some way).</p>
+<div class="note admonition">
+<p class="admonition-title">Note</p>
+<p>Whilst we generally use DySTrack with a separate prescan and main scan,
+it may sometimes be possible/preferable to only use a main scan, with
+DySTrack configured to compute new coordinates based on it, which are
+then used for the next time point. This can make tracking harder, but may
+remove the need for the microscope software to support reloading of
+different acquisition settings.</p>
+</div>
+</li>
+<li><p><strong>Saving acquired data (correctly)</strong></p>
+<p>For DySTrack to work, the prescan data acquired at a given time point and
+position must be written out as a separate file with an appropriate file
+name and format, so that the DySTrack manager recognizes it and the image
+analysis pipeline can load it.</p>
+<p>Some possible challenges include:</p>
+<ul>
+<li><p><strong>Writing individual files</strong></p>
+<p>If the microscope does not allow writing of individual files and instead
+writes to some large file object that is meant to contain the entire time
+course, it may not be possible to use (native) DySTrack.</p>
+<p>This is because DySTrack manager relies on the appearance of new files to
+recognize that a prescan has completed. In principle, it might be possible
+to add a feature that instead monitors the contents of the large file used
+by the microscope, but this is likely challenging and may be functionally
+impossible if the microscope retains a permanent file lock.</p>
+<p>However, note that sometimes the option of writing single files might
+exist and just be obscurely named or deeply hidden, or it might be
+possible to include some sort of <code class="docutils literal notranslate"><span class="pre">Save</span> <span class="pre">As</span></code> or <code class="docutils literal notranslate"><span class="pre">Export</span></code> command in the
+macro that saves out a copy of an individual position / time point.</p>
+</li>
+<li><p><strong>Custom file naming</strong></p>
+<p>Ideally, the microscope allows prescan and main scan files to be saved
+with different file prefixes (so that DySTrack can be configured to only
+recognize the prescan) or saved to different directories (in which case
+DySTrack should be configured to only monitor the prescan directory).</p>
+<p>If neither is possible, some regex magic could be used to have DySTrack
+manager recognize only files with certain numbers (e.g. every other file),
+or the DySTrack pipeline could be modified to skip certain files even if
+the manager triggers their analysis. Creative solutions may be required.</p>
+</li>
+<li><p><strong>File format</strong></p>
+<p>By default, DySTrack supports <code class="docutils literal notranslate"><span class="pre">.tif</span></code>, <code class="docutils literal notranslate"><span class="pre">.tiff</span></code>, <code class="docutils literal notranslate"><span class="pre">.czi</span></code>, and <code class="docutils literal notranslate"><span class="pre">.nd2</span></code> files.</p>
+<p>Support for other formats may be added by modifying <a class="reference internal" href="../api/pipelines/dystrack.pipelines.utilities.html#dystrack.pipelines.utilities.loading.robustly_load_image_after_write" title="dystrack.pipelines.utilities.loading.robustly_load_image_after_write"><code class="xref py py-func docutils literal notranslate"><span class="pre">robustly_load_image_after_write()</span></code></a>. DySTrack
+uses <a class="reference external" href="https://github.com/bioio-devs/bioio">bioio</a> as its backend to load image data, so support for formats
+covered by a bioio plugin can easily be added by installing that plugin
+and including the file ending among the supported file endings.</p>
+<p>For more obscure formats, a custom reader must be integrated into
+<a class="reference internal" href="../api/pipelines/dystrack.pipelines.utilities.html#dystrack.pipelines.utilities.loading.robustly_load_image_after_write" title="dystrack.pipelines.utilities.loading.robustly_load_image_after_write"><code class="xref py py-func docutils literal notranslate"><span class="pre">robustly_load_image_after_write()</span></code></a>.</p>
+</li>
+</ul>
+</li>
+</ol>
+<ol class="arabic" start="6">
+<li><p><strong>Reading coordinates provided by the DySTrack manager</strong></p>
+<p>Finally, the microscope software must provide some way of reading/receiving
+new coordinates from the DySTrack manager.</p>
+<p>Most commonly, this is done via the <code class="docutils literal notranslate"><span class="pre">dystrack_coords.txt</span></code> file that
+DySTrack generates in the target directory. This file looks something like
+this:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Z</span>       <span class="n">Y</span>       <span class="n">X</span>       <span class="n">msg</span>
+<span class="mf">8.1604</span>  <span class="mf">242.7783</span>        <span class="mf">373.4244</span>        <span class="n">OK</span>
+<span class="mf">9.5309</span>  <span class="mf">251.5007</span>        <span class="mf">243.2269</span>        <span class="n">OK</span>
+<span class="mf">9.1302</span>  <span class="mf">252.6594</span>        <span class="mf">258.4268</span>        <span class="n">OK</span>
+<span class="mf">9.1110</span>  <span class="mf">254.4120</span>        <span class="mf">256.6196</span>        <span class="n">OK</span>
+<span class="n">_</span>
+</pre></div>
+</div>
+<p>(The <code class="docutils literal notranslate"><span class="pre">_</span></code> symbol at the end signifies that the file always ends with an
+empty line. It is not actually there in the file. Also, note that this
+follows the numpy convention of <strong>ZYX</strong> ordering of the dimensions.)</p>
+<p>Ideally, the microscope macro is able to read and parse text files and to
+store e.g. the number of lines as a variable. This can be used to check if a
+new line has been added while waiting for new coordinates.</p>
+<p>Once a new line is detected, the numbers should be parsed out. The <code class="docutils literal notranslate"><span class="pre">msg</span></code>
+column can be used to add additional logic, e.g. to respond to failure cases
+or to trigger one of several different main scans (for a more complex
+experimental setup than standard tracking).</p>
+<p>One alternative to communicating via <code class="docutils literal notranslate"><span class="pre">dystrack_coords.txt</span></code> is found in our
+<a class="reference external" href="https://github.com/manerotoni/mypic/">MyPiC</a> ZEN Black macro (see also <a class="reference internal" href="zeiss_880.html"><span class="doc">here</span></a>), which reads new
+coordinates from the Windows registry.</p>
+<p>The relevant DySTrack manager keyword argument to specify the mode of
+coordinate transmission is <code class="docutils literal notranslate"><span class="pre">tra_method</span></code>. Currently available transmission
+functions are found <code class="xref py py-func docutils literal notranslate"><span class="pre">here</span></code>, which is also where a new
+transmission function should be implemented if it is required to get a
+certain microscope to run.</p>
+</li>
+</ol>
+<ol class="arabic" start="7">
+<li><p><strong>Converting DySTrack coordinates to stage coordinates</strong></p>
+<p>As noted in step 3 above, the macro must track and update stage coordinates.</p>
+<p>The default for DySTrack pipelines is to return coordinates of the tracked
+object in <strong>units pixel/voxel of the prescan</strong> and <strong>relative to the
+prescna’s origin</strong>, which is normally the voxel at index <code class="docutils literal notranslate"><span class="pre">[0,</span> <span class="pre">0,</span> <span class="pre">0]</span></code> in
+the numpy array that results from loading the prescan with <cite>bioio_</cite>.</p>
+<p>Within the microscope control software, stage coordinates may be represented
+in different ways depending on the manufacturer, so it is up to the
+microscope macro to convert the DySTrack coordinates into stage coordinates.</p>
+<p>There are three aspects to consider: <strong>units, image origins, and reference
+frames</strong>.</p>
+<p>This is further explained below - but first, some warnings:</p>
+<div class="warning admonition">
+<p class="admonition-title">Beware XY vs Z differences</p>
+<p>Microscope software often treats Z coordinates very differently to XY
+coordinates (for good reason).</p>
+<p>Information about the XY and Z dimensions may thus be found in different
+places, and the transformations required to convert XY and Z DySTrack
+coordinates into XY and Z stage coordinates may differ respectively.</p>
+<p>It can make sense to treat the two as essentially totally independent
+coordinate systems and reason about (and test!) both of them separately.</p>
+</div>
+<div class="warning admonition">
+<p class="admonition-title">Beware fenceposting errors</p>
+<p>If the first pixel of a 100px line marks coordinate <code class="docutils literal notranslate"><span class="pre">0</span></code> (as is the
+case in python/DySTrack), then pixel 100 is at position <code class="docutils literal notranslate"><span class="pre">99</span></code>. Thus,
+the center is at <code class="docutils literal notranslate"><span class="pre">(100</span> <span class="pre">-</span> <span class="pre">1)</span> <span class="pre">/</span> <span class="pre">2.0</span> <span class="pre">=</span> <span class="pre">49.5</span></code>! It is <em>not</em> at pixel 50.</p>
+<p>This is the <em>fencepost problem</em> and is likely to come up here because
+images are based on pixels but stage coordinates are continuous.
+Carefully test if the results of coordinate conversions are exactly
+right and not off by one or by one-half!</p>
+</div>
+<div class="danger admonition">
+<p class="admonition-title">Tread carefully!</p>
+<p>Errors in coordinate conversions may lead to unexpected stage movement,
+so this step requires extra care up front to preclude order-of-magnitude
+errors (e.g. if the stage uses a different unit than microns) as well as
+extra testing in post to detect and fix small errors that might
+accumulate over time.</p>
+</div>
+<p>Aspects to consider when converting between DySTrack coordinates and stage
+coordinates:</p>
+<ul>
+<li><p><strong>Units</strong>, e.g. pixels vs microns</p>
+<p>Microscope software usually tracks stage position in microns, so DySTrack
+coordinates must be converted from pixels:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">microns</span> <span class="o">=</span> <span class="n">pixels</span> <span class="o">*</span> <span class="n">microns</span><span class="o">/</span><span class="n">pixel</span>
+</pre></div>
+</div>
+<p>Obviously, this requires knowledge of the prescan’s pixel sizes. Ideally,
+the microscope macro can retrieve this directly from the prescan’s
+experiment settings or by loading an example prescan (this can be done
+once, before starting the actual loop or during the first iteration).</p>
+<p>If this is not supported, a creative solution must be found, or users must
+manually input this information before running DySTrack (<strong>risky</strong>).</p>
+<p>Remember that information about XY pixel sizes and Z step sizes are often
+stored in different places and accessed in different ways!</p>
+<div class="danger admonition">
+<p class="admonition-title">Order-of-magnitude errors</p>
+<p>Carefully check what units the stage is actually using. Though it is
+usually microns, I would not be surprised if there are stages out there
+that use inches or something. That could end badly.</p>
+</div>
+</li>
+<li><p><strong>Image origins</strong>, e.g. bottom left vs center</p>
+<p>Stage coordinates within the microscope software usually point to the
+center of the image (though they may point to a different origin, such as
+the bottom left or top left of the image, or some reference location on
+the stage itself).</p>
+<p>DySTrack returns coordinates relative to the corner at <code class="docutils literal notranslate"><span class="pre">[0,</span> <span class="pre">0,</span> <span class="pre">0]</span></code>, so
+they often need to be converted to be relative to the center of the
+prescan instead, e.g.:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">center</span> <span class="o">=</span> <span class="n">dystrack_coords</span> <span class="o">-</span> <span class="p">(</span><span class="n">prescan_size</span> <span class="o">/</span> <span class="mf">2.0</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Remember that such conversions are a likely source of fenceposting errors,
+so you may instead need something like:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">center</span> <span class="o">=</span> <span class="n">dystrack_coords</span> <span class="o">-</span> <span class="p">((</span><span class="n">prescan_size</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span> <span class="o">/</span> <span class="mf">2.0</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>This step requires knowledge of the total size of the prescan (in pixels
+or microns, depending on which conversion is done first), which again
+should ideally be retrievable from the prescan settings or an example
+file.</p>
+</li>
+<li><p><strong>Reference frames</strong>, e.g. prescan location vs absolute stage position</p>
+<p>Microscope software usually keeps the stage coordinates in a (calibrated)
+absolute reference frame relative to some zero-position of the stage,
+whereas DySTrack coordinates are relative to the prescan itself.</p>
+<p>Luckily, once units and image origins have been accounted for (see above),
+this means the DySTrack coordinates directly correspond to the required
+<strong>offset</strong> between old absolute stage coordinates and the new, updated
+absolute stage coordinates.</p>
+<p>Thus, the new coordinates can be calculated simply as:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">new_coords</span> <span class="o">=</span> <span class="n">old_coords</span> <span class="o">+</span> <span class="n">dystrack_coords_with_correct_units_and_origins</span>
+</pre></div>
+</div>
+<p>However, in some cases (particularly for z-coordinates!), the absolute
+reference frame of the stage may be reversed compared to how DySTrack is
+treating the image, so you may need:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">new_coords</span> <span class="o">=</span> <span class="n">old_coords</span> <span class="o">-</span> <span class="n">dystrack_coords_with_correct_units_and_origins</span>
+</pre></div>
+</div>
+<p>Some trial and error may be required to get to the right solution.</p>
+<div class="warning admonition">
+<p class="admonition-title">Accumulating errors</p>
+<p>If the offset direction is wrong, this may only produce a small error
+initially (since the initial position will usually not require much
+correction anyway), but a small correction in the wrong direction will
+trigger a greater correction (in the wrong direction) on the next
+iteration, and so on.</p>
+</div>
+</li>
+</ul>
+<p>See <code class="docutils literal notranslate"><span class="pre">Macros\LSM980_ZENBlue_macro.py</span></code> for a worked example that shows the
+relevant conversions as simple python code, including a fenceposting
+correction and the need to treat XY and Z differently.</p>
+</li>
+</ol>
+<div class="note admonition">
+<p class="admonition-title">Please share your amazing work!</p>
+<p>If you got all the way to this point and actually built DySTrack support
+for a microscope that is not currently supported, please consider
+contributing your valuable work to the DySTrack project to make it
+available for others in the community!</p>
+<p>If you are interested in doing so, please open an issue <a class="reference external" href="https://github.com/WhoIsJack/DySTrack/">on GitHub</a>.</p>
+</div>
+</section>
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="nikon_AXR.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">DySTrack on the Nikon AX R (NIS Elements)</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="postprocessing.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Advice on postprocessing DySTrack data</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2025, Jonas Hartmann, Zimeng Wu.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.2.3.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.1.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

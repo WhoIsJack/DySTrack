@@ -1,0 +1,599 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" data-theme="dark">
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Advice on postprocessing DySTrack data &#8212; DySTrack  documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "dark";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "dark";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'usage/postprocessing';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Image analysis pipelines" href="../pipelines/index.html" />
+    <link rel="prev" title="Adapting DySTrack to other microscopes" href="other_scopes.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="dark">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+    
+    
+    
+    <img src="../_static/DySTrack_logo_dark.svg" class="logo__image only-dark" alt="DySTrack - Home"/>
+    <img src="../_static/DySTrack_logo_lite.svg" class="logo__image only-light pst-js-only" alt="DySTrack - Home"/>
+  
+  
+    <p class="title logo__title">DySTrack Docs</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../intro/index.html">
+    Getting started
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="index.html">
+    Running DySTrack
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../pipelines/index.html">
+    Image analysis pipelines
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../api/index.html">
+    API Reference
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/WhoIsJack/DySTrack/" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../intro/index.html">
+    Getting started
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="index.html">
+    Running DySTrack
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../pipelines/index.html">
+    Image analysis pipelines
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../api/index.html">
+    API Reference
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/WhoIsJack/DySTrack/" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i>
+            <span class="sr-only">GitHub</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+<nav class="bd-docs-nav bd-links"
+     aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="zeiss_880.html">DySTrack on the Zeiss LSM880 (ZEN Black)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="zeiss_980.html">DySTrack on the Zeiss LSM980 (ZEN Blue)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="nikon_AXR.html">DySTrack on the Nikon AX R (NIS Elements)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="other_scopes.html">DySTrack on other microscopes</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Advice on postprocessing data</a></li>
+</ul>
+</div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="index.html" class="nav-link">Running DySTrack</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Advice on postprocessing DySTrack data</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="advice-on-postprocessing-dystrack-data">
+<h1>Advice on postprocessing DySTrack data<a class="headerlink" href="#advice-on-postprocessing-dystrack-data" title="Link to this heading">#</a></h1>
+<p>Some simple advice on processing data generated with DySTrack, based on our
+practical experience.</p>
+<div class="note admonition">
+<p class="admonition-title">Note</p>
+<p>The biggest challenge with these data tends to be their size. For 3D
+acquisitions of multiple samples over several hours, raw data can be
+hundreds of GB or even several TB (in particular for AiryScan data).</p>
+<p>In consequence, we have generally adopted the convention that deconvolved,
+8bit-converted data is the true “raw data” that is actually stored
+long-term.</p>
+<p>One possible downside of this approach is that new methods of deconvolution
+cannot be applied retroactively.</p>
+</div>
+<section id="common-postprocessing-steps">
+<h2>Common postprocessing steps<a class="headerlink" href="#common-postprocessing-steps" title="Link to this heading">#</a></h2>
+<ol class="arabic">
+<li><p><strong>Deconvolution of mainscan images</strong></p>
+<p>If required/desired, deconvolve your data using the relevant software (e.g.
+AiryScan Processing for Zeiss, or NIS Deconvolution or Denoising, or any
+other tool you usually use). Use batch mode to process all time points as
+one batch.</p>
+<div class="tip admonition">
+<p class="admonition-title">Tip</p>
+<p>It can be useful to have a powerful second PC set up with a high-bandwith
+connection to the microscope PC and an offline-only version of the
+acquisition software. This means time-consuming processing steps can be
+run without blocking the microscope.</p>
+</div>
+</li>
+<li><p><strong>8bit conversion of each time point</strong></p>
+<p>For most downstream analysis, 256 gray values are sufficient, so to save
+disk space and improve performance on downstream image analysis tasks, we
+generally convert images from 16bit to 8bit format using ImageJ macros in
+batch mode.</p>
+<div class="warning admonition">
+<p class="admonition-title">Warning: serious mistakes possible</p>
+<p>Converting images to 8bit must be done with care, as mistakes can render
+data useless (or even misleading)!</p>
+<p>Crucially, unless all data / time points across an experiment are
+converted using the same min and max values, intensity will no longer be
+comparable (if it ever was; absolute intensity measurements in microscopy
+come with many pitfalls and must be handled with care or avoided)!</p>
+<p>For any data where intensity matters, it is therefore essential to
+consistently set the same min and max values in the histogram prior to
+8bit conversion.</p>
+<p>If these min and max values are chosen poorly, other problems follow. If
+the range is chosen too small, data may get “cropped” and in consequence
+effectively look “overexposed”. Conversely, if the range is chosen too
+large, the histogram of the data may get compressed into far too few gray
+values, leading to a “filled contour” effect.</p>
+<p>To pick the right min and max values, be sure to check examples at
+different time points (in case signal increases at later time points),
+across multiple samples and, where applicable, across all different
+experimental conditions.</p>
+<p>If this advice is at all unclear, you should probably speak to someone
+with image analysis experience before processing your data.</p>
+</div>
+</li>
+<li><p><strong>Maximum z-projection</strong></p>
+<p>We usually use maximum z-projections for visual analysis of time course data
+(whilst keeping the z-stacks themselves for quantitative analysis). Again,
+batch processing in ImageJ is recommended.</p>
+</li>
+<li><p><strong>Loading time points as a time course (in ImageJ/Fiji)</strong></p>
+<p>There are many ways of converting individually-saved DySTrack time points
+into a single “movie”.</p>
+<p>One simple option using standard <strong>ImageJ</strong> is via <code class="docutils literal notranslate"><span class="pre">File</span> <span class="pre">&gt;&gt;</span> <span class="pre">Import</span> <span class="pre">&gt;&gt;</span> <span class="pre">Image</span>
+<span class="pre">Sequence...</span></code>:</p>
+<ul class="simple">
+<li><p>Select the folder with your data</p></li>
+<li><p>Use the <code class="docutils literal notranslate"><span class="pre">Filter</span></code> field to pick out files you want to load. For example,
+if your maximum z-projection macro adds <code class="docutils literal notranslate"><span class="pre">_zmax.tif</span></code> as the file ending,
+type this into the <code class="docutils literal notranslate"><span class="pre">Filter</span></code> field and you should see that the <code class="docutils literal notranslate"><span class="pre">Count</span></code>
+field now displays the correct number of detected files (i.e. the number
+of time points).</p></li>
+<li><p>Click <code class="docutils literal notranslate"><span class="pre">OK</span></code> to load the images in a single viewer.</p></li>
+<li><p>If there are multiple channels and/or slices, use <code class="docutils literal notranslate"><span class="pre">Image</span> <span class="pre">&gt;&gt;</span> <span class="pre">Hyperstacks</span>
+<span class="pre">&gt;&gt;</span> <span class="pre">Stack</span> <span class="pre">to</span> <span class="pre">Hyperstack...</span></code> and type in the correct values to create A
+hyperstack.</p></li>
+</ul>
+<p>In <strong>Fiji</strong>, using <code class="docutils literal notranslate"><span class="pre">File</span> <span class="pre">&gt;&gt;</span> <span class="pre">Import</span> <span class="pre">&gt;&gt;</span> <span class="pre">Bio-Formats</span></code> and selecting the
+option <code class="docutils literal notranslate"><span class="pre">Group</span> <span class="pre">files</span> <span class="pre">with</span> <span class="pre">similar</span> <span class="pre">names</span></code> can be used to load data directly
+as a hyperstack (use e.g. <code class="docutils literal notranslate"><span class="pre">File</span> <span class="pre">name</span> <span class="pre">|</span> <span class="pre">contains</span> <span class="pre">|</span> <span class="pre">_zmax.tif</span></code> to get the
+same file filtering effect).</p>
+<p>Once loaded, you can customize and save the time course as usual.</p>
+<div class="note admonition">
+<p class="admonition-title">Note</p>
+<p>Loading many time points in 3D simultaneously will require a lot of
+memory and may be slow. Using a <strong>virtual stack</strong> can help with this,
+though we tend to just look at projections or at individual time points,
+depending on what we are looking for.</p>
+</div>
+</li>
+<li><p><strong>“Deregistration” of DySTracked data</strong></p>
+<p>Sometimes it is of interest to visualize the actual movement of the tracked
+sample in real-space coordinates (see the bottom panel of the gif on the
+landing page), for example to measure the velocity or to create a kymograph.
+We refer to this as <strong>“deregistration”</strong>.</p>
+<p>The DySTrack repo comes with a Jupyter Notebook that performs deregistration
+on a dataset, using the coordinates in <code class="docutils literal notranslate"><span class="pre">dystrack_coords.txt</span></code> and the shape
+and pixel size of the prescan (must be provided). The notebook also provides
+some extra options to play around with.</p>
+<p>It is recommended to perform deregistration on z-projected images, as the
+resulting movies will tend to very large files.</p>
+</li>
+<li><p><strong>High-quality post-registration and tracking</strong></p>
+<p>Depending on the sample, acquisition settings, and image analysis pipeline,
+samples tracked with DySTrack may not necessarily be perfectly registered
+across time points. Indeed, DySTrack pipelines should be optimized for speed
+and robustness, not for high-quality registration.</p>
+<p>Thus, if high-quality registration is required, it is recommended to run it
+<em>in post</em>, rather than as a DySTrack pipeline during acquisition. This comes
+with the additional advantage that high-quality main scan data can be used
+to optimize the registration (as opposed to low-quality prescan data).</p>
+<p>The same applies to get high-quality tracking data (i.e. linked
+segmentations). It is usually preferable to segment and track objects in the
+high-quality main scan <em>in post</em>, without relying directly on the DySTrack
+coordinates. Depending on the smoothness of the raw data and the nature of
+the tracking algorithm, it may or may not be better to deregister the data
+(see above) prior to high-quality tracking.</p>
+</li>
+</ol>
+</section>
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="other_scopes.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Adapting DySTrack to other microscopes</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="../pipelines/index.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Image analysis pipelines</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2025, Jonas Hartmann, Zimeng Wu.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 8.2.3.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.1.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>
