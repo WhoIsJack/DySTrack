@@ -349,7 +349,11 @@ as a dependency.
 
 3. ``Create New >> Import Analysis From File...``
 
-4. Import ``DySTrack\macros\AX_NISGA3_PointsExpose.ga3``
+4. Import ``DySTrack\macros\AX_NISGA3_PointsExpose_vX-XX-XX.ga3``
+
+   The ``vX-XX-XX`` relates to the version number of NIS Elements. You can find 
+   this in ``Help >> About...``. Use the GA3 file that matches your version 
+   number as best as possible, or simply try the latest version available.
 
 5. To test, double-click it and select the file 
    ``DySTrack\tests\testdata\test-pllp_AXR_prescan.tiff``
@@ -380,9 +384,41 @@ as a dependency.
    for more information). It may make sense at this point to just import both, 
    so they are available and can be inspected as examples.
 
+   Again, there are version numbers ``vX-XX-XX`` associated with each JOBS
+   file. Use the one that matches the GA3 file imported above.
+
 You can now view and if necessary edit/customize a JOBS definition by
 double-clicking on it. **We strongly recommend making a copy of an existing 
 JOBS definition before trying out any modifications on it.**
+
+.. admonition:: Common issues with GA3 and JOBS
+    :class: warning
+
+    The interplay of GA3 and JOBS can be rather fickle.
+
+    One common problem arises because GA3 files and sometimes JOBS files will
+    "pay attention" to open images and may (mal)adapt automatically to them. To
+    head this off, we recommend configuring example acquisition settings and
+    acquiring or reloading a prescan stack prior to opening GA3/JOBS scripts.
+    The file ``DySTrack\tests\testdata\test-pllp_AXR_prescan.tiff`` included in
+    the DySTrack repo should work for this.
+
+    Another common issue is that changes to the GA3 Script may trigger the JOBS
+    script to automatically toggle some settings (and sometimes this seemingly
+    happens for no reason whatsoever). To ensure everything is correct, there
+    are two things to check in the JOBS block that uses the PointsExpose GA3
+    script:
+    
+    - In the ``Save outputs`` tab, check that the box under ``Images`` (usually 
+      ``EGFP``, but this may change) is *unticked* and the box under ``Tables`` 
+      (should be ``PrescanDims``) is *ticked*.
+
+    - In the ``Export parameters`` tab, check that both ``Tables`` and its
+      descendant, ``PrescanDims``, are *ticked*.
+
+    If a problem persists that cannot easily be solved, it may be necessary to
+    speak to your Nikon rep.
+
 
 .. admonition:: Out-of-the-box JOBS Definitions
     :class: note
@@ -391,14 +427,14 @@ JOBS definition before trying out any modifications on it.**
     ``macros`` folder:
 
 
-    * ``AX_NISJOBS_lateral_line.bin``
+    * ``AX_NISJOBS_lateral_line_vX-XX-XX.bin``
 
     This definition is used for standard tracking tasks, optionally with multi-
     positioning for multiple samples. It should work for most simple 
     experiments and should be the starting point for any customized workflows.
 
 
-    * ``AX_NISJOBS_chick_node.bin``
+    * ``AX_NISJOBS_chick_node_vX-XX-XX.bin``
 
     This definition was implemented for a special case where the main scan is
     itself a tile scan. Here, a single field of view is acquired as the prescan

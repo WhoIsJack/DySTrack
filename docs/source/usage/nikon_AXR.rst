@@ -70,8 +70,8 @@ steps:
 
    If this is unavailable, speak to an expert user / microscope administrator.
 
-2. Check if the GA3 Script ``AX_NISGA3_PointsExpose`` is available in the
-   ``Analysis Explorer`` (middle-left).
+2. Check if the GA3 Script ``AX_NISGA3_PointsExpose`` (or similar) is available 
+   in the ``Analysis Explorer`` (middle-left).
 
    .. image:: /images/nikon_AXR/Analysis_explorer.png
        :alt: Analysis explorer screenshot
