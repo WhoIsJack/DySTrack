@@ -89,9 +89,9 @@ def analyze_image(
     -------
     z_pos, y_pos, x_pos : floats
         New coordinates for the next acquisition. For 2D inputs, z_pos is 0.0.
-    img_msg : "_"
+    img_msg : "OK"
         A string output message; required by DySTrack but here unused and just
-        set to "_".
+        set to "OK".
     img_cache : {}
         A dictionary to be passed as keyword arguments to future calls to the
         pipeline; required by DySTrack but here unused and just set to {}.

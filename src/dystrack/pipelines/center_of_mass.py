@@ -84,9 +84,9 @@ def analyze_image(
     -------
     z_pos, y_pos, x_pos : floats
         New coordinates for the next acquisition. For 2D inputs, z_pos is 0.0.
-    img_msg : "_"
+    img_msg : "OK"
         A string output message; required by DySTrack but here unused and just
-        set to "_".
+        set to "OK".
     img_cache : {}
         A dictionary to be passed as keyword arguments to future calls to the
         pipeline; required by DySTrack but here unused and just set to {}.
@@ -335,9 +335,7 @@ def analyze_image(
     if raw.ndim == 3:
 
         # Use centroid positions as focusing targets
-        z_pos = cen[0]
-        y_pos = cen[1]
-        x_pos = cen[2]
+        z_pos, y_pos, x_pos = cen
 
         # Limit how much DySTrack may move in z
         z_limit = 0.1  # Fraction of image size
@@ -346,8 +344,7 @@ def analyze_image(
     # Get positions for 2D
     else:
         z_pos = 0.0
-        y_pos = cen[0]
-        x_pos = cen[1]
+        y_pos, x_pos = cen
 
     ### Return results
 
