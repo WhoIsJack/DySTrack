@@ -194,4 +194,21 @@ For details on the function's call signature, see the
   left boundary but low at the right (caudal/posterior) boundary.
 
 
+
+.. _pipeline-section-minimal-example:
+
+Minimal example pipeline
+------------------------
+
+This is a simplistic minimal example that simply tracks the center of mass of 
+intensity in the image. It is useful as a didactic example and simple starting
+point for users looking to develop their own pipelines. For actual 
+center-of-mass tracking applications, we recommend using the more full-featured
+:ref:`center-of-mass pipeline<pipeline-section-center-of-mass>` described 
+above.
+
+For details on the function's call signature, see the
+:doc:`API reference</api/pipelines/dystrack.pipelines.minimal_example>`.
+
+
 |

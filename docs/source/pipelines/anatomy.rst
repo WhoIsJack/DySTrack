@@ -56,6 +56,10 @@ Pipeline functions will commonly include the following steps:
 Additional information on each step is provided 
 :ref:`below<anatomy-section-pipeline-details>`.
 
+For a minimal example of what this looks like in code, see the `source code`_
+of our 
+:doc:`minimal example pipeline</api/pipelines/dystrack.pipelines.minimal_example>`.
+
 
 .. admonition:: Freedom!
     :class: note
@@ -184,9 +188,9 @@ The pipeline *must* return exactly 5 values:
         -------
         z_pos, y_pos, x_pos : floats
             New coordinates for the next acquisition. For 2D inputs, z_pos is 0.0.
-        img_msg : "_"
+        img_msg : "OK"
             A string output message; required by DySTrack but here unused and just
-            set to "_".
+            set to "OK".
         img_cache : {}
             A dictionary to be passed as keyword arguments to future calls to the
             pipeline; required by DySTrack but here unused and just set to {}.
@@ -195,6 +199,13 @@ The pipeline *must* return exactly 5 values:
         # <code to load and process the image>
 
         return z_pos, y_pos, x_pos, "OK", {}
+
+
+See the `source code`_ of our 
+:doc:`minimal example pipeline</api/pipelines/dystrack.pipelines.minimal_example>`
+for a fully worked minimal example.
+
+.. _source code: https://github.com/WhoIsJack/DySTrack/blob/main/src/dystrack/pipelines/minimal_example.py
 
 
 .. admonition:: Required: numpy-style doc string!

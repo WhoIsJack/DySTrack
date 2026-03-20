@@ -115,8 +115,17 @@ sketched below, but of course there are countless other possibilities.
 .. admonition:: Tip!
     :class: tip
 
-    Always best start by making a copy of an existing pipeline and then modify 
-    it as needed!
+    It's easiest to start by making a copy of an existing pipeline and then 
+    modifying it as needed!
+    
+    This could either be one of our full-fledged pipelines if you're planning 
+    on using a similar approach (see below), or alternatively it could simply 
+    be our 
+    :doc:`minimal example pipeline</api/pipelines/dystrack.pipelines.minimal_example>`
+    (`source`_).
+    
+.. _source: https://github.com/WhoIsJack/DySTrack/blob/main/src/dystrack/pipelines/minimal_example.py
+
 
 
 **Standard masking-based approach\:**
