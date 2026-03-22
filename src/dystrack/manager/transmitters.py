@@ -37,9 +37,6 @@ def send_coords_txt(
     """Communicate new position for stage movement to the microscope through a
     text file, which should be monitored by the microscope software's macro.
 
-    A new file with header is generated if the file at the provided path does
-    not exist yet. Otherwise new data is appended at the end of the file.
-
     Parameters
     ----------
     fpath : path-like
@@ -49,6 +46,14 @@ def send_coords_txt(
         string value "nan" will be written in place of a coordinate number.
     msg : str, optional, default "_"
         String message to write in 4th column of text file.
+        WARNING: It is recommended to keep this a relatively short string, i.e.
+        under 1000 chars in length, so that the file write operation happens in
+        a single buffer flush. Otherwise, there may be a risk of race condition
+        where the microscope reads a half-finished file. In other words, do not
+        abuse this to send extra data to the scope; instead write them to a
+        separate file within your pipeline function and modify the microscope
+        macro to read the data from that file *after* the new positions have
+        been read from the coordinate file.
     precision : int, optional, default 4
         Number of decimal places to write for coordinate values.
     """
