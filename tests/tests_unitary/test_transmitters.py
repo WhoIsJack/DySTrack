@@ -55,7 +55,7 @@ def test_macro_race_safety(mocker):
     and then read it from the microscope function *after* the new coordinates
     have been read from the coordinate file.
 
-    One reason this test may fail is when it is run on a non-Windows OS. This 
+    One reason this test may fail is when it is run on a non-Windows OS. This
     is currently not supported, so it is up to you to implement a race-safe way
     of writing coordinates for the non-Windows OS you are using.
     """

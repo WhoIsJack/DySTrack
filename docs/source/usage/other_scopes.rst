@@ -303,7 +303,10 @@ support (a variant of) these features:
 
    Ideally, the microscope macro is able to read and parse text files and to
    store e.g. the number of lines as a variable. This can be used to check if a
-   new line has been added while waiting for new coordinates.
+   new line has been added while waiting for new coordinates. (Side note for 
+   expert users: under normal circumstances, the new line will be appended to 
+   the file in a single buffer flush, so you need not worry about race 
+   conditions when monitoring the file for updates.)
 
    Once a new line is detected, the numbers should be parsed out. The ``msg``
    column can be used to add additional logic, e.g. to respond to failure cases
@@ -316,11 +319,12 @@ support (a variant of) these features:
 
    The relevant DySTrack manager keyword argument to specify the mode of 
    coordinate transmission is ``tra_method``. Currently available transmission
-   functions are found |transmitters_module|, which is also where a new
-   transmission function should be implemented if it is required to get a
-   certain microscope to run.
+   functions are found in 
+   :doc:`dystrack.manager.transmitters</api/manager/dystrack.manager.transmitters>`
+   (`source`_), which is also where a new transmission function should be 
+   implemented if it is required to get certain microscope to run.
 
-.. |transmitters_module| replace:: :py:func:`here<dystrack.pipelines.transmitters>`
+.. _source: https://github.com/WhoIsJack/DySTrack/blob/main/src/dystrack/manager/transmitters.py
 
 
 7. **Converting DySTrack coordinates to stage coordinates**

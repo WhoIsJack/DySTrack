@@ -148,8 +148,9 @@ The pipeline *must* return exactly 5 values:
 - ``x_pos`` (float): the new x-coordinate for the next acquisition.
 
 - ``img_msg`` (str): a string message that can be used to communicate extra
-  information to the microscope or to log events. By convention, simply return
-  ``"OK"`` if there is no meaningful information to communicate/log.
+  information to the microscope or to log events. Keep this short (\<1000 
+  chars). By convention, simply return ``"OK"`` if there is no extra 
+  information to communicate/log.
 
 - ``img_cache`` (dict): Used to forward variables to the next call of the 
   pipeline function (see above). This is an advanced feature, so most users 
