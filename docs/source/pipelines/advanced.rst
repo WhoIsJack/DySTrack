@@ -32,7 +32,7 @@ Another, more modular but less interconnected option would be to run multiple
 independent instances of DySTrack that monitor for different file names and
 trigger different pipelines.
 
-Example use case: **Event-based swapping between overview and targetted 
+Example use case: **Event-based swapping between overview and targeted 
 acquisitions**
 
   In this example, the microscope periodically images a field of largely
@@ -48,9 +48,9 @@ acquisitions**
   The scope then switches to a high-NA objective and images the delaminating
   cell at high resolution as it migrates away. During this time, DySTrack is
   used for single-cell tracking, enabling the microscope to closely track the
-  target cell. After a certain time, or if some other condition is satisfied,
-  the microscope returns to the low-magnification mode and monitors the cell
-  layer for another delamination event.
+  target cell. After a certain time, or if some other condition is met, the 
+  microscope returns to the low-magnification mode and monitors the cell layer 
+  for another delamination event.
 
   This is a quite sophisticated example that illustrates the combined use of
   multiple different image analysis tasks (drift correction on low-resolution 
@@ -70,25 +70,29 @@ Sending extra data to the scope
 Some applications require more data to be sent to the microscope than just a
 single set of coordinates.
 
-The easiest way of doing this is to encode the extra data as a string in 
-``img_msg`` and then parse it within the macro / automation workflow in the 
-microscope control software. However, whilst this approach is very good for 
-raising flags (e.g. to switch experimental phases, see above), it quickly 
-becomes cumbersome when passing actual data.
+The safest and most flexible way of doing this is to write the extra data to a 
+separate file (of any appropriate type of your choice) within the image 
+analysis pipeline, and then to read and parse that file within the macro / 
+automation workflow in the microscope control software *after* a new line in
+``dystrack_coords.txt`` has been detected.
 
-A simple and powerful alternative is to write out extra data in separate text
-files, which are then again parsed out in the microscope control macro.
+To clarify, the control flow would then look as follows:
 
-Example use case: **Periodic photoactivation of leader cells**
+1. Scope writes prescan, awaits new line in ``dystrack_coords.txt``
+2. DySTrack manager detects prescan, triggers image analysis pipeline
+3. Pipeline performs analysis, writes extra file (e.g. ``extra_data.xml``),
+   then returns coordinates/msg as usual
+4. DySTrack manager updates ``dystrack_coords.txt``
+5. Scope detects and parses update in ``dystrack_coords.txt``
+6. Scope opens and parses ``extra_data.xml`` and proceeds with next acquisition
 
-  In this example, normal tracking of a migratory tissue such as the lateral
-  line is performed as usual. However, every n-th time point, the image
-  analysis pipeline executes an additional workflow that identifies the
-  position of the current leader cell.
-
-  This extra coordinate is fed back to the microscope via ``img_msg``,
-  triggering placement of a ROI and a pulse of light at an activating 
-  wavelength for an optogenetic construct.
+Crucially, synchronization between the microscope macro and DySTrack manager is
+ensured without the risk of a race condition because DySTrack manager uses a
+single buffer flush to add the new line to ``dystrack_coords.txt`` in step 4, 
+which is what the microscope macro is listening for. By contrast, 
+``extra_data.xml`` might be a larger file, but the pipeline function will not
+return out before it has been fully written, and the microscope macro is not
+directly listening for it.
 
 Example use case: **Detection and tracking of a subset of cells**
 
@@ -102,9 +106,36 @@ Example use case: **Detection and tracking of a subset of cells**
   named ``overview_t012_p003.tif``) with the coordinates of all detected target
   cells.
 
-  The microscope macro is then configured to parse the text file and trigger
-  acquisition of a high-resolution stack of each target cell before returning 
-  to the overview acquisition setting.
+  The microscope macro then detects the new global coordinates in
+  ``dystrack_coords.txt`` as usual and stores them for next overview image
+  acquisition. Next, it proceeds to parse the "active nuclei" text file and
+  triggers acquisitions of high-resolution stacks for each target cell. Once
+  these are completed, it returns to the overview acquisition settings to start
+  the next cycle.
+
+
+An even simpler (but less safe!) alternative is to encode the extra data as a 
+string in ``img_msg`` and then parse it within the macro / automation workflow
+in the microscope control software.
+
+Whilst this approach is very good for raising flags (e.g. to switch 
+experimental phases, see the previous section), it quickly becomes cumbersome
+when passing actual data. Furthermore, if the additional data is more than 
+a few kb, *it may lead to race conditions* wherein the microscope macro 
+(attempts to) read the ``dystrack_coords.txt`` file *while* DySTrack manager is 
+still writing to it, potentially causing an error or partial read!
+
+Example use case: **Periodic photoactivation of leader cells**
+
+  In this example, normal tracking of a migratory tissue such as the lateral
+  line is performed as usual. However, every n-th time point, the image
+  analysis pipeline also executes an additional workflow that identifies the
+  position of the current leader cell.
+
+  This extra coordinate is fed back to the microscope via ``img_msg`` as a
+  short string (e.g. ``"leader=[9.97,252.25,112.44]"``), triggering 
+  placement of a ROI and illumination with a pulse of activating light for an
+  optogenetic construct.
 
  
 
