@@ -333,7 +333,7 @@ support (a variant of) these features:
 
    The default for DySTrack pipelines is to return coordinates of the tracked
    object in **units pixel/voxel of the prescan** and **relative to the
-   prescna's origin**, which is normally the voxel at index ``[0, 0, 0]`` in
+   prescan's origin**, which is normally the voxel at index ``[0, 0, 0]`` in
    the numpy array that results from loading the prescan with `bioio_`.
 
    Within the microscope control software, stage coordinates may be represented
