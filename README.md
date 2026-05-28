@@ -131,17 +131,20 @@ Alessandro Mongera.
 
 ## Citing DySTrack
 
-If you are using DySTrack in your research, please cite [the preprint](https://www.biorxiv.org/content/10.64898/2025.12.02.691816v1):
+If you are using DySTrack in your research, please cite [the JCS paper](https://doi.org/10.1242/jcs.264728):
 
 ```
-@article {Wu2025.12.02.691816,
+@article{wu2026dystrack,
   author = {Wu, Zimeng and Voiculescu, Octavian and Mongera, Alessandro and Mayor, Roberto and Wong, Mie and Hartmann, Jonas},
-  title = {DySTrack: a modular smart microscopy tool for live tracking of dynamic samples on modern commercial microscopes},
-  elocation-id = {2025.12.02.691816},
-  year = {2025},
-  doi = {10.64898/2025.12.02.691816},
-  publisher = {Cold Spring Harbor Laboratory},
-  URL = {https://www.biorxiv.org/content/10.64898/2025.12.02.691816v1},
-  journal = {bioRxiv}
+  title = {DySTrack – a modular smart microscopy tool for live tracking of dynamic samples on modern commercial microscopes},
+  journal = {Journal of Cell Science},
+  volume = {139},
+  number = {21},
+  pages = {jcs264728},
+  year = {2026},
+  month = {05},
+  publisher={The Company of Biologists},
+  doi = {10.1242/jcs.264728},
+  url = {https://doi.org/10.1242/jcs.264728},
 }
 ```
