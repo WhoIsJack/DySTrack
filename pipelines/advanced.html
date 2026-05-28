@@ -1,0 +1,666 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" data-theme="dark">
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Advanced tools and strategies &#8212; DySTrack  documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "dark";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "dark";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=0790524f97105ba85085" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=0790524f97105ba85085" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../_static/custom.css" />
+  
+  <!-- So that users can add custom icons -->
+  <script defer src="../_static/scripts/fontawesome.js?digest=0790524f97105ba85085"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=0790524f97105ba85085" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=0790524f97105ba85085" />
+
+    <script src="../_static/documentation_options.js?v=5929fcd5"></script>
+    <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'pipelines/advanced';</script>
+    <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="API Reference" href="../api/index.html" />
+    <link rel="prev" title="Developing image analysis pipelines" href="develop.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  
+    
+    <script src="../_static/searchtools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <script src="../searchindex.js"></script>
+  
+  </head>
+  <body data-default-mode="dark">
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+  
+  
+  
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header id="pst-header" class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+    
+    
+    
+    <img src="../_static/DySTrack_logo_dark.svg" class="logo__image only-dark" alt="DySTrack - Home"/>
+    <img src="../_static/DySTrack_logo_lite.svg" class="logo__image only-light pst-js-only" alt="DySTrack - Home"/>
+  
+  
+    <p class="title logo__title">DySTrack Docs</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../intro/index.html">
+    Getting started
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../usage/index.html">
+    Running DySTrack
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="index.html">
+    Image analysis pipelines
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../api/index.html">
+    API Reference
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg fa-fw" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg fa-fw" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg fa-fw" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg fa-fw me-1"></i>System Settings</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg fa-fw me-1"></i>Light</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg fa-fw me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
+      
+        <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/WhoIsJack/DySTrack/" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i><span class="visually-hidden">GitHub</span></a>
+        </li>
+</ul></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../intro/index.html">
+    Getting started
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../usage/index.html">
+    Running DySTrack
+  </a>
+</li>
+
+
+<li class="nav-item current active">
+  <a class="nav-link nav-internal" href="index.html">
+    Image analysis pipelines
+  </a>
+</li>
+
+
+<li class="nav-item ">
+  <a class="nav-link nav-internal" href="../api/index.html">
+    API Reference
+  </a>
+</li>
+
+  </ul>
+</nav></div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg fa-fw" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg fa-fw" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg fa-fw" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg fa-fw me-1"></i>System Settings</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg fa-fw me-1"></i>Light</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg fa-fw me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
+        
+          <div class="navbar-item"><ul class="navbar-icon-links"
+    aria-label="Icon Links">
+        <li class="nav-item">
+          
+          
+          
+          
+          
+          
+          
+          
+          <a href="https://github.com/WhoIsJack/DySTrack/" title="GitHub" class="nav-link pst-navbar-icon" rel="noopener" target="_blank" data-bs-toggle="tooltip" data-bs-placement="bottom"><i class="fa-brands fa-square-github fa-lg" aria-hidden="true"></i><span class="visually-hidden">GitHub</span></a>
+        </li>
+</ul></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item pst-sidebar-collapse"><button id="pst-collapse-sidebar-button" aria-expanded="true" aria-controls="pst-primary-sidebar"><svg class="pst-icon svg-inline--fa" role="img" aria-hidden="true" focusable="false" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+    <path fill="currentColor" d="M3 15.5C2.36232 15.5 1.74874 15.2564 1.28478 14.8189C0.820828 14.3815 0.541576 13.7832 0.504167 13.1467L0.5 13L0.5 3C0.499965 2.36232 0.743605 1.74874 1.18107 1.28478C1.61854 0.820828 2.21676 0.541576 2.85333 0.504167L3 0.5L13 0.5C13.6377 0.499965 14.2513 0.743605 14.7152 1.18107C15.1792 1.61854 15.4584 2.21676 15.4958 2.85333L15.5 3L15.5 13C15.5 13.6377 15.2564 14.2513 14.8189 14.7152C14.3815 15.1792 13.7832 15.4584 13.1467 15.4958L13 15.5L3 15.5ZM3 13.8333L10.5 13.8333L10.5 2.16667L3 2.16667C2.79589 2.16669 2.59889 2.24163 2.44636 2.37726C2.29383 2.5129 2.19638 2.69979 2.1725 2.9025L2.16667 3L2.16667 13C2.16669 13.2041 2.24163 13.4011 2.37726 13.5536C2.5129 13.7062 2.69979 13.8036 2.9025 13.8275L3 13.8333ZM6.65583 10.325L6.5775 10.2558L4.91083 8.58917C4.76735 8.44567 4.68116 8.25476 4.66843 8.05223C4.65569 7.84971 4.71729 7.6495 4.84167 7.48917L4.91083 7.41083L6.5775 5.74417C6.72747 5.59471 6.9287 5.50794 7.14032 5.50148C7.35194 5.49502 7.55809 5.56935 7.7169 5.70937C7.8757 5.8494 7.97525 6.04463 7.99533 6.25539C8.01541 6.46616 7.95451 6.67667 7.825 6.84417L7.75583 6.9225L6.67917 8L7.75583 9.0775C7.89931 9.22099 7.98551 9.41191 7.99824 9.61443C8.01097 9.81695 7.94938 10.0172 7.825 10.1775L7.75583 10.2558C7.61234 10.3993 7.42142 10.4855 7.2189 10.4982C7.01638 10.511 6.81617 10.4494 6.65583 10.325Z"/>
+  </svg>
+  <span class="pst-collapse-sidebar-label">Collapse Sidebar</span>
+  <span class="pst-expand-sidebar-label">Expand Sidebar</span>
+</button></div>
+        <div class="sidebar-primary-item">
+
+<nav class="bd-docs-nav bd-links"
+     aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="available.html">Available pipelines</a></li>
+<li class="toctree-l1"><a class="reference internal" href="anatomy.html">Anatomy of a pipeline</a></li>
+<li class="toctree-l1"><a class="reference internal" href="develop.html">Developing pipelines</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Advanced tools &amp; strategies</a></li>
+</ul>
+</div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="index.html" class="nav-link">Image analysis pipelines</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Advanced tools and strategies</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="advanced-tools-and-strategies">
+<h1>Advanced tools and strategies<a class="headerlink" href="#advanced-tools-and-strategies" title="Link to this heading">#</a></h1>
+<p>This section discusses some advanced tools and suggested strategies for the
+development of sophisticated experimental workflows using DySTrack.</p>
+<div class="warning admonition">
+<p class="admonition-title"><strong>Advanced topic</strong></p>
+<p>This is for advanced users looking to extend DySTrack beyond its basic
+tracking capabilities.</p>
+</div>
+<div class="note admonition">
+<p class="admonition-title">Please share your work!</p>
+<p>If you build a DySTrack image analysis pipeline that could be of interest
+for others, please consider sharing your work with the community by adding
+it to the DySTrack repo. You can do so during/after publication, if this is
+a constraint.</p>
+<p>If you would like to add a pipeline, please open an issue <a class="reference external" href="https://github.com/WhoIsJack/DySTrack/">on GitHub</a>.</p>
+</div>
+<section id="multi-phase-experiments">
+<h2>Multi-phase experiments<a class="headerlink" href="#multi-phase-experiments" title="Link to this heading">#</a></h2>
+<p>In some scenarios, different image analysis tasks are required withing a single
+experiment. Although this differs from standard DySTrack use cases, it is quite
+straightforward to implement.</p>
+<p>The easiest way of doing so is to modify the macro / automation workflow in the
+microscope control software to write prescans with different file names
+depending on the required image analysis task (so basically just an extension
+of the standard distinction between prescans and main scans). Within the image
+analysis pipeline, you can then simply use <code class="docutils literal notranslate"><span class="pre">if</span></code>-statements that check the
+file name and run the appropriate image analysis task.</p>
+<p>Another, more modular but less interconnected option would be to run multiple
+independent instances of DySTrack that monitor for different file names and
+trigger different pipelines.</p>
+<p>Example use case: <strong>Event-based swapping between overview and targeted
+acquisitions</strong></p>
+<blockquote>
+<div><p>In this example, the microscope periodically images a field of largely
+stationary cells in a monolayer, using a low-magnification objective. These
+images are passed to DySTrack, which computes and returns coordinates for
+drift correction, especially in z.</p>
+<p>Additionally, the pipeline also detects delamination events, where cells
+leave the monolayer and start to migrate away. If such an event is detected,
+the coordinates of the target cell are sent to the microscope, along with an
+<code class="docutils literal notranslate"><span class="pre">img_msg</span></code> indicating that a target cell has been found.</p>
+<p>The scope then switches to a high-NA objective and images the delaminating
+cell at high resolution as it migrates away. During this time, DySTrack is
+used for single-cell tracking, enabling the microscope to closely track the
+target cell. After a certain time, or if some other condition is met, the
+microscope returns to the low-magnification mode and monitors the cell layer
+for another delamination event.</p>
+<p>This is a quite sophisticated example that illustrates the combined use of
+multiple different image analysis tasks (drift correction on low-resolution
+monolayer images, detection of delaminating cells, single-cell tracking of
+migrating target cells, and possibly detection of some other event that
+terminates single-cell tracking). Variations of this strategy could be used
+for countless applications, e.g. tracking patrolling immune cells at low
+resolution and swapping to high-resolution if one is activated and starts to
+engulf a target, or detecting division events and recursively tracking all
+daughter cells over several divisions to reconstruct a complete lineage.</p>
+</div></blockquote>
+</section>
+<section id="sending-extra-data-to-the-scope">
+<h2>Sending extra data to the scope<a class="headerlink" href="#sending-extra-data-to-the-scope" title="Link to this heading">#</a></h2>
+<p>Some applications require more data to be sent to the microscope than just a
+single set of coordinates.</p>
+<p>The safest and most flexible way of doing this is to write the extra data to a
+separate file (of any appropriate type of your choice) within the image
+analysis pipeline, and then to read and parse that file within the macro /
+automation workflow in the microscope control software <em>after</em> a new line in
+<code class="docutils literal notranslate"><span class="pre">dystrack_coords.txt</span></code> has been detected.</p>
+<p>To clarify, the control flow would then look as follows:</p>
+<ol class="arabic simple">
+<li><p>Scope writes prescan, awaits new line in <code class="docutils literal notranslate"><span class="pre">dystrack_coords.txt</span></code></p></li>
+<li><p>DySTrack manager detects prescan, triggers image analysis pipeline</p></li>
+<li><p>Pipeline performs analysis, writes extra file (e.g. <code class="docutils literal notranslate"><span class="pre">extra_data.xml</span></code>),
+then returns coordinates/msg as usual</p></li>
+<li><p>DySTrack manager updates <code class="docutils literal notranslate"><span class="pre">dystrack_coords.txt</span></code></p></li>
+<li><p>Scope detects and parses update in <code class="docutils literal notranslate"><span class="pre">dystrack_coords.txt</span></code></p></li>
+<li><p>Scope opens and parses <code class="docutils literal notranslate"><span class="pre">extra_data.xml</span></code> and proceeds with next acquisition</p></li>
+</ol>
+<p>Crucially, synchronization between the microscope macro and DySTrack manager is
+ensured without the risk of a race condition because DySTrack manager uses a
+single buffer flush to add the new line to <code class="docutils literal notranslate"><span class="pre">dystrack_coords.txt</span></code> in step 4,
+which is what the microscope macro is listening for. By contrast,
+<code class="docutils literal notranslate"><span class="pre">extra_data.xml</span></code> might be a larger file, but the pipeline function will not
+return out before it has been fully written, and the microscope macro is not
+directly listening for it.</p>
+<p>Example use case: <strong>Detection and tracking of a subset of cells</strong></p>
+<blockquote>
+<div><p>Imagine a use case similar to the one described for delaminating cells in
+the previous section, but here multiple target cells are detected in the
+overview image, e.g. all cells currently expressing some marker.</p>
+<p>In addition to returning the global coordinates of the monolayer for the next
+overview image in the usual way, the pipeline also writes an appropriately
+named text file (e.g. <code class="docutils literal notranslate"><span class="pre">active_nuclei_coords_t012_p003.txt</span></code> given a prescan
+named <code class="docutils literal notranslate"><span class="pre">overview_t012_p003.tif</span></code>) with the coordinates of all detected target
+cells.</p>
+<p>The microscope macro then detects the new global coordinates in
+<code class="docutils literal notranslate"><span class="pre">dystrack_coords.txt</span></code> as usual and stores them for next overview image
+acquisition. Next, it proceeds to parse the “active nuclei” text file and
+triggers acquisitions of high-resolution stacks for each target cell. Once
+these are completed, it returns to the overview acquisition settings to start
+the next cycle.</p>
+</div></blockquote>
+<p>An even simpler (but less safe!) alternative is to encode the extra data as a
+string in <code class="docutils literal notranslate"><span class="pre">img_msg</span></code> and then parse it within the macro / automation workflow
+in the microscope control software.</p>
+<p>Whilst this approach is very good for raising flags (e.g. to switch
+experimental phases, see the previous section), it quickly becomes cumbersome
+when passing actual data. Furthermore, if the additional data is more than
+a few kb, <em>it may lead to race conditions</em> wherein the microscope macro
+(attempts to) read the <code class="docutils literal notranslate"><span class="pre">dystrack_coords.txt</span></code> file <em>while</em> DySTrack manager is
+still writing to it, potentially causing an error or partial read!</p>
+<p>Example use case: <strong>Periodic photoactivation of leader cells</strong></p>
+<blockquote>
+<div><p>In this example, normal tracking of a migratory tissue such as the lateral
+line is performed as usual. However, every n-th time point, the image
+analysis pipeline also executes an additional workflow that identifies the
+position of the current leader cell.</p>
+<p>This extra coordinate is fed back to the microscope via <code class="docutils literal notranslate"><span class="pre">img_msg</span></code> as a
+short string (e.g. <code class="docutils literal notranslate"><span class="pre">&quot;leader=[9.97,252.25,112.44]&quot;</span></code>), triggering
+placement of a ROI and illumination with a pulse of activating light for an
+optogenetic construct.</p>
+</div></blockquote>
+</section>
+<section id="caching-across-time-points">
+<h2>Caching across time points<a class="headerlink" href="#caching-across-time-points" title="Link to this heading">#</a></h2>
+<p>Normally, every call of the image analysis pipeline by the DySTrack manager is
+completely independent. However, in some cases it may be useful to have
+information about previous acquisitions available when running the image
+analysis pipeline.</p>
+<p>This is what the <code class="docutils literal notranslate"><span class="pre">img_cache</span></code> keyword argument is for. It works essentially
+the same as <code class="docutils literal notranslate"><span class="pre">img_kwargs</span></code>, except that it is also returned back by the image
+analysis pipeline and can thus be updated to keep track of information over
+multiple time points.</p>
+<p>Example use case: <strong>An absolute limit to z-movement</strong></p>
+<blockquote>
+<div><p>As mentioned under Step 2 of the
+<a class="reference internal" href="anatomy.html#anatomy-section-pipeline-details"><span class="std std-ref">pipeline anatomy</span></a>, one standard
+safety measure we currently provide as a pipeline utility is to limit the
+amount by which the stage can move in z at each time point. However, there is
+no tool to limit the total amount by which the stage can move in z over the
+entire time course.</p>
+<p>This is readily implemented using <code class="docutils literal notranslate"><span class="pre">img_cache</span></code>, which can be used to keep
+track of the cumulative sum of stage movement across time points. The result
+can then be fed into a constraint function similar to <a class="reference internal" href="../api/pipelines/dystrack.pipelines.utilities.html#dystrack.pipelines.utilities.constraints.constrain_z_movement" title="dystrack.pipelines.utilities.constraints.constrain_z_movement"><code class="xref py py-func docutils literal notranslate"><span class="pre">constrain_z_movement()</span></code></a>, and
+the user can configure the maximum allowed range using e.g. an additional
+(fixed) keyword argument in <code class="docutils literal notranslate"><span class="pre">img_kwargs</span></code>.</p>
+</div></blockquote>
+<p>Example use case: <strong>Robust tracking using historical information</strong></p>
+<blockquote>
+<div><p>In engineering applications, tools such as <a class="reference external" href="https://en.wikipedia.org/wiki/Proportional%E2%80%93integral%E2%80%93derivative_controller">PID controllers</a> or <a class="reference external" href="https://en.wikipedia.org/wiki/Kalman_filter">Kalman
+filters</a> are often used for robust and smooth control in the presence of
+noise (e.g. in airplane autopilots). These tools utilize past information
+about the sample’s movement as a prior when deciding the coordinates for the
+next step.</p>
+<p>This can be implemented in DySTrack using e.g. a keyword argument
+<code class="docutils literal notranslate"><span class="pre">coordinate_history</span> <span class="pre">=</span> <span class="pre">[]</span></code> that starts an empty list to which coordinates
+are appended in each acquisition. As the list starts filling up, subsequent
+steps can use this information to improve the robustness of coordinate
+identification, the smoothness of the tracking, and/or the chance that
+fallbacks will be successful if the image analysis occasionally fails.</p>
+<p>For this case, one would set <code class="docutils literal notranslate"><span class="pre">img_cache</span> <span class="pre">=</span> <span class="pre">{&quot;coordinate_history&quot;</span> <span class="pre">=</span> <span class="pre">[]}</span></code> as
+the initial condition in the config file.</p>
+<p>To generalize this to multi-position tracking, use a dictionary instead of a
+list and parse which position is currently being tracked based on the file
+name suffix.</p>
+</div></blockquote>
+</section>
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="develop.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Developing image analysis pipelines</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="../api/index.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">API Reference</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../_static/scripts/bootstrap.js?digest=0790524f97105ba85085"></script>
+<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=0790524f97105ba85085"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2025, Jonas Hartmann, Zimeng Wu.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 9.1.0.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.18.0.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>
